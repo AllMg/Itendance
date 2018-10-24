@@ -1,0 +1,54 @@
+/* CONTACT */
+.titre_lien_foot_h1
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.lien-foot
+{
+  margin-top: 1%;
+  background-image: url('../../../assets/img/fond_contact.jpg');
+  background-attachment: fixed;
+  background-size: 100%;
+  padding: 1%;
+}
+.lien-foot h1
+{
+  color: white;
+  text-align: center;
+  padding: 1%;
+}
+.content-annexe
+{
+  color: white;
+}
+
+/* Colonne 1*/
+.titre-h5-footer-col1
+{
+  color:white
+}
+.menu-footer
+{
+  color: white
+}
+.menu-footer li a
+{
+  color: white;
+}
+.menu-footer li a:hover
+{
+  cursor: pointer;
+  text-decoration: underline
+}
+/* Colonne 2 */
+.titre-h5-footer-col2
+{
+  color:white
+}
+
+/* Colonne 3*/
+.textarea-footer
+{
+  min-height: 100px
+}

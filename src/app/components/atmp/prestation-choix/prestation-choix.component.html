@@ -1,0 +1,32 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Choix des prestations de la DAT n° {{reference}}
+      </h4>
+    </div>
+    <label class="customcheck"> Indemnité Journalière (IJ/AT)
+      <input type="checkbox" (change)="change($event)" value="211">
+      <span class="checkmark"></span>
+    </label>
+    <label class="customcheck"> Remboursement Frais Médicaux
+      <input type="checkbox" (change)="change($event)" value="212">
+      <span class="checkmark"></span>
+    </label>
+    <label class="customcheck"> Frais de de déplacement (FD1)
+      <input type="checkbox" (change)="change($event)" value="214">
+      <span class="checkmark"></span>
+    </label>
+    <label class="customcheck"> Frais de Prothése (FD2)
+      <input type="checkbox" (change)="change($event)" value="213">
+      <span class="checkmark"></span>
+    </label>
+    <label class="customcheck"> Frais Funéraire  (FF)
+      <input type="checkbox" (change)="change($event)" value="215">
+      <span class="checkmark"></span>
+    </label>
+    <button type="button" (click)="save()"  class="btn btn-primary btn-lg">Sauvegarder</button>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation déclaration nominative</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-5"><input #periode type="text" class="form-control" placeholder="Période"></div>
+      <div class="col-sm-5"><input #matricule type="text" class="form-control" placeholder="Matricule employeur"></div>
+      <div class="col-sm-2"><button (click)="searchDnMatr(periode.value, matricule.value)" class="btn btn-info btn-block">Voir détails</button></div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5>Liste des travailleurs</h5>
+      </div>
+      <div class="col-sm-12 table_DN">
+        <table class="table table-striped" id="table">
+          <tr>
+            <td class="dn1">Matricule</td>
+            <td class="dn1">Nom</td>
+            <td class="dn1">Prénom(s)</td>
+            <td colspan="2" class="dn1">Date</td>
+            <td colspan="3" class="dn1">1er mois</td>
+            <td colspan="3" class="dn1">2e mois</td>
+            <td colspan="3" class="dn1">3e Mois</td>
+            <td class="dn1">OCC</td>
+            <td colspan="2">Salaire</td>
+            <td colspan="3">Cotisation</td>
+          </tr>
+          <tr>
+            <td class="dn2">&nbsp;</td>
+            <td class="dn2">&nbsp;</td>
+            <td class="dn2">&nbsp;</td>
+            <td class="dn2">Embauche</td>
+            <td class="dn2">Débauche</td>
+            <td class="dn2">Salaires</td>
+            <td class="dn2">Avantage</td>
+            <td class="dn2">TP</td>
+            <td class="dn2">Salaires</td>
+            <td class="dn2">Avantage</td>
+            <td class="dn2">TP</td>
+            <td class="dn2">Salaires</td>
+            <td class="dn2">Avantage</td>
+            <td class="dn2">TP</td>
+            <td class="dn2">&nbsp;</td>
+            <td *ngIf="regime != 'GENS DE MAISON'">Non Plafonné</td>
+            <td *ngIf="regime != 'GENS DE MAISON'">Plafonné</td>
+            <td>Part salariale</td>
+            <td>Part patronale</td>
+            <td>Total</td>
+          </tr>
+          <tr *ngFor="let dn of listeDn; let i=index">
+              <td>{{dn.matricule}}</td>
+              <td>{{dn.nom}}</td>
+              <td>{{dn.prenoms}}</td>
+              <td><input type="date" (keyup)="dn.dateDebutContrat=$event.target.value" value="{{dn.dateDebutContrat}}"></td>
+              <td><input type="date" (keyup)="dn.dateFinContrat=$event.target.value" value="{{dn.dateFinContrat}}"></td>
+              <td>
+                <span *ngIf="regime == 'GENS DE MAISON'; else rgM1">{{dn.salM1}}</span>
+                <ng-template #rgM1>
+                    <input type="number" (keyup)="dn.salM1=$event.target.value; calcul(i)" value="{{dn.salM1}}">
+                </ng-template>
+              </td>
+              <td><input type="number" (keyup)="dn.avtM1=$event.target.value; calcul(i)" value="{{dn.avtM1}}"></td>
+              <td><input type="number" (keyup)="dn.tpM1=$event.target.value; calcul(i)" value="{{dn.tpM1}}"></td>
+              <td>
+                  <span *ngIf="regime == 'GENS DE MAISON'; else rgM2">{{dn.salM2}}</span>
+                  <ng-template #rgM2>
+                      <input type="number" (keyup)="dn.salM2=$event.target.value; calcul(i)" value="{{dn.salM2}}">
+                  </ng-template>
+              </td>
+              <td><input type="number" (keyup)="dn.avtM2=$event.target.value; calcul(i)" value="{{dn.avtM2}}"></td>
+              <td><input type="number" (keyup)="dn.tpM2=$event.target.value; calcul(i)" value="{{dn.tpM2}}"></td>
+              <td>
+                  <span *ngIf="regime == 'GENS DE MAISON'; else rgM3">{{dn.salM3}}</span>
+                  <ng-template #rgM3>
+                      <input type="number" (keyup)="dn.salM3=$event.target.value; calcul(i)" value="{{dn.salM3}}">
+                  </ng-template>
+                </td>
+              <td><input type="number" (keyup)="dn.avtM3=$event.target.value; calcul(i)" value="{{dn.avtM3}}"></td>
+              <td><input type="number" (keyup)="dn.tpM3=$event.target.value; calcul(i)" value="{{dn.tpM3}}"></td>
+              <td>
+                <div class="form-group">
+                  <select [(ngModel)]="dn.typeContrat" class="form-control" (change)="onChange($event.target.value)">
+                      <option *ngFor="let oc of occ" [value]="oc" [selected]="oc == dn.typeContrat">{{oc}}</option>
+                  </select>
+                </div>
+              </td>
+              <td *ngIf="regime != 'GENS DE MAISON'" class="totSalNonPlaf">{{dn.totSalNonPlaf}}</td>
+              <td *ngIf="regime != 'GENS DE MAISON'" class="totSalPlaf">{{dn.totSalPlaf}}</td>
+              <td class="cotPartSalariale">{{dn.cotPartSalariale}}</td>
+              <td class="cotPartPatronale">{{dn.cotPartPatronale}}</td>
+              <td class="totCotisation">{{dn.totCotisation}}</td>
+            </tr>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <tr *ngIf="regime != 'GENS DE MAISON'">
+            <td>TOTAL SALAIRE NON PLAFONNE</td>
+            <td></td>
+          </tr>
+          <tr *ngIf="regime != 'GENS DE MAISON'">
+            <td>TOTAL SALAIRE PLAFONNE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PART SALARIALE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PART PATRONALE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>COTISATION A PAYEE</td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-8"></div>
+      <div class="col-sm-2"><button class="btn btn-block btn-danger">Refuser</button></div>
+      <div class="col-sm-2"><button class="btn btn-block btn-info">Valider</button></div>
+    </div>
+    <br>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>

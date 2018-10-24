@@ -1,0 +1,9 @@
+<div *ngIf="entity==='E'">
+    <app-info-employeurs></app-info-employeurs>
+</div>
+<div *ngIf="entity==='T'||entity==='C'">
+    <app-info-individus></app-info-individus>
+</div>
+<div *ngIf="entity!=='T'&&entity!=='E'&&entity!==undefined&&entity!=='C'">
+    <app-info-agents></app-info-agents>
+</div>

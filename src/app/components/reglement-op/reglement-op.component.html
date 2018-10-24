@@ -1,0 +1,52 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Règlement OP</h4>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          <h6 class="sous_titre_page">Numéro OP</h6>
+        </div>
+        <div class="col-sm-8">
+          <input (keyup)="onKey($event)"  type="text" class="form-control" placeholder="Veuillez entrer le numéro OP">
+        </div>
+        <div class="col-sm-4">
+          <button (click)="submitSearch()" class="btn btn-info" style="width:100%"> Rechercher</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <h6 class="sous_titre_page">Liste OP</h6>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-striped" style="overflow-y:auto">
+          <tr>
+            <td>Numéro OP</td>
+            <td>Nom</td>
+            <td>Prénom</td>
+            <td>Date OP</td>
+            <td></td>
+          </tr>
+          <tr *ngFor="let list of listOp">
+            <td>{{list.id_op}}</td>
+            <td><div *ngIf="list.tecbenef.length>0"><div *ngIf="list.tecbenef[0].hasOwnProperty('individu')">{{list.tecbenef[0].individu.nom}}</div></div></td>
+            <td><div *ngIf="list.tecbenef.length>0"><div *ngIf="list.tecbenef[0].hasOwnProperty('individu')">{{list.tecbenef[0].individu.prenoms}}</div></div></td>
+            <td>{{list.date_op}}</td>
+            <td><a href="reglement-op-validation/{{list.id_op}}" class="btn btn-info btn-block">Voir</a></td>
+          </tr>
+        </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li *ngFor="let age of page_count; let i = index" class="page-item"><a class="page-link" href="/reglement-op/{{i+1}}">{{i+1}}</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

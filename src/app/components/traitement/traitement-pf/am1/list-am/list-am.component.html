@@ -1,0 +1,63 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Liste des demandes d'allocation de matérnité 1ère tranche</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <label class="col-sm-6 col-form-label texte-content">Etat</label>
+        <div class="col-sm-6">
+          <select (change)="onChangeEtat()" [(ngModel)]="etat" name="etat" class="form-control">
+            <option *ngFor="let a of listeEtat; let i = index;" value="{{a.id_type_etat}}" [selected]="a.id_type_etat === 1">{{a.libelle}}</option>
+          </select>
+        </div>
+        <br>
+        <div class="row">
+          <div *ngIf="!show" style="width: 100%">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Référence</th>
+                  <th>Date Reception</th>
+                  <th>Matricule Beneficiaire</th>
+                  <th>Nom Beneficiaire</th>
+                  <th>Etat</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dmd of listDmdAm ; ">
+                  <td>{{dmd.reference}}</td>
+                  <td>{{dmd.date_reception}}</td>
+                  <!-- <td></td>
+                          <td></td> -->
+                  <td>{{dmd.matricule}}</td>
+                  <td>{{dmd.nom_individu}}</td>
+                  <td>{{dmd.etat_libelle}}</td>
+                  <td>
+                    <button (click)="onClickDmd(dmd.reference)" class="btn btn-primary btn-sm">Détails</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li *ngFor="let p of page_count; let i = index" [ngClass]="{'page-item active': pagination==i+1, 'page-item': pagination != i}">
+                  <a class="page-link" (click)="pageClick(i+1)">{{i+1}}</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div *ngIf="show" style="margin: auto">
+            <div class="loader" style="margin: auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

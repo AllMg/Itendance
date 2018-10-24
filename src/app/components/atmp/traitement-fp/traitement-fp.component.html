@@ -1,0 +1,86 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div>
+    <div class="col-sm-12">
+      <h6>
+        <b>Factures</b>
+      </h6>
+    </div>
+    <div class="row">
+      <div class="col-ms-12">
+        <ng-container *ngFor="let piece of pieceJointe" >
+          <div class="row">
+
+            <div class="col-lg-12">
+
+              <ng-container *ngIf="piece.type==='image'">
+                <img src="{{piece.file}}">
+              </ng-container>
+              <br>
+              <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>télécharger {{piece.name}}</a>
+            </div>
+          </div>
+
+        </ng-container>
+
+
+      </div>
+
+    </div>
+    <div class="col-sm-2 texte-content">Liste des prothèse :</div>
+    <br>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th>Désignation</th>
+        <th>Quantité</th>
+        <th>Montant</th>
+        <th>Validation SEM</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngIf="medicaments">
+        <tr *ngFor="let med of medicaments.fille; index as indice">
+          <td>{{med.designation}}</td>
+          <td>{{med.qte}}</td>
+          <td>{{med.pu | number}} Ar</td>
+          <td>
+            <label class="customcheck">
+              <input type="checkbox" (change)="change($event,indice)">
+              <span class="checkmark"></span>
+            </label>
+          </td>
+
+        </tr>
+      </ng-container>
+
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6">
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12 inline"><button  class="btn btn-danger btn-action" (click)="rejeter()"> Rejeté</button><button class="btn btn-success btn-action" (click)="save()">Enregistré</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-sm-10" *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</div>
+    <div class="col-sm-10">
+      <span *ngIf="adresseIndividu">{{adresseIndividu.quartier}} {{adresseIndividu.complement}}</span>
+    </div> -->
+    <!-- <div class="col-sm-2 texte-content">Nom ou raison sociale</div>
+          <div class="col-sm-10">Valeur</div> -->
+    <!-- <div class="col-sm-2 texte-content">Mode de paiement</div> -->
+    <!-- <div class="col-sm-10"></div> -->
+  </div>
+
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

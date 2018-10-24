@@ -1,0 +1,12 @@
+<div class="col-sm-12" [formGroup]="form">
+  <div class="row">
+    <div class="col-sm-4 texte-content" [attr.for]="pieces.key">
+      {{pieces.label}} : 
+    </div>
+    <div class="col-sm-8">
+      <input class="form-control" [formControlName]="pieces.key" [id]="pieces.key" type="file" (change)="onchange($event)" multiple>
+      <span class="errorMessage" *ngIf="!isValid">{{pieces.label}} is required</span>
+    </div>
+  </div>
+  <br>
+</div>

@@ -1,0 +1,139 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page3">
+      <h4>Modification compte bancaire</h4>
+    </div>
+    <form (submit)="onModifCLick()">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Pays</label>
+            <div class="col-sm-6">
+              <select [(ngModel)]="pays" name="pays" class="form-control" required>
+                <option *ngFor="let p of listPays;" value="{{p.id_pays}}">{{p.libelle}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Banque</label>
+            <div class="col-sm-6">
+              <select required (change)="onChange()" [(ngModel)]="banque" name="banque" class="form-control">
+                <option *ngFor="let b of listBanque; let i = index;" value="{{i}}">{{b.libelle}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Lieu agence</label>
+            <div class="col-sm-6">
+              <div *ngIf="!show1">
+                <select required [(ngModel)]="lieuAgence" name="lieuAgence" class="form-control">
+                  <option *ngFor="let a of listLieuAgence; let i = index;" value="{{i}}">{{a.libelle}}</option>
+                </select>
+              </div>
+              <div *ngIf="show1">
+                <div class="loader"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Compte bancaire</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="compteBancaire" name="compteBancaire" type="text" class="form-control" placeholder="Entrer 11 chiffres"
+                maxlength="11">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Clé RIB</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="cleRib" name="cleRib" type="text" class="form-control" placeholder=" Entrer 2 chiffres" maxlength="2">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Date début</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="datedebut" name="datedebut" type="date" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Code Swift</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="codeSwift" name="codeSwift" type="text" class="form-control" maxlength="20" placeholder="Entrer des chiffres">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Domiciliation</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="domicialiation" name="domicialiation" type="text" class="form-control" placeholder="Domiciliation"
+                maxlength="75">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Département</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="departement" name="departement" maxlength="3" type="text" class="form-control" placeholder="Département"
+                maxlength="5">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Localité</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="localite" name="localite" type="text" class="form-control" placeholder="Localité" maxlength="50">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Code région</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="codeRegion" name="codeRegion" type="text" class="form-control" placeholder="Code région" maxlength="20">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Boîte postale</label>
+            <div class="col-sm-6">
+              <input required [(ngModel)]="boitePostal" name="boitePostal" type="text" class="form-control" placeholder="Boîte postale"
+                maxlength="5">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div *ngIf="!show" class="container-fluid connex_boutton">
+            <button class="btn btn3 btn-block">Modifier</button>
+          </div>
+          <div *ngIf="show" class="container-fluid connex_boutton">
+            <div class="loader"></div>
+          </div>
+        </div>
+      </div>
+    </form>
+    &nbsp;
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

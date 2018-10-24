@@ -1,0 +1,38 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Liste des employés</h4>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Matricule</th>
+              <th>Nom et prénom</th>
+              <th>Date</th>
+              <th>Salaire</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let indiv of info">
+              <td>
+                {{indiv.matricule}}
+              </td>
+              <td> {{indiv.nom}} {{indiv.prenom}}</td>
+              <td>{{indiv.date | date :'dd/MM/yyyy'}}</td>
+              <td>{{indiv.salaire | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

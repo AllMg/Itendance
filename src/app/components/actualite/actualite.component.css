@@ -1,0 +1,59 @@
+/* ACTUALITES */
+.actualites
+{
+  background-image: url('../../../assets/img/fond_actualite.jpg');
+  background-attachment: fixed;
+  background-size: 100%;
+  padding: 0.5%;
+  margin-top: 1%;
+}
+.titre_actualites_h1
+{
+  color: white;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.div_actualites
+{
+  margin:auto;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.contenu_actualite
+{
+  border: solid 3px white;
+  border-radius: 15px;
+}
+.contenu_actualite img
+{
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+.div_actualites1
+{
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: auto;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.date_actualite
+{
+  text-align: right;
+}
+.titre_actualites_h4
+{
+  text-align: center;
+}
+.titre_actualites_h4 a
+{
+  color: black;
+}
+.titre_actualites_h4 a:hover
+{
+  color: black;
+  text-shadow: 0px 0px 10px white
+}
+.description_actualites
+{
+  text-align: justify;
+}

@@ -1,0 +1,386 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+html, body
+{
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif !important;
+}
+
+/* LOADER INDEX */
+.cssload-thecube {
+  width: 73px;
+  height: 73px;
+  margin: 0 auto;
+  margin-top: 49px;
+  position: relative;
+  transform: rotateZ(45deg);
+  -o-transform: rotateZ(45deg);
+  -ms-transform: rotateZ(45deg);
+  -webkit-transform: rotateZ(45deg);
+  -moz-transform: rotateZ(45deg);
+  margin-top: 20%;
+}
+.cssload-thecube .cssload-cube {
+  position: relative;
+  transform: rotateZ(45deg);
+  -o-transform: rotateZ(45deg);
+  -ms-transform: rotateZ(45deg);
+  -webkit-transform: rotateZ(45deg);
+  -moz-transform: rotateZ(45deg);
+}
+.cssload-thecube .cssload-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+}
+.cssload-thecube .cssload-cube:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(3,158,194);
+  animation: cssload-fold-thecube 2.76s infinite linear both;
+  -o-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -ms-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -webkit-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -moz-animation: cssload-fold-thecube 2.76s infinite linear both;
+  transform-origin: 100% 100%;
+  -o-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  -webkit-transform-origin: 100% 100%;
+  -moz-transform-origin: 100% 100%;
+}
+.cssload-thecube .cssload-c2 {
+  transform: scale(1.1) rotateZ(90deg);
+  -o-transform: scale(1.1) rotateZ(90deg);
+  -ms-transform: scale(1.1) rotateZ(90deg);
+  -webkit-transform: scale(1.1) rotateZ(90deg);
+  -moz-transform: scale(1.1) rotateZ(90deg);
+}
+.cssload-thecube .cssload-c3 {
+  transform: scale(1.1) rotateZ(180deg);
+  -o-transform: scale(1.1) rotateZ(180deg);
+  -ms-transform: scale(1.1) rotateZ(180deg);
+  -webkit-transform: scale(1.1) rotateZ(180deg);
+  -moz-transform: scale(1.1) rotateZ(180deg);
+}
+.cssload-thecube .cssload-c4 {
+  transform: scale(1.1) rotateZ(270deg);
+  -o-transform: scale(1.1) rotateZ(270deg);
+  -ms-transform: scale(1.1) rotateZ(270deg);
+  -webkit-transform: scale(1.1) rotateZ(270deg);
+  -moz-transform: scale(1.1) rotateZ(270deg);
+}
+.cssload-thecube .cssload-c2:before {
+  animation-delay: 0.35s;
+  -o-animation-delay: 0.35s;
+  -ms-animation-delay: 0.35s;
+  -webkit-animation-delay: 0.35s;
+  -moz-animation-delay: 0.35s;
+}
+.cssload-thecube .cssload-c3:before {
+  animation-delay: 0.69s;
+  -o-animation-delay: 0.69s;
+  -ms-animation-delay: 0.69s;
+  -webkit-animation-delay: 0.69s;
+  -moz-animation-delay: 0.69s;
+}
+.cssload-thecube .cssload-c4:before {
+  animation-delay: 1.04s;
+  -o-animation-delay: 1.04s;
+  -ms-animation-delay: 1.04s;
+  -webkit-animation-delay: 1.04s;
+  -moz-animation-delay: 1.04s;
+}
+
+
+
+@keyframes cssload-fold-thecube {
+  0%, 10% {
+    transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+@-o-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -o-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    -o-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    -o-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -ms-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    -ms-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    -ms-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -webkit-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    -webkit-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    -webkit-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -moz-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    -moz-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    -moz-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+.index_loader
+{
+  margin-top: 2%;
+}
+.index_loader img
+{
+  margin: 1% 46%;
+}
+.index_loader h5
+{
+  text-align: center;
+}
+
+/* CONTENU PAGE*/
+@media(max-width: 960px)
+{
+  .content_page
+  {
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+  }
+}
+.content_page
+{
+  box-shadow: 2px 2px 10px silver;
+  border-radius: 15px;
+  border: solid 3px white;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+  margin-top: 1%;
+}
+.content_page:hover
+{
+  box-shadow: 7px 7px 10px silver
+}
+.titre_page h4
+{
+  background-color: rgb(3,158,194);
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre_page1 h4
+{
+  background-color: purple;
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre_page2 h4
+{
+  background-color: green;
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre_page3 h4
+{
+  background-color: orange;
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre_page4 h4
+{
+  background-color: red;
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre_page5 h4
+{
+  background-color: brown;
+  width: 100%;
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+  padding: 1%;
+}
+.titre-content{
+  color: blue
+}
+.texte-content
+{
+    color: rgb(3,158,194);
+}
+.sous_titre_page
+{
+  color: rgb(3,158,194);
+  font-weight: bold
+}
+
+/* SCROLL TYPE */
+::-webkit-scrollbar
+{
+  width: 15px;
+}
+::-webkit-scrollbar-track
+{
+  box-shadow: inset 0 0 1px grey;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb
+{
+  background-color: rgb(3,158,194);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover
+{
+  background-color: rgb(3,158,194);
+}
+
+/* STYLE BOUTTON */
+.bouttonPurple
+{
+  background-color: purple !important;
+  border: none;
+  color: white;
+}
+.bouttonPurple:hover
+{
+  opacity: 0.8;
+}
+
+.btn1
+{
+  background-color: purple !important;
+  border: none;
+  color: white;
+}
+.btn1:hover
+{
+  opacity: 0.8;
+}
+.btn2
+{
+  background-color: green !important;
+  border: none;
+  color: white;
+}
+.btn2:hover
+{
+  opacity: 0.8;
+}
+.btn3
+{
+  background-color: orange !important;
+  border: none;
+  color: white;
+}
+.btn3:hover
+{
+  opacity: 0.8;
+}
+.btn4
+{
+  background-color: red !important;
+  border: none;
+  color: white;
+}
+.btn4:hover
+{
+  opacity: 0.8;
+}
+.btn5
+{
+  background-color: brown !important;
+  border: none;
+  color: white;
+}
+.btn5:hover
+{
+  opacity: 0.8;
+}
+
+.mat-step-header .mat-step-icon
+{
+  display: none !important
+}
+.mat-step-icon-not-touched
+{
+  display: none !important
+}

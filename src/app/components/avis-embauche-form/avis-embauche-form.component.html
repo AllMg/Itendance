@@ -1,0 +1,531 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4 *ngIf="estIndiv">Déclaration d'embauche provisoire</h4>
+      <h4 *ngIf="!estIndiv">Déclaration d'embauche/débauche</h4>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a *ngIf="estIndiv" class="nav-item nav-link col-sm-4 active tabs_AEF" id="nav-modifContrat-tab" data-toggle="tab" href="#nav-modifContrat"
+              role="tab" aria-controls="nav-modifContrat" aria-selected="true">Modification de votre informations
+              </a>
+            <!--<a *ngIf="!estIndiv" class="nav-item nav-link col-sm-4 active tabs_AEF" id="nav-modifContrat-tab" data-toggle="tab" href="#nav-modifContrat"
+              role="tab" aria-controls="nav-contrat" aria-selected="true">Modification contrat</a>-->
+            <a *ngIf="!estIndiv" class="nav-item nav-link col-sm-4 active tabs_AEF" id="nav-avec-tab" disabled data-toggle="tab" href="#nav-avec"
+              role="tab" aria-controls="nav-avec" aria-selected="true">Avec matricule</a>
+            <a *ngIf="!estIndiv" class="nav-item nav-link col-sm-4 tabs_AEF" id="nav-sans-tab" disabled data-toggle="tab" href="#nav-sans"
+              role="tab" aria-controls="nav-sans" aria-selected="false">Sans matricule</a>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <!-- Tab modification contrat si employeur -->
+          <div *ngIf="!estIndiv" class="tab-pane fade active show" id="nav-avec" role="tabpanel" aria-labelledby="nav-avec-tab">
+            <div class="row">&nbsp;</div>
+            <div class="form-group row">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" [(ngModel)]="id" placeholder="Veuillez entrer le matricule">
+              </div>
+              <div class="col-sm-4">
+                <button (click)="onValid()" class="btn btn4" style="width:100%">Rechercher</button>
+              </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Début de contrat :</div>
+              <div class="col-sm-3">
+                <input type="date" [(ngModel)]="debutDateEmbauche" class="form-control">
+              </div>
+              <div class="col-sm-3 texte-content">Fin de contrat :</div>
+              <div class="col-sm-3">
+                <input type="date" [disabled]="btnDisable" [(ngModel)]="finDateEmbauche" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Type contrat :</div>
+              <div class="col-sm-3">
+                <select [(ngModel)]="typeContrat" id="typeContrat" class="form-control" (ngModelChange)="onChange($event)">
+                  <option value="CDD">CDD</option>
+                  <option value="CDI">CDI</option>
+                </select>
+                <!--<input type="text" [(ngModel)]="typeContrat" class="form-control">-->
+              </div>
+              <div class="col-sm-3 texte-content">Salaire :</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="salaire" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3" texte-content>Avantage :</div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control">
+              </div>
+              <div class="col-sm-3 texte-content">Débauche :</div>
+              <div class="col-sm-3">
+                <input type="date" class="form-control">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="nom" class="col-sm-6 col-form-label texte-content">Nom :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="nom" id="nom" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="prenom" class="col-sm-6 col-form-label texte-content">Prénom(s) :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="prenoms" id="prenom" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="dateNaissance" class="col-sm-6 col-form-label texte-content">Date de naissance :</label>
+                  <div class="col-sm-6">
+                    <input type="date" class="form-control" [(ngModel)]="date_naissance" id="dateNaissance" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="lieuNaissance" class="col-sm-6 col-form-label texte-content">Lieu de naissance :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="lieu_naissance" id="lieuNaissance" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Firaisanan de naissance :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="firaisana_indiv" id="lieuNaissance" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Sexe :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="sexe_indiv" id="lieuNaissance" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Nationalité :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="nat_indiv" id="lieuNaissance" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="cin" class="col-sm-6 col-form-label texte-content">CIN :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="cin" id="cin" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="dateCin" class="col-sm-6 col-form-label texte-content">Date CIN :</label>
+                  <div class="col-sm-6">
+                    <input type="date" class="form-control" [(ngModel)]="date_cin" id="dateCin" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="pere" class="col-sm-6 col-form-label texte-content">Père :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="pere" id="pere" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="mere" class="col-sm-6 col-form-label texte-content">Mère :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="mere" id="mere" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="codeDr" class="col-sm-6 col-form-label texte-content">Code DR :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="code_dr" id="codeDr" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="form-group row">
+                  <label for="pieceJointe" class="col-sm-2 col-form-label texte-content">Piece jointe :</label>
+                  <div class="col-sm-10">
+                    <input type="file" class="form-control" id="pieceJointe">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-10"></div>
+              <div class="col-sm-2">
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <div *ngIf="!show">
+                      <button (click)="modifierTravailleur()" class="btn btn4 btn-block">Enregistrer</button>
+                    </div>
+                    <div *ngIf="show">
+                      <div class="loader"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Non modification contrat Employeur -->
+          <div *ngIf="estIndiv" class="tab-pane fade active show" id="nav-contrat" role="tabpanel" aria-labelledby="nav-contrat-tab">
+            <div class="row">&nbsp;</div>
+            <hr>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Début de contrat :</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="debutDateEmbauche" class="form-control" disabled>
+              </div>
+              <div class="col-sm-3 texte-content">Fin de contrat :</div>
+              <div class="col-sm-3">
+                <input type="date" [(ngModel)]="finDateEmbauche" class="form-control" disabled>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Type contrat :</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="typeContrat" class="form-control" disabled>
+              </div>
+              <div class="col-sm-3 texte-content">Salaire :</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="salaire" class="form-control" disabled>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Avantage :</div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" disabled>
+              </div>
+              <div class="col-sm-3 texte-content">Raison sociale</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="raisonSociale" class="form-control" disabled>
+              </div>
+
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-3 texte-content">Matricule</div>
+              <div class="col-sm-3">
+                <input type="text" [(ngModel)]="matriculeEmpl" class="form-control" disabled>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="nom" class="col-sm-6 col-form-label texte-content">Nom :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="nom" id="nom">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="prenom" class="col-sm-6 col-form-label texte-content">Prénom(s) :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="prenoms" id="prenom">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="dateNaissance" class="col-sm-6 col-form-label texte-content">Date de naissance :</label>
+                  <div class="col-sm-6">
+                    <input type="date" class="form-control" [(ngModel)]="date_naissance" id="dateNaissance">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="lieuNaissance" class="col-sm-6 col-form-label texte-content">Lieu de naissance :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="lieu_naissance" id="lieuNaissance">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Firaisanan de naissance :</label>
+                  <div class="col-sm-6">
+                    <ngx-select [items]="items" [(ngModel)]="id_firaisana_rel_fkt_naiss" name="id_firaisana_rel_fkt_naiss" (typed)="inputTyped('ngx-select', $event)">
+                    </ngx-select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Sexe :</label>
+                  <div class="col-sm-6">
+                    <select [(ngModel)]="id_sexe" name="id_sexe" class="form-control">
+                      <option *ngFor="let sexe of dataSexe" value="{{JSON.stringify(sexe)}}">{{sexe.libelle}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label class="col-sm-6 col-form-label texte-content">Nationalité :</label>
+                  <div class="col-sm-6">
+                    <select [(ngModel)]="id_nationalite" name="id_nationalitesexe" class="form-control">
+                      <option *ngFor="let nat of dataNationalite" value="{{JSON.stringify(nat)}}">{{nat.libelle}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="cin" class="col-sm-6 col-form-label texte-content">CIN :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="cin" id="cin">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="dateCin" class="col-sm-6 col-form-label texte-content">Date CIN :</label>
+                  <div class="col-sm-6">
+                    <input type="date" class="form-control" [(ngModel)]="date_cin" id="dateCin">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="pere" class="col-sm-6 col-form-label texte-content">Père :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="pere" id="pere">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="mere" class="col-sm-6 col-form-label texte-content">Mère :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="mere" id="mere">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group row">
+                  <label for="codeDr" class="col-sm-6 col-form-label texte-content">Code DR :</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" [(ngModel)]="code_dr" id="codeDr">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="form-group row">
+                  <label for="pieceJointe" class="col-sm-2 col-form-label texte-content">Piece jointe :</label>
+                  <div class="col-sm-10">
+                    <input type="file" class="form-control" id="pieceJointe">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4"></div>
+              <div class="col-sm-10"></div>
+              <div class="col-sm-2">
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <div *ngIf="!show">
+                      <button (click)="modifierTravailleur()" class="btn btn4 btn-block">Enregistrer</button>
+                    </div>
+                    <div *ngIf="show">
+                      <div class="loader"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab sans matricule -->
+          <div class="tab-pane fade" id="nav-sans" role="tabpanel" aria-labelledby="nav-sans-tab">
+            <div class="row">&nbsp;</div>
+            <mat-horizontal-stepper [linear]="isLinear" #stepper>
+              <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup" (ngSubmit)="newTrav(stepper)">
+                  <ng-template matStepLabel>
+                    <h5 class="texte-badge-dimm text-center texte-content">Etape&nbsp;
+                      <span class="badge badge-light badge-dimm">1</span>
+                    </h5>
+                    <h6 class="texte-content">Informations de l'individu</h6>
+                  </ng-template>
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Nom" formControlName="new_nom" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Prénom(s)" formControlName="new_prenom" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput [matDatepicker]="picker" placeholder="Date de naissance" formControlName="new_date_naissance" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Lieu de naissance" formControlName="new_lieu" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <mat-select placeholder="Sexe" formControlName="id_sexe" required>
+                          <mat-option *ngFor="let sex of dataSexe" [value]="JSON.stringify(sex)">
+                            {{sex.libelle}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <mat-select placeholder="Nationalité" formControlName="id_nationalite" required>
+                          <mat-option *ngFor="let nation of dataNationalite" [value]="JSON.stringify(nation)">
+                            {{nation.libelle}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="CIN" formControlName="new_cin" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput [matDatepicker]="picker1" placeholder="Date CIN" formControlName="new_date_cin" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Père" formControlName="new_pere" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Mère" formControlName="new_mere" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Code DR" formControlName="new_code_dr" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4 form-group">
+                      <ngx-select required placeholder="Firaisana" [items]="items" formControlName="new_firaisana" name="firaisana" (typed)="inputTyped('ngx-select', $event)">
+                      </ngx-select>
+                    </div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-10"></div>
+                    <div class="col-sm-2">
+                      <button class="btn btn4 btn-block" type="submit" style="color: white" mat-button>Suivant</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup" (ngSubmit)="newContrat(stepper)">
+                  <ng-template matStepLabel>
+                    <h5 class="texte-badge-dimm text-center texte-content">Etape&nbsp;
+                      <span class="badge badge-light badge-dimm-na">2</span>
+                    </h5>
+                    <h6 class="texte-content">Contrat</h6>
+                  </ng-template>
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput placeholder="Salaire" formControlName="new_salaire" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <mat-select placeholder="Type contrat" formControlName="new_type_contrat" required>
+                          <mat-option *ngFor="let contrat of contrats" [value]="contrat.value">
+                            {{ contrat.viewValue }}
+                          </mat-option>
+                        </mat-select>
+                        <!--<input matInput placeholder="Type contrat" formControlName="new_type_contrat" required>-->
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <!--<input matInput placeholder="Date début du contrat" formControlName="new_date_debut_contrat" required>-->
+                        <input matInput [matDatepicker]="picker2" placeholder="Date début du contrat" formControlName="new_date_debut_contrat" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <mat-form-field class="input-avis">
+                        <input matInput [matDatepicker]="picker3" placeholder="Date fin du contrat" formControlName="new_date_fin_contrat" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                        <!--<input matInput placeholder="Date fin du contrat" formControlName="new_date_fin_contrat" required>-->
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <label class="texte-content">Piece jointe</label>
+                      <input type="file" class="form-control">
+                    </div>
+                    <div class="col-sm-8"></div>
+                    <div class="col-sm-10"></div>
+                    <div class="col-sm-2 form-group">
+                      <div *ngIf="!show">
+                        <button class="btn btn-block btn4">Enregistrer</button>
+                      </div>
+                      <div *ngIf="show">
+                        <div class="loader"></div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

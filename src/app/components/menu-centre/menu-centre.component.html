@@ -1,0 +1,98 @@
+<div class="container-fluid content_menu_centre">
+  <ul class="menu_centre">
+    <li>
+      <div *ngIf="entity==='E'">
+        <a [routerLink]="['/accueil-connecte']" class="menu_centre_a">
+          <div>
+            <span class="fa fa-user icon_menu_centre"></span>
+          </div>
+          <br>
+          <p>ESPACE&nbsp;EMPLOYEUR</p>
+        </a>
+      </div>
+      <div *ngIf="entity!=='E'||entity===undefined">
+        <a href="#" class="menu_centre_a" href="#" data-toggle="modal" data-target="#exampleModal">
+          <div>
+            <span class="fa fa-user icon_menu_centre"></span>
+          </div>
+          <br>
+          <p>ESPACE&nbsp;EMPLOYEUR</p>
+        </a>
+      </div>
+    </li>
+    <li>
+      <div *ngIf="entity==='T'">
+        <a [routerLink]="['/accueil-connecte']" class="menu_centre_a">
+          <div>
+            <span class="fa fa-user icon_menu_centre"></span>
+          </div>
+          <br>
+          <p>ESPACE&nbsp;TRAVAILLEUR</p>
+        </a>
+      </div>
+      <div *ngIf="entity!=='T'||entity===undefined">
+        <a href="#" class="menu_centre_a" href="#" data-toggle="modal" data-target="#exampleModal">
+          <div>
+            <span class="fa fa-user icon_menu_centre"></span>
+          </div>
+          <br>
+          <p>ESPACE&nbsp;TRAVAILLEUR</p>
+        </a>
+      </div>
+    </li>
+    <li>
+      <a href="http://192.168.1.173" class="menu_centre_a">
+        <div>
+          <span class="fa fa-home icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>VIE&nbsp;INTERNE</p>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/pratiques']" class="menu_centre_a">
+        <div>
+          <span class="fa fa-book icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>PRATIQUES</p>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/a-propos']" class="menu_centre_a">
+        <div>
+          <span class="fa fa-info icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>A&nbsp;PROPOS</p>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/cnaps-sport']" class="menu_centre_a">
+        <div>
+          <span class="fa fa-futbol icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>CNaPS&nbsp;SPORT</p>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/ccl']" class="menu_centre_a">
+        <div>
+          <span class="fab fa-reddit-alien icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>CCL</p>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/liste-indicateurs']" class="menu_centre_a">
+        <div>
+          <span class="fa fa-table icon_menu_centre"></span>
+        </div>
+        <br>
+        <p>REPORTING</p>
+      </a>
+    </li>
+  </ul>
+</div>

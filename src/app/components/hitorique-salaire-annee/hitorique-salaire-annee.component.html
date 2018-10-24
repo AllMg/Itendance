@@ -1,0 +1,112 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page2">
+      <h4>Historique des salaires</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-10">
+        <div class="col-sm-12 text-center">
+          <h4><strong>Année <ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.annee}}</ng-container> </strong></h4>
+        </div>
+        <div class="col-sm-12"><div class="row"><div class="col-sm-2 texte_info">Matricule employeur : </div><div class="col-sm-10"> <ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.employeur_matricule}}</ng-container></div></div></div>
+        <div class="col-sm-12"><div class="row"><div class="col-sm-2 texte_info">Nom employeur : </div><div class="col-sm-10"><ng-container *ngIf="dataCITAnnee && dataCITAnnee.travailleurData">{{dataCITAnnee.travailleurData.employeur_nom}}</ng-container></div></div></div>
+        <div class=" col-sm-12 table-over">
+          <table class="table table-striped table-bordered">
+            <tr>
+              <td class="col1"></td>
+              <td class="col2"><strong>Janvier</strong></td>
+              <td class="col2"><strong>Février</strong></td>
+              <td class="col2"><strong>Mars</strong></td>
+              <td class="col2"><strong>Avril</strong></td>
+              <td class="col2"><strong>Mai</strong></td>
+              <td class="col2"><strong>Juin</strong></td>
+              <td class="col2"><strong>Juillet</strong></td>
+              <td class="col2"><strong>Août</strong></td>
+              <td class="col2"><strong>Septembre</strong></td>
+              <td class="col2"><strong>Octobre</strong></td>
+              <td class="col2"><strong>Novembre</strong></td>
+              <td class="col2"><strong>Décembre</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Avantages</strong></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage1 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage2 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage3 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage4 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage5 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage6 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage7 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage8 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage9 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage10 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage11 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.avantage12 | number:'1.2-2':'fr'}}</ng-container></td>
+            </tr>
+            <tr>
+              <td><strong>Salaires</strong></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m1 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m2 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m3 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m4 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m5 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m6 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m7 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m8 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee"> {{dataCITAnnee.m9 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m10 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m11 | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.m12 | number:'1.2-2':'fr'}}</ng-container></td>
+            </tr>
+            <tr>
+              <td><strong>Taux de cotisation</strong></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+              <td class="text-right"><ng-container *ngIf="dataCITAnnee">{{dataCITAnnee.tauxcot_empl | number:'1.2-2':'fr'}}</ng-container></td>
+            </tr>
+            <tr>
+              <td><strong>Complémentaire</strong></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+              <td class="text-center"><span class="fa fa-check check-icon"></span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="col-sm-12 text-center">
+          <hr>
+          <h5>Liste disponible</h5>
+          <hr>
+        </div>
+        <div class="col-sm-12">
+          <div *ngFor="let anneeSalaire of dataCIT; index as indice">
+            <li class="liste-pri"><a (click)="onClickAnneeSalaire(indice)" class="liste"><span class="fa fa-angle-double-right"></span>&nbsp;{{anneeSalaire.annee}}</a></li>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

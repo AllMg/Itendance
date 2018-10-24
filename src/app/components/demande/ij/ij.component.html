@@ -1,0 +1,69 @@
+<app-banniere></app-banniere>
+<!-- <app-menu-centre></app-menu-centre> -->
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Demande Indeminité Journalière première tranche </h4>
+    </div>
+    <form (ngSubmit)="onSaveCLick()" [formGroup]="ijForm" class="form-inline">
+      <div class="row">
+        <div class="col-sm-12">
+          <h5 class="text-center"> Ref - {{referenceDemandeIj}}</h5>
+        </div>
+        <div class="col-sm-12">
+          <h6>
+            <strong>Informations requises</strong>
+          </h6>
+        </div>
+        <!-- dynamic form -->
+        <div class="col-sm-12" *ngFor="let input of inputs">
+          <app-dynamic-input [input]="input" [form]="ijForm"></app-dynamic-input>
+        </div>
+        <!-- dynamic form -->
+        <div class="col-sm-12">
+          <h6>
+            <strong>Employeurs</strong>
+          </h6>
+          <div class="form-group col-sm-6" *ngFor="let empl of listEmployeur;">
+            <input formControlName="employeur" name="employeur" [value]="empl.matricule" type="radio" class="form-control">
+            <label>&nbsp;&nbsp;{{empl.nom}}</label>
+          </div>
+        </div>
+        <div class="col-sm-12 border-haut">
+          <h6>
+            <strong>Pièces justificatives</strong>
+          </h6>
+        </div>
+        <!-- <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-4 texte-content">
+              Fiche de paie mois précédant la demande :
+            </div>
+            <div class="col-sm-6">
+              <input formControlName="fichePaye" name="fichePaye" type="file" class="form-control">
+            </div>
+          </div>
+          <br>
+        </div> -->
+        <div class="col-sm-12" *ngFor="let piece of pieces">
+          <app-dynamic-pieces [pieces]="piece" [form]="ijForm" [idfiles]="referenceDemandeIj"></app-dynamic-pieces>
+          <br>
+        </div>
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div *ngIf="!show">
+            <button type="submit" class="btn btn4 btn-block" [disabled]="!ijForm.valid">Enregistrer</button>
+            <br>
+          </div>
+          <div *ngIf="show">
+            <div class="loader"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- <app-historique-indiv></app-historique-indiv> -->
+<app-lien-foot></app-lien-foot>

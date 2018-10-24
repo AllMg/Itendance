@@ -1,0 +1,102 @@
+<app-banniere></app-banniere>
+<!-- <app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes> -->
+<div class="container-fluid">
+  <div class="col-sm-12 content_page" *ngIf="decompte">
+    <div class="row titre_page4">
+      <h4>Décompte Droit Indemnité Journalère Deuxième tranche</h4>
+    </div>
+    <div class="container" id="printableArea3">
+      <div class="row">
+        <div class="col-sm-8"></div>
+        <div class="col-sm-4 text-center">Date :{{dateNow| date : 'dd/MM/yyyy'}}</div>
+        <div class="col-sm-12"><br><br></div>
+        <div class="col-sm-12 bas">
+          <p class="texte-indiv" *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</p>
+          <!-- <p class="texte-indiv">PLASMAD SARL</p> -->
+          <p class="texte-indiv" *ngIf="adresseIndividu">{{adresseIndividu.quartier}} {{adresseIndividu.complement}}</p>
+          <p class="texte-indiv" *ngIf="adresseIndividu">{{adresseIndividu.fokontany.firaisana.fivondronana.region.faritany.libelle}}</p>
+        </div>
+        <hr>
+        <div class="col-sm-6" *ngIf="employeur">Employeur : {{employeur}}</div>
+        <div class="col-sm-6">N° OP : {{idop}} </div>
+        <div class="col-sm-12" *ngIf="individu">N° CNaPS : {{individu.id_individu}}</div>
+        <div class="col-sm-12"><br></div>
+        <div class="col-sm-12">
+          <p>Décompte de droits de MME</p>
+          <p *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</p>
+        </div>
+        <div class="col-sm-12">
+          <h5 class="titre1"><strong>1 - PERIODE PRENATALE</strong> </h5>
+          <p>Date d'accouchement : {{decompte.dpa | date : 'dd/MM/yyyy'}}</p>
+          <p>Arrêt de travail : {{decompte.dat | date : 'dd/MM/yyyy'}}</p>
+          <p>Montant du salaire (Ar) : {{decompte.salaire}}</p>
+          <p>Indeminté journalière (Ar) : {{decompte.demisalaire}}</p>
+          <p>Du {{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}} Au {{decompte.dpa | date : 'dd/MM/yyyy'}} Soit {{decompte.nbjourpre}}
+            jours X {{decompte.demisalaire}} = {{decompte.prenatale}} Ar.</p>
+          <h5 class="titre1"><strong> 2- PERIODE POST NATALE</strong> </h5>
+          <p>Reprise de travail : {{decompte.drt | date : 'dd/MM/yyyy'}}</p>
+          <p>Du {{decompte.date_debut_postnatale | date : 'dd/MM/yyyy'}} Au {{decompte.date_fin_postnatale | date : 'dd/MM/yyyy'}}
+            Soit {{decompte.nbjourpost}} X {{decompte.demisalaire}} = {{decompte.postnatale}} Ar.</p>
+        </div>
+        <div class="col-sm-12">
+          <h5 class="titre1"><strong> 1- PROLONGATION</strong> </h5>
+          <p>Du {{decompte.date_debut_prolongation | date : 'dd/MM/yyyy'}} au {{decompte.date_fin_prolongation | date : 'dd/MM/yyyy'}}
+            = {{decompte.nbprolongation}}</p>
+          <hr>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 marge">
+          <div class="row">
+            <div class="col-sm-6">Total :</div>
+            <div class="col-sm-6 text-right"> {{decompte.nbjourpre+decompte.nbjourpost}} jour(s) </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6"><strong>-</strong></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">Déja payé :</div>
+            <div class="col-sm-6 text-right"> {{decompte.nbjourIJ1}} jour(s) </div>
+          </div>
+          <hr>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 marge">
+          <div class="row">
+            <div class="col-sm-6">Reste à payer :</div>
+            <div class="col-sm-6 text-right">{{decompte.nbjourpre+decompte.nbjourpost-decompte.nbjourIJ1}} jour(s)</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6"><strong>x</strong></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6 text-right">{{decompte.demisalaire}} Ar</div>
+          </div>
+          <hr>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 marge">
+          <p class="text-right">{{(decompte.nbjourpre+decompte.nbjourpost-decompte.nbjourIJ1)*decompte.demisalaire}}</p>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 marge">
+          <div class="row">
+            <div class="col-sm-6">Net à payer : </div>
+            <div class="col-sm-6 text-right tout"><strong>{{(decompte.nbjourpre+decompte.nbjourpost-decompte.nbjourIJ1)*decompte.demisalaire}} Ar </strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-10"></div>
+      <div class="col-sm-2"><input type="button" onclick="printDiv1('printableArea3')" value="Imprimer" class="btn btn-block btn4"
+        /><br></div>
+    </div>
+  </div>
+</div>
+<!-- <app-historique-indiv></app-historique-indiv> -->
+<app-lien-foot></app-lien-foot>

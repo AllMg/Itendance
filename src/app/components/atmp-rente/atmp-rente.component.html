@@ -1,0 +1,177 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-agents></app-info-agents>
+ <div class="container-fluid">
+  <div class="col-md-12 content_page">
+    <div class="row titre_page">
+      <h4>Détails Rente Mortelle-ATMP</h4>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="text-center texte-content">Ref - {{refatmp}}</h4>
+      </div>
+    </div>
+
+        <div class="row">
+           <ng-container>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6 texte-content">Reference Demande:</div>
+              <div class="col-md-6  "  *ngIf="dmd">{{dmd.reference}}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-4 texte-content">Date Reception  Demande:</div>
+              <div class="col-md-8"  *ngIf="dmd">{{dmd.date_reception}}</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6 texte-content">Etat Demande </div>
+              <div class="col-md-6"  *ngIf="dmd">{{dmd.etat_libelle}}</div>
+            </div>
+          </div>
+            
+        </ng-container>
+        </div>
+       
+    <hr>
+    <div class="row">
+      <div class="col-md-12 col1">
+         <h5 style="text-decoration: underline;text-align: center;" class="text-center texte-content" >Beneficiaire </h5>
+        <div class="row titre-info">
+          <h3  *ngIf="individu">&nbsp;{{individu.nom}} {{individu.prenoms}}</h3>
+        </div>
+        <div class="row">
+           <ng-container>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">Matricule:</div>
+              <div class="col-md-6"  *ngIf="individu">{{individu.id_individu}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-4 texte-content">Sexe:</div>
+              <div class="col-md-8"  *ngIf="individu">{{individu.id_sexe.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">Date de naissance:</div>
+              <div class="col-md-6"  *ngIf="individu">{{individu.date_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">Lieu de naissance:</div>
+              <div class="col-md-6"  *ngIf="individu">{{individu.lieu_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">CIN:</div>
+              <div class="col-md-6"  *ngIf="individu">{{individu.cin}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-4 texte-content">Date CIN:</div>
+              <div class="col-md-8"  *ngIf="individu">{{individu.date_cin}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">Nationalité:</div>
+              <div class="col-md-6" *ngIf="individu">{{individu.id_nationalite.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 texte-content">Firaisana:</div>
+              <div class="col-md-6" *ngIf="adresseIndividu" >{{adresseIndividu.fokontany.firaisana.libelle}}</div>
+            </div>
+          </div>
+          
+        </ng-container>
+        </div>
+      </div>
+    </div>
+    <hr>
+ 
+    <hr>
+         
+    <div class="row">
+      <div class="col-md-12">
+        <h5 class="text-center texte-content">Pièces justificatives</h5>
+      </div>
+      <div class="col-md-12">
+          <div class="row">
+                <div class="col-ms-12">
+                  <ng-container *ngFor="let piece of pieceJointe" >
+                    <div class="row">
+
+                      <div class="col-lg-12">
+
+                       <ng-container 
+                        *ngIf="piece.type==='image'">
+                          <img class="thmb" data-toggle="modal" data-target="#myModal" (click)="ChangeImgModal(piece.file)" src="{{piece.file}}">
+                        </ng-container>
+                        <br>
+                        <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>télécharger {{piece.name}}</a>
+                      </div>
+                    </div>
+              </ng-container>
+
+
+                </div>
+          </div>
+        </div>
+       
+    </div>
+    
+    <hr>
+   <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">   
+     <div *ngIf="!show" class="container-fluid connex_boutton">
+     	<app-loader [show]="show"></app-loader>
+          <button type="submit" [disabled]="disabled" *ngIf="show" class="btn btn-danger" (click)="PcsNon()">
+            Piece Jointe non Conforme
+          </button>
+        </div>
+      </div>
+    <div class="col-md-4">
+      <div  class="container-fluid connex_boutton">
+         <app-loader [show]="show"></app-loader>
+          <button type="submit" *ngIf="!show" [disabled]="disabled"  class="btn btn-success" (click)="ValidateIJ()">
+            Valider
+          </button>
+        </div>
+
+    </div>
+   </div>
+  </div>
+</div>
+  <div id="myModal" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dimdiss="modal">
+                  <span  data-dimdiss="modal" aria-hidden="true">×</span>
+                  <span class="sr-only">Close</span>
+                </button>
+              </div>
+              <ng-container>
+                <div class="modal-body" style="width: auto">
+                  <img src="{{image}}" class="img-responsive" style="width: 100%">
+                </div>
+            </ng-container>
+            </div>
+          </div>
+  </div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>
+
+

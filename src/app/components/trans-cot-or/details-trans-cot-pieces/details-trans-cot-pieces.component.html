@@ -1,0 +1,124 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<!-- <app-info-personnes></app-info-personnes> -->
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Rectification de la demande transfert de cotisation</h4>
+    </div>
+    <div class="row" *ngIf="showRef">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    <div class="row" *ngIf="dataTransfert">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-5 texte-content">Etat de la demande :</div>
+      <div class="col-sm-5">
+        <input type="text" class="form-control text-center" value="{{dataTransfert.etat}}" readonly="">
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12"></div>
+    </div>
+    <div class="row" *ngIf="dataTransfert">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-5 texte-content">Référence de la demande :</div>
+      <div class="col-sm-5">
+        <input type="text" class="form-control text-center" value="{{dataTransfert.dossier.accueilMod.id_acc}}"
+          readonly="">
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="titre-content">
+          <strong>Informations reçues</strong>
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12"></div>
+    </div>
+    <div class="row" *ngIf="showLib">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    <ng-container *ngIf="dataTransfert">
+      <ng-container *ngFor="let dataT of dataTransfert.dossier.tecInfoRecuMod; index as indice">
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-5 texte-content">{{dataT.refAccInfoTypMod.libelle_info}} :</div>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" value="{{dataT.valeur}}" readonly="">
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12"></div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="titre-content">
+          <strong>Pièces requises (Pièces à reclamer)</strong>
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12"></div>
+    </div>
+    <div class="row" *ngIf="showPie">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    <ng-container *ngFor="let piecesTransfert of pieces; index as indice">
+      <div class="row" *ngIf="!showPie">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5 texte-content">{{piecesTransfert.libelle}} ({{piecesTransfert.abrev}}) :</div>
+        <div class="col-sm-5">
+          <input type="file" class="form-control" (change)="onFileChange($event, indice)" [(ngModel)]="piecesTransfert.value"
+            required="true">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12"></div>
+      </div>
+    </ng-container>
+    <div class="row">
+      <div class="col-sm-12">
+        <hr>
+      </div>
+    </div>
+    <div class="row" *ngIf="dataTransfert">
+      <div class="col-sm-10"></div>
+      <div class="col-sm-2" *ngIf="!show1">
+        <button class="btn btn-info btn-block" (click)="valider()">Valider</button>
+      </div>
+      <div class="col-sm-2" *ngIf="show1">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot> -->

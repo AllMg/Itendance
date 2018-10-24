@@ -1,0 +1,82 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>IMMOBILISATIONS</h4>
+		</div>
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
+				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
+				<li class="menu1-active"><span>ARTICLE</span></li>
+			</ul>
+		</div>
+
+	    <div class="conteneur-de-menu2">
+			<ul class="menu1">
+				<li (click)="clickSousMenu('art_stock')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_stock'}"><span>STOCK</span></li>
+				<li (click)="clickSousMenu('art_spe')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_spe'}"><span>SPECIFICITE</span></li>
+				<li (click)="clickSousMenu('art_hist')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_hist'}"><span>HISTORIQUE</span></li>
+			</ul>
+		</div>
+		<!-- FIN MENU -->
+
+		<!-- CONTENU -->
+		<div class="row" style="padding: 10px;">
+			<div *ngIf="Menu.sousMenu == 'art_stock'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des articles dans la base</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Article</label><br>
+							<input type="text" class="form-control" />
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Domaine</label>
+							<select class="form-control custom-select">
+								<option>Domaine1</option>
+								<option>Domaine2</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Type</label>
+							<select class="form-control custom-select">
+								<option>Type1</option>
+								<option>Type2</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<th>Désignation</th>
+						<th>Domaine</th>
+						<th>Type</th>
+						<th>Stock</th>
+						<th>Code</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>ARTICLE</td>
+							<td>DOMAINE</td>
+							<td>TYPE</td>
+							<td>1</td>
+							<td>ARTCODE</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

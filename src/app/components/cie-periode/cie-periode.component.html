@@ -1,0 +1,88 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Historique de compte {{ this.fitreSelect }}</h4>
+    </div>
+    &nbsp;
+    <div>
+      <button type="button" class="btn bouton" (click)="tousSituation()">Toutes les situations de compte</button>
+    </div>
+    &nbsp;
+    <div class="row">
+      <div class="col-sm-12 table-CIE">
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr class="table-info">
+            <td class="cie1">Période</td>
+            <td class="cie1">Date déclaration</td>
+            <td class="cie1">Cotisations dues</td>
+            <td class="cie1">Date paiement Cot</td>
+            <td class="cie1">Cotisation payé</td>
+            <td class="cie1">Majoration de retard</td>
+            <!--<td class="cie1">Debit (Montant due)</td>-->
+
+            <td class="cie1">Solde de la periode en cours</td>
+            <td class="cie1">Solde Cumulé</td>
+          </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let ci of situation , let i = index ">
+                <td *ngIf="i == 0" class="text-right">
+                  <a class="boutton-detail" href="#collapseCiePeriode" id="nb" data-toggle="collapse" aria-expanded="false" aria-controls="collapseCiePeriode">
+                      <span class="fa fa-plus"></span>
+                    </a>
+                    <span>{{ ci.periode }}</span>
+                </td>
+                <td *ngIf="i == 0" class="text-right">{{ ci.dateDn | date :'dd/MM/yyyy' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ afficheSituationTotal.cotisationDu | number:'1.2-2':'fr' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ ci.dateCotDn | date :'dd/MM/yyyy' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ afficheSituationTotal.cotisationPaye | number:'1.2-2':'fr' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ ci.avisMr | number:'1.2-2':'fr' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ ci.solde | number:'1.2-2':'fr' }}</td>
+                <td *ngIf="i == 0" class="text-right">{{ ci.soldeCum | number:'1.2-2':'fr' }}</td>
+              </tr>
+              <tr>
+                <td colspan="8">
+                  <div class="collapse" id="collapseCiePeriode">
+                  <table class="table table-bordered table-striped" >
+                    <thead>
+                      <tr class="table-detail">
+                        <td class="cie1">Observation</td>
+                        <td class="cie1">Date déclaration</td>
+                        <td class="cie1">Cotisations dues</td>
+                        <td class="cie1">Date paiement Cot</td>
+                        <td class="cie1">Cotisations payées</td>
+                        <td class="cie1">Nouveau MR</td>
+                        <td class="cie1">MR payé</td>
+                        <td class="cie1">Date paiement MR</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="table-info" *ngFor="let c of situation">
+                        <td class="text-right">{{ c.libelleTypePaiement }}</td>
+                        <td class="text-right">{{ c.dateDn | date :'dd/MM/yyyy' }}</td>
+                        <td class="text-right">{{ c.avisDn | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.dateCotDn | date :'dd/MM/yyyy' }}</td>
+                        <td class="text-right">{{ c.cotPayeDn | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.nouvMr | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.cotPayeMr | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.dateCotPayeMr | date :'dd/MM/yyyy' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>&nbsp;
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

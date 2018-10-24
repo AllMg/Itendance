@@ -1,0 +1,46 @@
+#smartwizard ul
+{
+    margin: auto;
+    text-align: center
+}
+#smartwizard ul li
+{
+    margin: auto;
+    text-align: center
+}
+.titre-dimm
+{
+    text-align: center;
+    margin: auto
+}
+.btn-dimm
+{
+    color: white
+}
+.badge-dimm
+{
+    background-color: rgb(3,158,194);
+    color: white;
+    border-radius: 100%
+}
+.badge-dimm
+{
+    background-color: rgb(3,158,194);;
+    border-radius: 100%;
+    color: white;
+}
+.badge-dimm-na
+{
+    background-color: silver;
+    border-radius: 100%;
+    color: white;
+}
+.texte-badge-dimm
+{
+    text-align: center
+}
+.input-dimm
+{
+    width: 98%;
+    margin: auto
+}

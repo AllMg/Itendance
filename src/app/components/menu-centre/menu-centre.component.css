@@ -1,0 +1,74 @@
+/* MENU CENTRE */
+@media(max-width: 960px)
+{
+  .content_menu_centre
+  {
+    
+  }
+}
+.menu_centre
+{
+  margin: auto;
+  margin-top: 2%;
+  list-style: none;
+  text-align: center;
+}
+.menu_centre li
+{
+  margin: auto;
+  margin-top: 1%;
+  display: inline-block;
+  min-width: 125px;
+  text-align: center;
+  font-size: 75%;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border: solid 3px white;
+}
+.menu_centre li:hover
+{
+  cursor: pointer;
+}
+.menu_centre_a
+{
+  color: blue;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.menu_centre_a:hover
+{
+  text-decoration: none;
+  color: rgb(3,158,194)
+}
+.menu_centre_a p
+{
+  font-size: 125%;
+}
+.image_menu_centre
+{
+  width: 50% !important
+}
+.icon_menu_centre
+{
+  font-size: 200%;
+  color: white;
+  margin: auto;
+  margin-top: 23% !important;
+  text-align: center;
+}
+.menu_centre_a div
+{
+  transition: ease 0.3s all;
+  background: linear-gradient(145deg, lightblue 0%,rgb(3,158,194) 100%);
+  filter: progidXImageTransform.Microsoft.gradient( startColorstr='rgb(3,158,194)', endColorstr='#2d99ed',GradientType=1 );
+  border-radius: 100%;
+  border: solid 3px white;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  padding: 0%;
+  box-shadow: 5px 5px 10px silver
+}
+.menu_centre_a div:hover
+{
+  box-shadow: 10px 10px 10px silver
+}

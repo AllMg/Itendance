@@ -1,0 +1,32 @@
+/* AUTRES LIENS */
+.autres_liens
+{
+  list-style: none;
+  text-align: center;
+}
+.autres_liens li
+{
+  padding: 5%;
+  display: inline-block;
+  min-width: 160px;
+  text-align: center;
+}
+.autres_liens li:hover
+{
+  cursor: pointer;
+}
+.autres_liens_a
+{
+  color: black;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.autres_liens_a:hover
+{
+  text-decoration: none;
+  color: black
+}
+.autres_liens_span
+{
+  font-size: 500%;
+  color: rgb(3,158,194);
+}

@@ -1,0 +1,43 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Historique des déclarations nominatives des salaires</h4>
+    </div>
+    <div class="row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <td>#</td>
+            <td>Période</td>
+            <td>Cotisation</td>
+            <td>Statut</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hist of histo; let i=index">
+            <td>{{i+1}}</td>
+            <td>{{hist.periode}}</td>
+            <td>{{hist.cotisation}}</td>
+            <td>{{hist.statut}}</td>
+            <td>
+              <a (click)="link(hist.periode)" class="btn btn4 btn-block" style="color: white">Détails</a>
+              <!-- <button class="btn btn4">Pdf</button> -->
+              <!-- <button class="btn btn4">Imprimer</button> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li *ngFor="let age of page_count; let i = index" class="page-item"><a class="page-link" href="/reglement-op/{{i+1}}">{{i+1}}</a></li>
+        </ul>
+      </nav> -->
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

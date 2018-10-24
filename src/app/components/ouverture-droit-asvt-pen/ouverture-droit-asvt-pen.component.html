@@ -1,0 +1,151 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page2">
+    <div class="row titre_page">
+      <h4>Ouverture droit ASVT </h4>
+    </div>
+    <div class="row" *ngIf="show">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    &nbsp;
+    &nbsp;
+    <form (ngSubmit)="onSaveCLick()" [formGroup]="revForm" class="form-inline" *ngIf="!show">
+      <div class="row">
+        <div class="col-sm-12">
+          <h5 class="text-center"> Ref - {{referenceDemande}}</h5>
+        </div>
+        <!--<div class="col-sm-12">
+          <label class="container">Conjoint
+            <input type="radio" checked="checked" name="radio" (change)="recupTypePcsDemandeur('317')">
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">Tuteur
+            <input type="radio" name="radio" (change)="recupTypePcsDemandeur('318')">
+            <span class="checkmark"></span>
+          </label>
+        </div>-->
+        <div class="col-sm-12">
+          <h4 style="position: relative;">
+            <strong class="color-text">Informations requises</strong>
+          </h4>
+        </div>
+        <!--<div class="col-sm-12">
+          <span class="col-sm-4">
+            <strong>Matricule du Travailleur</strong>
+          </span>
+          <div class="form-group col-sm-9" style="float:right;">
+            <input formControlName="matriculeTravailleur" name="matriculeTravailleur" type="text" class="form-control" (change)="verifMariculTravailleur($event)" (keyup)="verifMariculTravailleur($event)" (keydown)="verifMariculTravailleur($event)" maxlength="17"><button type="button" class="btn btn-primary" style="margin:5px;" (click)="onClickValiderMariculTravailleur(matriculeTravailleur)">Validé</button>
+          </div>
+        </div>-->
+        
+
+        <div class="col-sm-12" *ngIf="listFamille != null" style="padding-top: 5px;">
+          <span class="col-sm-4">
+            <strong style="color:rgb(3,158,194) !important;">Information du bénéficiaire</strong>
+          </span>
+          <div class="form-group col-sm-6">
+            <ul>
+                <li style="list-style-type:none;"><strong  style="color:rgb(3,158,194);">Matricule : </strong>  {{infoIndivUser.id_individu}}</li>
+                <li style="list-style-type:none;"><strong  style="color:rgb(3,158,194);">Nom et Prénom(s) : </strong> {{infoIndivUser.nom}} {{infoIndiv.prenoms}}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-12" *ngIf="listFamille != null" style="padding-top: 5px;">
+          <span class="col-sm-4">
+            <strong  style="color:rgb(3,158,194) !important;">information du Travailleur</strong>
+          </span>
+          <div class="form-group col-sm-6">
+            <ul>
+                <li style="list-style-type:none;"><strong style="color:rgb(3,158,194);">Matricule : </strong>  {{infoIndiv.id_individu}}</li>
+                <li style="list-style-type:none;"><strong style="color:rgb(3,158,194);">Nom et Prénom(s) : </strong> {{infoIndiv.nom}} {{infoIndiv.prenoms}}</li>
+            </ul>
+          </div>
+        </div>
+
+        <br/>
+        <div class="col-sm-12" *ngIf="listEnfant != null" style="padding-top: 5px;">
+          <h6 class="col-sm-4">
+            <strong class="color-text" style="color:rgb(3,158,194) !important;">Les ayants droits</strong>
+          </h6>
+          <div class="form-group col-sm-6">
+            <ul>
+              <span *ngFor="let famil of listEnfant; let i = index">
+                <li style="list-style-type:none;" *ngIf="21>famil.age"><input type="checkbox" [value]="famil" style="size:5px;" (change)="oncheckEnfant($event,famil,i)"> {{ famil.nom }}</li>
+              </span>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- dynamic form
+        <div class="col-sm-12" *ngFor="let input of inputs">
+          <app-dynamic-input [input]="input" [form]="Form"></app-dynamic-input>
+        </div>
+         dynamic form -->
+        
+        <div class="col-sm-12 border-haut">
+          <h4>
+            <strong class="color-text">Pièces requises</strong>
+          </h4>
+        </div>
+       
+        <div class="col-sm-12" *ngFor="let piece of listPiece">
+          <!--<span *ngIf="nombreAyantdroit >= 0">
+              <span *ngIf="piece.label !== pcs">
+                  <app-dynamic-pieces [pieces]="piece" [form]="revForm"></app-dynamic-pieces>
+              </span>
+              <span *ngFor="let pcs of listPcsMulti">
+                <span *ngIf="piece.label == pcs">
+                    <app-dynamic-pieces [pieces]="piece" [form]="revForm" *ngFor="let i of arrayOne(nombreAyantdroit)"></app-dynamic-pieces>
+                </span>
+              </span>
+          </span>
+          <span *ngIf="nombreAyantdroit == -1">
+              <app-dynamic-pieces [pieces]="piece" [form]="revForm"></app-dynamic-pieces>
+          </span>-->
+          <span>
+            <span>
+              <app-dynamic-pieces [pieces]="piece" [form]="revForm" [idfiles]="referenceDemande"></app-dynamic-pieces>
+            </span>
+          </span>
+          <br>
+        </div>
+        
+
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div *ngIf="show1">
+            <button type="submit" class="btn btn2 btn-block" [disabled]="!revForm.valid">Enregistrer</button>
+            <br>
+          </div>
+          <div *ngIf="!show1">
+            <div class="loader"></div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="id01" [style.display]="none" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom w3-card-4">
+    <header class="w3-container w3-teal">
+      <h1>Avertissement</h1>
+    </header>
+    <div class="w3-container">
+      <div>
+        <h2>
+          <span class="fa fa-warning-sign"></span> Ce Travailleur ne posséde ni un conjoint ni un tiérse personne.</h2>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button type="button" class="w3-button w3-right w3-padding  btn btn-primary btn-md" (click)="clickDisableModale()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-lien-foot></app-lien-foot>

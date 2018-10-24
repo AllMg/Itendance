@@ -1,0 +1,28 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Historique des notifications</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 texte-content">Date:
+        <span style="color:black;"><ng-container *ngIf="histoNofit"> {{histoNofit.dateEnvoi | date :'dd/MM/yyyy'}} </ng-container></span>
+      </div>
+      <div class="col-sm-12 texte-content">Titre:
+        <span style="color:black;"><ng-container *ngIf="histoNofit"> {{histoNofit.titre}} </ng-container></span>
+      </div>
+      <div class="col-sm-12 texte-content">Message:
+        <span style="color:black;"><ng-container *ngIf="histoNofit"> {{histoNofit.message}} </ng-container></span>
+      </div>
+      <div class="col-sm-12 texte-content">Destinataire:
+        <span style="color:black;"><ng-container *ngIf="histoNofit"> {{histoNofit.destinataire}} </ng-container></span>
+      </div>
+    </div>
+    <hr>
+    <br>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

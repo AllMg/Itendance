@@ -1,0 +1,302 @@
+<div>
+  <div class="container-fluid">
+    <div class="col-sm-12">
+      <div class="row content-info">
+        <div class="col-sm-12 col1">
+          <div class="row titre-info">
+            <h1 *ngIf="dataUser">&nbsp;{{dataUser.nom}} {{dataUser.prenoms}}
+              <strong>( {{libelleStatu}} )</strong>
+            </h1>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-4 texte_info">Matricule:</div>
+                <div *ngIf="dataUser" class="col-sm-6">{{dataUser.id_individu}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-4 texte_info">Sexe:</div>
+                <div *ngIf="dataUser" class="col-sm-8">{{dataUser.id_sexe.libelle}} ({{dataUser.id_sexe.id_sexe}})</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-6 texte_info">Date de naissance:</div>
+                <div *ngIf="dataUser" class="col-sm-6">{{dataUser.date_naissance | date:'dd-MM-yyyy'}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-6 texte_info">Lieu de naissance:</div>
+                <div *ngIf="dataUser" class="col-sm-6">{{dataUser.lieu_naissance}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-4 texte_info">CIN:</div>
+                <div *ngIf="dataUser" class="col-sm-8">{{dataUser.cin}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-4 texte_info">Date CIN:</div>
+                <div *ngIf="dataUser" class="col-sm-8">{{dataUser.date_cin}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-6 texte_info">Firaisana:</div>
+                <div *ngIf="dataUser" class="col-sm-6">{{dataUser.firaisanaLibelle}}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                <div class="col-sm-6 texte_info">Nationalité:</div>
+                <div *ngIf="dataUser" class="col-sm-6">{{dataUser.id_nationalite.libelle}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="row titre-info1">
+                <a href="#collapseExample4" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample4" class="info1">
+                  Les membres de la famille
+                  <strong>&nbsp;&raquo;</strong>
+                </a>
+              </div>
+              <div class="collapse" id="collapseExample4">
+                <div class="row">
+                  <ng-container *ngIf="dataConjoint">
+                    <div class="col-sm-12 texte_info text-center">Conjoint</div>
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-4 texte_info">Matricule : </div>
+                        <div *ngIf="dataConjoint" class="col-sm-8">{{dataConjoint.matricule}}</div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-4 texte_info">Nom : </div>
+                        <div *ngIf="dataConjoint" class="col-sm-8">{{dataConjoint.nom}}</div>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div *ngFor="let enfant of dataEnfant; index as i" class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-12 texte_info text-center">Enfant {{i+1}}</div>
+                      <div class="col-sm-12">
+                        <div class="row">
+                          <div class="col-sm-4 texte_info">Matricule :</div>
+                          <div *ngIf="enfant" class="col-sm-8">{{enfant.matricule}}</div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="row">
+                          <div class="col-sm-4 texte_info">Nom :</div>
+                          <div *ngIf="enfant" class="col-sm-8">{{enfant.nom}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="row titre-info1">
+                <a href="#collapseExample5" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample5" class="info3">
+                  Adresse de correspondance
+                  <strong>&nbsp;&raquo;</strong>
+                </a>
+                <a [routerLink]="['/ajout-adresse']" class="info2">
+                  <span class="fa fa-edit icon-info"></span>Modifier</a>
+              </div>
+              <div class="collapse" id="collapseExample5">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Type du lieu : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.type}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Num de rue : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.numero}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Libellé : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Quartier : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.adresse_quartier}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Fokontany : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Firaisana : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.firaisana.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Fivondronana : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.firaisana.fivondronana.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Région : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.firaisana.fivondronana.region.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Faritany : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.firaisana.fivondronana.region.faritany.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Pays : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.fokontany.firaisana.fivondronana.region.faritany.pays.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Téléphone : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.adresse_telephone}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Complément : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.complement}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Adresse mail : </div>
+                      <div *ngIf="dataAdresse" class="col-sm-8">{{dataAdresse.adresse_e_mail}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="row titre-info1">
+                <a href="#collapseExample6" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample6" class="info3">
+                  Mode de paiement
+                  <strong>&nbsp;&raquo;</strong>
+                </a>
+                <a [routerLink]="['/modifier-compte-bancaire']" class="info2">
+                  <span class="fa fa-edit icon-info"></span>Modifier</a>
+              </div>
+              <div class="collapse" id="collapseExample6">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Pays : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.libellePays}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Banque : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.id_rel_bq_agce.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Agence : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.id_rel_bq_agce.id_bq.libelle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Numero : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.compte}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Clé : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.cle}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Date début : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.date_debut}}</div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Code Swift : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.code_swift}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Localité : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.localite}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Code région : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.code_region}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Boîte postale : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.bp}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Domiciliation : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.domiciliation}}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4 texte_info">Département : </div>
+                      <div *ngIf="dataBanque" class="col-sm-8">{{dataBanque.departement}}</div>
+                    </div>
+                  </div>
+                  <!-- <div class="col-sm-12 texte_info">
+                    <strong>Changer mode de paiement :</strong>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <label>
+                          <input type="radio">&nbsp;MVola</label>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

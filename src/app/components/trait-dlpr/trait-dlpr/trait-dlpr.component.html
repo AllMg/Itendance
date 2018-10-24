@@ -1,0 +1,37 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Liste des ordres de recette</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 liste-or">
+        <table class="table table-striped">
+           
+          <tr>
+            <td class="texte-content">Reference Demande</td>
+            <td class="texte-content">Date de réception</td>
+            <td class="texte-content">Travailleur matricule</td> 
+            <td class="texte-content">Etat Demande</td>
+            <td class="texte-content"></td>
+             
+          </tr>
+           <tr *ngFor="let dmd of listdem ; " >
+                <td>{{dmd.reference}}</td>
+				<td>{{dmd.date_reception}}</td>
+				<td>{{dmd.matricule}}</td>
+				<td>{{dmd.etat_libelle}}</td>
+				 <td>
+					<button (click)="onClickDmd(dmd.reference)" class="btn btn1 btn-block">Détails</button>
+				</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

@@ -1,0 +1,198 @@
+/* SERVICE */
+.boutton_service
+{
+  width: 100%;
+  border-radius: 0%;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border: none;
+  color: rgb(3,158,194,1);;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.boutton_service:hover
+{
+  text-decoration: underline 
+}
+.boutton_liste_service
+{
+  width: 100%;
+  border-radius: 0%;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border: none;
+  color: black
+}
+.boutton_liste_service:hover
+{
+  text-decoration: underline 
+}
+.boutton_service1
+{
+  background-color: white;
+}
+.boutton_service2
+{
+  background-color: white;
+}
+.boutton_service3
+{
+  background-color: white;
+}
+.boutton_service4
+{
+  background-color: white;
+}
+.boutton_service5
+{
+  background-color: white;
+}
+.boutton_service6
+{
+  box-shadow: 2px 2px 5px silver;
+  border: solid 3px white;
+  background-color: rgb(3,158,194,1);
+}
+.boutton_service6:hover
+{
+  box-shadow: 5px 5px 5px silver
+}
+.description_service
+{
+  text-align: justify;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre_service1
+{
+  font-size: 100%;
+  text-align: center;
+  background-color: purple;
+  color: #ffffff;
+  min-height: 82px;
+  font-weight: normal;
+  border-top-right-radius: 15px !important;
+  border-top-left-radius: 15px !important;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre_service2
+{
+  font-size: 100%;
+  text-align: center;
+  background-color: blue;
+  color: white;
+  min-height: 82px;
+  font-weight: normal;
+  border-top-right-radius: 15px !important;
+  border-top-left-radius: 15px !important;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre_service3
+{
+  font-size: 100%;
+  text-align: center;
+  background-color: green;
+  color: white;
+  min-height: 82px;
+  font-weight: normal;
+  border-top-right-radius: 15px !important;
+  border-top-left-radius: 15px !important;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre_service4
+{
+  font-size: 100%;
+  text-align: center;
+  background-color: orange;
+  color: white;
+  min-height: 82px;
+  font-weight: normal;
+  border-top-right-radius: 15px !important;
+  border-top-left-radius: 15px !important;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre_service5
+{
+  font-size: 100%;
+  text-align: center;
+  background-color: red;
+  color: white;
+  min-height: 82px;
+  font-weight: normal;
+  border-top-right-radius: 15px !important;
+  border-top-left-radius: 15px !important;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.div_service
+{
+  margin: auto;
+}
+.card-body
+{
+  min-height: 250px !important
+}
+.content_service
+{
+  transition: ease 0.5s all;
+  box-shadow: 5px 0px 10px silver;
+  cursor: pointer;
+  border:none;
+  border-radius: 15px;
+  border: solid 3px white;
+}
+.content_service:hover
+{
+  box-shadow: 10px 5px 10px silver;
+}
+.titre_service_h1
+{
+  text-align: center;
+  color: rgb(3,158,194);
+}
+.liste_sous_services
+{
+  margin: 5px auto;
+}
+.boutton_sous_service
+{
+  width: 100%;
+  border: none;
+  margin: 1% auto;
+  color: white;
+  border: solid 3px white;
+  box-shadow: 2px 2px 5px silver;
+  border-radius: 12px
+}
+.boutton_sous_service:hover
+{
+  box-shadow: 5px 5px 5px silver;
+}
+.boutton_sous_service1
+{
+  background-color: rgb(3,158,194,0.8);
+}
+.boutton_sous_service1:hover
+{
+  background-color: rgb(3,158,194,1);
+}
+.menu-service
+{
+  margin-left: -15%
+}
+.menu-service li a:hover
+{
+  text-decoration: underline
+}
+.li_pen {
+  list-style:none;
+  color: black; 
+}
+.li_pen::before{
+  content:"+";
+  font-weight: bold;
+  margin: -16px;
+}
+.style_href{
+  color: black;
+  text-decoration: none;
+  margin-left: 18px;
+}
+

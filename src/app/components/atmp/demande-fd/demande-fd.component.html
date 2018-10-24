@@ -1,0 +1,74 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <form [formGroup]="demandeFormGroup" (ngSubmit)="saveDemande()">
+    <div class="col-sm-12 content_page">
+      <div class="row titre_page">
+        <h4>Demande Indaminité Journalière : ref n° {{reference}}</h4>
+      </div>
+      <div class="row">
+        <ng-container *ngFor="let input of libelle">
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">{{input.libelle}}</label>
+              <div class="col-sm-6">
+                <mat-form-field class="input-atmp">
+                  <input matInput type="{{input.type}}" formControlName="{{input.id_type_info}}" >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="row">
+        <ng-container *ngFor="let input of piece; index as indice">
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content"><strong>{{input.libelle}}</strong></label>
+              <div class="col-sm-6">
+
+                <ng-container *ngIf="input.id_piece ==='21C'">
+                  <input multiple type="file" (change)="onFileChange($event, indice)" required>
+                </ng-container>
+                <ng-container *ngIf="input.id_piece !=='21C'">
+                  <input  type="file" (change)="onFileChange($event, indice)" required>
+                </ng-container>
+
+              </div>
+            </div>
+          </div>
+          <ng-container *ngFor="let info of input.infos">
+
+            <div class="col-sm-12">
+              <div class="form-group row">
+                <label class="col-sm-6 col-form-label texte-content">{{info.libelleInfo}}</label>
+                <div class="col-sm-6">
+                  <mat-form-field class="input-atmp">
+                    <input matInput type="{{info.type}}" formControlName="{{info.idTypeInfo}}" required>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <app-loader [show]="show"></app-loader>
+              <button *ngIf="!show" [disabled]="disabled" type="submit" class="btn btn-info btn-block">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

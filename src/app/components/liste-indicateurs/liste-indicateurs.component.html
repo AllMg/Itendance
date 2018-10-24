@@ -1,0 +1,179 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Indicateurs</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-2">
+        <h5 class="text-center titre-indicateur">Indicateurs</h5>
+        <ul>
+            <li>
+                <p  (click)="viewDSV()" class="indicateur">DSV-EMPL  (Déclaration sans versement)   </p>
+              </li>
+          <li>
+            <p  (click)="viewTsoldes()"  class="indicateur">Taux De Soldes</p>
+          </li>
+          <li>
+              <p   disabled="true"  class="indicateur">DSV - MT(Déclaration sans versement)   </p>
+            </li>
+            <li>
+                <p     class="indicateur">Taux total dernier solde par employeur  </p>
+              </li>
+              <li>
+                  <p     class="indicateur">DP - EMPL (Débit Partiel)               </p>
+                </li>
+
+                <li>
+                    <p     class="indicateur">MR                                                    </p>
+                  </li>
+                  <li>
+                      <p     class="indicateur">VE (Versement Echelonné)                               </p>
+                    </li>
+        </ul>
+      </div>
+        <div class="col-sm-10">
+          <h5 class="text-center titre-indicateur">{{titre}}</h5>
+          <div *ngIf="showDSV" class="row content_indicateur">
+            <div class="col-sm-8">
+              <div >
+                <div style="display: block">
+                  <ng-container *ngIf="!show">
+                      <canvas baseChart #camembert="base-chart" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartClick)="chartClicked($event)">
+                        </canvas>
+                  <h6 class="btn-block text-center">Camembert Taux DSV-EMPL {{debut}} - {{fin}}</h6>
+                  </ng-container>
+                  <ng-container *ngIf="show">
+                      <div class="loader"></div>
+                  </ng-container>
+                  
+                  <br>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" placeholder="Début année" [(ngModel)]="debut" (ngModelChange)="onChangeDebut($event)">
+                    </div>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" placeholder="Fin année" [(ngModel)]="fin" (ngModelChange)="onChangeFin($event)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+                 <div style="display: block">
+                     <canvas baseChart #baseHisto="base-chart" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                      [legend]="barChartLegend" [chartType]="barChartType" [colors]="chartColors">
+                    </canvas>
+                    <h6 class="btn-block text-center">Histogramme Details Trimestre</h6>
+                    <div *ngIf="GettingBarLoader">
+                      <div class="loader"></div>
+                    </div>
+                  </div>
+                
+            </div>
+            <div class="col-sm-8">
+                <ng-container *ngIf="!show">
+                 <div style="display: block">
+                       <canvas baseChart width="400" height="200"
+                        [datasets]="lineChartDSVData"
+                        [labels]="lineChartDSVLabels"
+                        [options]="lineChartDSVOptions"
+                        [colors]="lineChartDSVColors"
+                        [legend]="lineChartDSVLegend"
+                        [chartType]="lineChartDSVType">
+                      </canvas>
+                   </div>
+                    <h6 class="btn-block text-center">Courbe DSV-EMPL {{debut}} - {{fin}}</h6>
+                  </ng-container>
+                  <ng-container *ngIf="show">
+                      <div class="loader"></div>
+                  </ng-container>
+            </div>
+
+            </div>
+           <hr>
+          <div *ngIf="showSoldeindicateur" class="row content_indicateur">
+            <div class="col-sm-3">
+              <div class="row">
+                <div style="display: block" *ngIf="!showSolde">
+                  <canvas baseChart #ok="base-chart" [data]="okData" [labels]="okLabels" [chartType]="pieChartType">
+                  </canvas>
+                </div>
+                <div *ngIf="showSolde">
+                  <div class="loader"></div>
+                </div>
+                <h6 class="btn-block text-center">OK</h6>
+              </div>
+              <div class="row">
+                <div style="display: block" *ngIf="!showSolde">
+                  <canvas baseChart #c="base-chart" [data]="cData" [labels]="cLabels" [chartType]="pieChartType">
+                  </canvas>
+                </div>
+                <div *ngIf="showSolde">
+                  <div class="loader"></div>
+                </div>
+                <h6 class="btn-block text-center">Créditeur</h6>
+              </div>
+              <div class="row">
+                <div style="display: block" *ngIf="!showSolde">
+                  <canvas baseChart #d="base-chart" [data]="dData" [labels]="dLabels" [chartType]="pieChartType">
+                  </canvas>
+                </div>
+                <div *ngIf="showSolde">
+                  <div class="loader"></div>
+                </div>
+                <h6 class="btn-block text-center">Débiteur</h6>
+              </div>
+            </div>
+            <div class="col-sm-9">
+              <div *ngIf="!showSolde">
+                <div style="display: block">
+                 <!--  <canvas baseChart #camembert="base-chart" [data]="tauxData" [labels]="tauxLabels" [chartType]="pieChartType">
+                  </canvas>
+                   -->
+                   <canvas baseChart height="100"
+                  [datasets]="linChartData"
+                  [labels]="lineChartLabels"
+                  [options]="lineChartOptions"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType" 
+                  [colors]="lineChartColors"
+                  
+                 ></canvas>
+                 <h6 class="btn-block text-center">Coubre Solde {{debutSolde}} - {{finSolde}} </h6>
+                  <br>
+                </div>
+              </div>
+              <div *ngIf="showSolde">
+                <div class="loader"></div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <input id="dSolde" type="text" class="form-control" placeholder="Début année" [(ngModel)]="debutSolde" (ngModelChange)="onChangeD()">
+                </div>
+                <div class="col-sm-6">
+                  <input id="fSolde" type="text" class="form-control" placeholder="Fin année" [(ngModel)]="finSolde" (ngModelChange)="onChangeF()">
+                </div>
+              </div>
+            </div>
+             
+              <div class="col-sm-12">
+                <div style="display: block" *ngIf="!showBarperiode">
+                  <canvas baseChart   height="100" #chartPeriode="base-chart" [datasets]="periodeSoldeData" [labels]="periodeSoldeLabels" [options]="barChartOptions"
+                    [legend]="barChartLegend" [chartType]="barChartType"   >
+                  </canvas>
+                  <h6 class="btn-block text-center">Histogramme detail Solde {{debutSolde}} - {{finSolde}}</h6>
+                </div>
+                <div *ngIf="showBarperiode">
+                  <div class="loader"></div>
+                </div>
+               
+                </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-lien-foot></app-lien-foot>

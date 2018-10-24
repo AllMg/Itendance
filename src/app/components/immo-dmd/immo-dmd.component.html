@@ -1,0 +1,169 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>IMMOBILISATIONS</h4>
+		</div>
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li class="menu1-active"><span>DEMANDE</span></li>
+				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
+				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
+			</ul>
+		</div>
+
+	    <div class="conteneur-de-menu2">
+			<ul class="menu1">
+				<li (click)="clickSousMenu('dmd_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_mob'}"><span>MOBILIER/MATERIEL INFORMATIQUE</span></li>
+				<li (click)="clickSousMenu('dmd_rep_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_rep_mob'}"><span>REPARATION MOBILIER</span></li>
+				<li (click)="clickSousMenu('dmd_entr_bat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_entr_bat'}"><span>ENTRETIENT BATIMENT</span></li>
+			</ul>
+		</div>
+		<!-- FIN MENU -->
+
+		<!-- CONTENU -->
+		<div class="row" style="padding: 10px;">
+			<!-- DMD MOBILIER / MATERIEL INFO-->
+			<div *ngIf="Menu.sousMenu == 'dmd_mob'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Formulaire de demande de mobilier/matériel informatique</h6>
+				<hr>
+				<form>	
+					<div class="form-group">
+						<label>N° Matricule demandeur</label>
+						<input type="text" class="form-control" required/>
+					</div>
+					<div class="form-group">
+						<label>Articles</label>
+						<div class="row" style="font-size: 10pt;">
+							<div class="col-5">Désignation</div>
+							<div class="col-1">Qte</div>
+							<div class="col-2">Pour</div>
+							<div class="col-2">Le</div>
+							<div class="col-2">Jusqu'à</div>
+						</div>
+						<div class="row">
+							<div class="col-5">
+								<input type="text" class="form-control" />
+							</div>
+							<div class="col-1">
+								<input type="text" class="form-control" value="1" />
+							</div>
+							<div class="col-2">
+								<select class="form-control custom-select">
+									<option>Dotation</option>
+									<option>Prêt</option>
+								</select>
+							</div>
+							<div class="col-2">
+									<input type="date" class="form-control" />
+							</div>
+							<div class="col-2">
+									<input type="date" class="form-control" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-2">
+								<button class="btn btn-primary btn-block">Plus d'article</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Observation</label>
+						<textarea class="form-control" rows="7" cols="50" required></textarea>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- DMD REPARATION MOBILIER-->
+			<div *ngIf="Menu.sousMenu == 'dmd_rep_mob'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Formulaire de demande de réparation de mobilier</h6>
+				<hr>
+				<form>
+					<div class="form-group">
+						<label>N° Matricule demandeur</label>
+						<input type="text" class="form-control" required/>
+					</div>
+					<div class="form-group">
+						<label>Article</label>
+						<input type="text" class="form-control" required/>
+					</div>
+					<div class="form-group">
+						<label>Observation (Motif)</label>
+						<textarea class="form-control" rows="7" cols="50" required></textarea>
+					</div>
+					<div class="form-group">
+						<label>Pièces justificatives (facultative)</label>
+						<label for="pj-dmd-rep-mob" class="form-control" style="cursor: pointer;">Parcourir mon ordinateur</label>
+						<input id="pj-dmd-rep-mob" type="file" accept="image/*" multiple style="display: none;" />
+					</div>
+					<div class="form-group row">
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- DMD ENTRETIENT BATIMENT-->
+			<div *ngIf="Menu.sousMenu == 'dmd_entr_bat'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Formulaire de demande d'entretient batiment</h6>
+				<hr>
+				<form>
+					<div class="form-group">
+						<label>N° Matricule demandeur</label>
+						<input type="text" class="form-control" required/>
+					</div>
+					<div class="form-group">
+						<label>Site de localisation</label>
+						<input type="text" class="form-control" required/>
+					</div>
+					<div class="form-group">
+						<label>Type</label>
+						<select class="form-control custom-select">
+							<option>Aménagement</option>
+							<option>Construction</option>
+							<option>Logement</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Caractéristique</label>
+						<select class="form-control custom-select">
+							<option>Toiture</option>
+							<option>Portte</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Enumération</label>
+						<select class="form-control custom-select">
+							<option>Peinture</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Observation</label>
+						<textarea class="form-control" rows="7" cols="50" required></textarea>
+					</div>
+					<div class="form-group">
+						<label>Pièces justificatives (facultative)</label>
+						<label for="pj-dmd-entr-bat" class="form-control" style="cursor: pointer;">Parcourir mon ordinateur</label>
+						<input id="pj-dmd-entr-bat" type="file" accept="image/*" multiple style="display: none;" />
+					</div>
+					<div class="form-group row">
+						<div class="col-md-4">
+							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

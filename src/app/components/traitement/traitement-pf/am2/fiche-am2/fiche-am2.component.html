@@ -1,0 +1,224 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Détails d'allocation de matérnité 2ème tranche </h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="text-center">Ref - {{reference}}</h4>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12 col1" *ngIf="individu">
+        <div class="row titre-info">
+          <h3>&nbsp;{{individu.nom}} {{individu.prenoms}}</h3>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Matricule:</div>
+              <div class="col-sm-6">{{individu.id_individu}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-4 texte-content">Sexe:</div>
+              <div class="col-sm-8">{{individu.id_sexe.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Date de naissance:</div>
+              <div class="col-sm-6">{{individu.date_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Lieu de naissance:</div>
+              <div class="col-sm-6">{{individu.lieu_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">CIN:</div>
+              <div class="col-sm-6">{{individu.cin}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-4 texte-content">Date CIN:</div>
+              <div class="col-sm-8">{{individu.date_cin}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Firaisana:</div>
+              <div class="col-sm-6" *ngIf="adresseIndividu">{{adresseIndividu.fokontany.firaisana.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Nationalité:</div>
+              <div class="col-sm-6">{{individu.id_nationalite.libelle}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <!--<form (ngSubmit)="onModifTecInfReq()" class="form-horizontal" [formGroup]="ijForm">-->
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b><i class="fa fa-info-circle" aria-hidden="true"></i>
+            Informations</b>
+        </h6>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="date de visite">{{this.tecInfo.tecInfoRecuMod[0].refAccInfoTypMod.libelle_info}}</label>
+        <div class="col-sm-2">
+          <input type="date" [(ngModel)]="tecInfo.tecInfoRecuMod[0].valeur" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="date de depot">{{this.tecInfo.tecInfoRecuMod[1].refAccInfoTypMod.libelle_info}}</label>
+        <div class="col-sm-2">
+          <input type="date" [(ngModel)]="tecInfo.tecInfoRecuMod[1].valeur" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="Référence am1">Référence AM1:</label>
+        <div class="col-sm-2">
+          <input type="text" [(ngModel)]="refAm1.id_acc" class="form-control" readonly>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-1">
+        <button *ngIf="cant_validate==true" type="submit" (click)="onModifTecInfReq()" class="btn btn-success btn-block">Modifier</button>
+      </div>
+    </div>
+    <!--</form>-->
+    <hr>
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b>Droit</b>
+        </h6>
+      </div>
+      <label class="control-label col-sm-2 texte-content" for="pwd">Montant droit:</label>
+      <br>
+      <div class="col-sm-2">
+        <input type="text" [(ngModel)]="droit.message" class="form-control" value="" readonly>
+      </div>
+    </div>
+    <hr>
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b>Enfant né</b>
+        </h6>
+      </div>
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let enfant of dataEnfant">
+            <td>{{enfant.id_individu}}</td>
+            <td>{{enfant.nom}}</td>
+            <td>
+              {{enfant.prenoms}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b>Pièces justificatives</b>
+        </h6>
+      </div>
+      <div class="col-sm-12">
+        <div *ngFor="let pieces of piece">
+          <i class="fa fa-paperclip" style="color:black"></i> <a style="cursor: pointer;color: rgb(3,158,194)" (click)="onClickPiece(pieces.file)">{{pieces.name}}</a>
+          <br>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div *ngIf="cant_validate==true">
+      <form (ngSubmit)="validerDemande()" [formGroup]="validForm">
+        <div class="">
+          <div class="col-sm-12">
+            <h6>
+              <b>Conclusion</b>
+            </h6>
+          </div>
+          <div class="col-sm-2 texte-content">Observations</div>
+          <div class="col-sm-10">
+            <textarea name="observations" formControlName="observations" class="form-control"></textarea>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-3">
+            <a *ngIf="cant_validate==true" class="btn btn4 btn-block" style="color: #fff;" data-toggle="modal" data-target="#piecesJointes">Pièces
+              jointes non conformes</a>
+            <br>
+          </div>
+
+          <div class="col-sm-2">
+            <div *ngIf="!show">
+              <button *ngIf="cant_validate==true" [disabled]="!validForm.valid" type="submit" class="btn btn-success btn-block">Valider</button>
+              <br>
+            </div>
+            <div *ngIf="show">
+              <div class="loader"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="piecesJointes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Message</label>
+          <textarea class="form-control" [(ngModel)]="pieceJointeMessage" name="pieceJointeMessage"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="!show" class="container-fluid connex_boutton">
+          <button type="submit" data-dismiss="modal" class="btn btn-info" (click)="pieceNonConforme()">
+            Envoyer
+          </button>
+        </div>
+        <div *ngIf="show" class="container-fluid connex_boutton">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

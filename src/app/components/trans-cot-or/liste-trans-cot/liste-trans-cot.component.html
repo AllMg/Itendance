@@ -1,0 +1,59 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Liste des cotisations à transférer</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-1 texte-content">
+        Filtre :
+      </div>
+      <div class="col-sm-2">
+        <select (change)="onChangeEtat($event)" name="etat" class="form-control">
+          <option *ngFor="let etat of dataEtat; let i = index;" value="{{etat.id_type_etat}}" [selected]="etat.id_type_etat === 1">{{etat.libelle}}</option>
+        </select>
+      </div>
+      <div class="col-sm-9"></div>
+      <div class="col-sm-12">
+        <hr>
+      </div>
+    </div>
+    <div class="row" *ngIf="show">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    <div class="row" *ngIf="!show">
+      <div class="col-sm-12" *ngIf="!show">
+        <table class="table table-bordered table-striped">
+          <tr>
+            <td>Référence du transfert</td>
+            <td>Matricule</td>
+            <td>Nom</td>
+            <td>Date de réception</td>
+            <td>Etat</td>
+            <td></td>
+          </tr>
+          <tr *ngFor="let dataT of dataTransfert; index as indice">
+            <td class="text-right">{{dataT.reference}}</td>
+            <td class="text-right">{{dataT.matricule}}</td>
+            <td>{{dataT.nom_individu}}</td>
+            <td class="text-right">{{dataT.date_reception | date: 'dd/MM/yyyy'}}</td>
+            <td>{{dataT.etat_libelle}}</td>
+            <td class="text-center">
+              <a (click)="onClickTransfert(dataT.etat, dataT.reference, dataT.matricule)" class="voir">
+                <span class="fa fa-angle-double-right"></span>
+                &nbsp;Voir détails
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

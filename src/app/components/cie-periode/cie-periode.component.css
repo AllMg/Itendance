@@ -1,0 +1,8 @@
+.bouton{
+	color: white!important;
+	background-color:#039ec2!important;
+}
+
+.table-detail, .table-detail > td, .table-detail > th {
+    background-color: #A3D1E8 !important;
+}

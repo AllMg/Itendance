@@ -1,0 +1,19 @@
+.titre_page_DN h5
+{
+    text-align: center
+}
+.table_DN
+{
+    overflow-x: scroll;
+    overflow-y: auto;
+    max-height: 500px;
+}
+.dn1
+{
+    text-align: center
+}
+.dn2
+{
+    text-align: center;
+    min-width: 100px;
+}

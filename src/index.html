@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CNaPS</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="assets/img/logo1.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
+  <link rel="stylesheet" href="assets/css/compact-gallery.css">
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script>
+    function printDiv(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+    function printDiv1(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+    function printDiv3(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+    function printDn(divName) {
+      var printContents = document.getElementById(divName).innerHTML;
+      var originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+    </script>
+</head>
+<body>
+  <app-root>
+    <div class="cssload-thecube">
+      <div class="cssload-cube cssload-c1"></div>
+      <div class="cssload-cube cssload-c2"></div>
+      <div class="cssload-cube cssload-c4"></div>
+      <div class="cssload-cube cssload-c3"></div>
+    </div>
+    <div class="container index_loader">
+      <img src="assets/img/logo2.png" class="img-responsive" style="width:8%">
+      <h5>Caisse Nationale de Prévoyance Sociale</h5>
+    </div>
+  </app-root>
+
+  <script>
+    $(document).ready(function () {
+      $('.js-scrollTo').on('click', function () {
+        var page = $(this).attr('href');
+        var speed = 750;
+        $('html, body').animate({ scrollTop: $(page).offset().top }, speed);
+        return false;
+      });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+  <script>
+    baguetteBox.run('.compact-gallery', { animation: 'slideIn' });
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <form (ngSubmit)="saveIndividu()">
+    <div class="col-sm-12 content_page">
+      <div class="row titre_page">
+        <h4>Création compte</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Matricule rattaché :</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="matriculeR" name="nom" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Nom</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="nom" name="nom" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Prénom(s)</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="prenoms" name="prenoms" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Date de naissance</label>
+            <div class="col-sm-6">
+              <input type="date" [(ngModel)]="date_naissance" name="date_naissance" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Lieu de naissance</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="lieu_naissance" name="lieu_naissance" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Firaisana de naissance</label>
+            <div class="col-sm-6">
+              <ngx-select [items]="items" [(ngModel)]="id_firaisana_rel_fkt_naiss" name="id_firaisana_rel_fkt_naiss"
+                (typed)="inputTyped('ngx-select', $event)">
+              </ngx-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Sexe</label>
+            <div class="col-sm-6">
+              <select [(ngModel)]="id_sexe" name="id_sexe" class="form-control">
+                <option *ngFor="let sexe of dataSexe" value="{{JSON.stringify(sexe)}}">{{sexe.libelle}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Nationalité</label>
+            <div class="col-sm-6">
+              <select [(ngModel)]="id_nationalite" name="id_nationalitesexe" class="form-control">
+                <option *ngFor="let nat of dataNationalite" value="{{JSON.stringify(nat)}}">{{nat.libelle}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">CIN</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="cin" name="cin" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Date CIN</label>
+            <div class="col-sm-6">
+              <input type="date" [(ngModel)]="date_cin" name="date_cin" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Père</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="nom_pere" name="nom_pere" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Mère</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="nom_mere" name="nom_mere" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Code DR</label>
+            <div class="col-sm-6">
+              <input type="text" [(ngModel)]="code_dr" name="code_dr" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label texte-content">Pièce jointe</label>
+            <div class="col-sm-9">
+              <input type="file" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-info btn-block">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

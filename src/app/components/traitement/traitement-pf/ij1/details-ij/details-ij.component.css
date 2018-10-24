@@ -1,0 +1,23 @@
+.titre-info
+{
+    background-color: rgb(3,158,194);
+    margin: auto;
+    text-align: center;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.titre-info h3
+{
+    color: white;
+    text-align: center;
+    margin: auto;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid red; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+  }

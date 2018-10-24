@@ -1,0 +1,500 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page1">
+      <h4>Demande d'immatriculation</h4>
+    </div>
+    <div class="row">
+      <mat-horizontal-stepper [linear]="isLinear" #stepper style="width: 100% !important">
+        <div class="col-sm-12 content_page">
+          <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup" (ngSubmit)="newEmployeur(stepper)">
+              <ng-template matStepLabel>
+                <h5 class="texte-badge-dimm texte-content">Etape&nbsp;
+                  <span class="badge badge-light badge-dimm">1</span>
+                </h5>
+                <h6 class="texte-content">Informations sur la société</h6>
+              </ng-template>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select (change)="onChangeStatus($event)" placeholder="Statut" formControlName="id_statut" required>
+                      <mat-option *ngFor="let stat of status" [value]="stat">
+                        {{ stat.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Nom de la société (ou) Raison sociale" formControlName="employeur_nom" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Lieu registre" formControlName="employeur_lieu_registre" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker" placeholder="Date registre" formControlName="employeur_date_registre" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Numéro registre" formControlName="employeur_num_registre" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker1" placeholder="Date adhésion" formControlName="employeur_date_adhesion" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker2" placeholder="Date embauche" formControlName="employeur_date_embauche" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Numéro statistique" formControlName="employeur_num_stat" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker3" placeholder="Date statistique" formControlName="employeur_date_stat" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Lieu statistique" formControlName="employeur_lieu_stat" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="NIF" formControlName="employeur_nif" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker4" placeholder="Date NIF" formControlName="employeur_date_nif" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker5" placeholder="Date début activités" formControlName="date_debut_act" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                    <mat-datepicker #picker5></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Votre mot de passe" formControlName="mote_de_passe" type="password" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Confirmez votre mot de passe" formControlName="mote_de_passe_conf" type="password" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <label class="texte-content"></label>
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Sigle code" formControlName="sigle_code" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <label class="texte-content"></label>
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="DrCode" formControlName="dr_code" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <ngx-select required placeholder="Firaisana" [items]="itemsFiraisana" formControlName="firaisana" name="firaisana" (typed)="inputTypedFiraisana('ngx-select', $event)">
+                  </ngx-select>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <ngx-select required placeholder="Catégories" [items]="items" formControlName="id_categorie" name="id_firaisana_rel_fkt_naiss"
+                    (typed)="inputTyped('ngx-select', $event)">
+                  </ngx-select>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <ngx-select required placeholder="Activité" [items]="itemsActivite" formControlName="id_activite" name="id_activite" (typed)="inputTypedActivite('ngx-select', $event)">
+                  </ngx-select>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label class="texte-content">Certificat d'éxistence délivré par le Fokontany</label>
+                  <input type="file" class="form-control">
+                </div>
+                <div class="col-sm-6 form-group">
+                  <label class="texte-content">N° de compte bancaire de l’établissement </label>
+                  <input type="file" class="form-control">
+                </div>
+                <ng-container *ngIf="pigl">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte statistique</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte patente – NIF</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Extrait de Registre du commerce</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte d’identité nationale du responsable</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="enseignement">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Autorisation d’ouverture</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte statistique</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte d’identité nationale du responsable</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="sp">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte d’identité nationale du responsable</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="sarl">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Statut</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte statistique – NIF</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte patente</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Extrait du Registre du commerce)</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte d’identité nationale du gérant si celui-ci n’est pas un actionnaire</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="sa">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Statut</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte statistique – NIF</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte patente</label>
+                    <input type="file" class="form-control">
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Extrait du Registre du commerce</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="egm">
+                  <div class="col-sm-6 form-group">
+                    <label class="texte-content">Carte d’identité nationale de l’employeur</label>
+                    <input type="file" class="form-control">
+                  </div>
+                </ng-container>
+              </div>
+              <div class="row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2"><button class="btn btn-block btn1" style="color: white" type="submit" mat-button>Suivant</button></div>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup" (ngSubmit)="newAdresse(stepper)">
+              <ng-template matStepLabel>
+                <h5 class="texte-badge-dimm texte-content">Etape&nbsp;
+                  <span class="badge badge-light badge-dimm-na">2</span>
+                </h5>
+                <h6 class="texte-content">Informations sur l'adresse</h6>
+              </ng-template>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Numéro de rue" formControlName="numero" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Libelle" formControlName="libelle" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Quartier" formControlName="adresse_quartier" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Email" formControlName="adresse_e_mail" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Adresse Fax" formControlName="adresse_fax" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Téléphone" formControlName="adresse_telephone" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select placeholder="Type Adresse" formControlName="id_type" required>
+                      <mat-option *ngFor="let co of corres" [value]="co">
+                        {{ co.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select placeholder="Type du lieu" formControlName="type" required>
+                      <mat-option *ngFor="let li of lieu" [value]="li.libelle">
+                        {{ li.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <ngx-select required placeholder="Fokontany" formControlName="fokontany" [items]="itemsFokotany" name="fokontany" (typed)="inputTypedFokotany('ngx-select', $event)">
+                  </ngx-select>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <label class="texte-content">Certificat de résidence</label>
+                  <input type="file" class="form-control">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2"><button class="btn btn1 btn-block" style="color: white" type="submit" mat-button>Suivant</button></div>                
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <form [formGroup]="thirdFormGroup" (ngSubmit)="newCompte(stepper)">
+              <ng-template matStepLabel>
+                <h5 class="texte-badge-dimm texte-content">Etape&nbsp;
+                  <span class="badge badge-light badge-dimm-na">3</span>
+                </h5>
+                <h6 class="texte-content">Informations sur le compte bancaire</h6>
+              </ng-template>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select placeholder="Pays" formControlName="pays" required>
+                      <mat-option *ngFor="let p of pays" [value]="p">
+                        {{ p.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select (change)="onChange($event)" placeholder="Banque" formControlName="banque" required>
+                      <mat-option *ngFor="let b of banque" [value]="b">
+                        {{ b.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <mat-select placeholder="Agence" formControlName="agence" required>
+                      <mat-option *ngFor="let a of agence" [value]="a">
+                        {{ a.libelle }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Clé RIB" formControlName="cle_rib" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Compte Bancaire" formControlName="compteBancaire" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker6" placeholder="Date début" formControlName="date_debut" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                    <mat-datepicker #picker6></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <hr>
+              <h4>Si Bénéficiaire : International</h4>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Code Swift" formControlName="code_swift">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Domiciliation" formControlName="domiciliation">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Département" formControlName="departement">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Localité" formControlName="localite">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Code région" formControlName="code_region">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Boîte postale" formControlName="boite_postale">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2"><button class="btn btn1 btn-block" type="submit" style="color: white" mat-button>Suivant</button></div>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <form [formGroup]="fourthFormGroup" (ngSubmit)="newResponsable(stepper)">
+              <ng-template matStepLabel>
+                <h5 class="texte-badge-dimm texte-content">Etape&nbsp;
+                  <span class="badge badge-light badge-dimm-na">4</span>
+                </h5>
+                <h6 class="texte-content">Informations du responsable</h6>
+              </ng-template>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <input id="matricule" type="text" class="form-control" placeholder="Matricule responsable">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Nom" formControlName="nom">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Prénom(s)" formControlName="prenom" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="Fonction postale" formControlName="fonction" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker7" placeholder="Date début" formControlName="date_debut" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+                    <mat-datepicker #picker7></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput [matDatepicker]="picker8" placeholder="Date fin" formControlName="date_fin" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+                    <mat-datepicker #picker8></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <mat-form-field class="input-dimm">
+                    <input matInput placeholder="E-mail" formControlName="email" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-2"><button class="btn btn1 btn-block" style="color: white" type="submit" mat-button>Enregistrer</button></div>
+              </div>
+            </form>
+          </mat-step>
+        </div>
+      </mat-horizontal-stepper>
+    </div>
+  </div>
+</div>
+<app-historique-indiv *ngIf="user!==undefined"></app-historique-indiv>
+<app-lien-foot *ngIf="user!==undefined"></app-lien-foot>

@@ -1,0 +1,130 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Modification d'adresse</h4>
+    </div>
+    <form (ngSubmit)="ajoutAdresse()">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="numeroRue" class="col-sm-6 col-form-label texte-content">Numéro de rue</label>
+            <div class="col-sm-6">
+              <input type="text" name="numero" [(ngModel)]="numero" class="form-control" id="numeroRue">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="libelle" class="col-sm-6 col-form-label texte-content">Libellé</label>
+            <div class="col-sm-6">
+              <input type="text" name="libelle" [(ngModel)]="libelle" class="form-control" id="libelle">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="quartier" class="col-sm-6 col-form-label texte-content">Quartier</label>
+            <div class="col-sm-6">
+              <input type="text" name="adresse_quartier" [(ngModel)]="quartier" class="form-control" id="quartier">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="email" class="col-sm-6 col-form-label texte-content">E-mail</label>
+            <div class="col-sm-6">
+              <input type="text" name="adresse_e_mail" [(ngModel)]="adresse_e_mail" class="form-control" id="email">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="adresseFax" class="col-sm-6 col-form-label texte-content">Adresse Fax</label>
+            <div class="col-sm-6">
+              <input type="text" name="adresse_fax" [(ngModel)]="adresse_fax" class="form-control" id="adresseFax">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="telephone" class="col-sm-6 col-form-label texte-content">Téléphone</label>
+            <div class="col-sm-6">
+              <input type="text" name="adresse_telephone" [(ngModel)]="adresse_telephone" class="form-control" id="telephone">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="typeAdresse" class="col-sm-6 col-form-label texte-content">Type adresse</label>
+            <div class="col-sm-6">
+              <ng-container *ngIf="entity==='T'">
+                <select class="form-control" id="typeAdresse" [(ngModel)]="type_adresse" name="type_adresse">
+                  <ng-container *ngFor="let type of dataType">
+                    <option selected value="{{type.id_type}}" *ngIf="type.libelle==='CORRESPONDANCE'">{{type.libelle}}</option>
+                  </ng-container>
+                </select>
+              </ng-container>
+              <ng-container *ngIf="entity!=='T'">
+                <select class="form-control" id="typeAdresse" [(ngModel)]="type_adresse" name="type_adresse">
+                  <option *ngFor="let type of dataType" value="{{type.id_type}}">{{type.libelle}}</option>
+                </select>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="typeLieu" class="col-sm-6 col-form-label texte-content">Type du lieu</label>
+            <div class="col-sm-6">
+              <select class="form-control" id="typeLieu" [(ngModel)]="type_lieu" name="lieu_dit">
+                <option value="route">ROUTE</option>
+                <option value="avenue">AVENUE</option>
+                <option value="boulevard">BOULEVARD</option>
+                <option value="rue">RUE</option>
+                <option value="logt">LOGT</option>
+                <option value="lot">LOT</option>
+                <option value="appt">APPT</option>
+                <option value="np">BP</option>
+                <option value="localite">LOCALITE</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label for="fokontany" class="col-sm-6 col-form-label texte-content">Fokontany</label>
+            <div class="col-sm-6">
+
+              <ngx-select id="fokontany" [items]="itemsFokotany" [(ngModel)]="fokontany" name="fokontany" (typed)="inputTyped('ngx-select', $event)">
+              </ngx-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label texte-content">Certificat de résidende</label>
+            <div class="col-sm-8">
+              <input type="file" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div *ngIf="!show">
+            <button type="submit" class="btn btn-info btn-block">Enregistrer</button>
+          </div>
+          <div *ngIf="show">
+            <div class="loader"></div>
+          </div>
+        </div>
+      </div>
+    </form>
+    &nbsp;
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

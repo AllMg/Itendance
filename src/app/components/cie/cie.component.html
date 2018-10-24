@@ -1,0 +1,129 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Situation de compte</h4>
+    </div>
+    &nbsp;
+    <div>
+      <button type="button" class="btn bouton" (click)="initSituation()">Toutes les situations de compte</button>
+      <select style="width: 250px; height: 40px;" (change)="selectionAnne($event.target.value)" class="selectpicker" [(ngModel)]="anneSelectionne">
+        <option *ngFor="let oc of listeAnnee" [value]="oc" [selected]="oc == fitreSelect">{{oc}}</option>
+      </select>
+    </div>
+    &nbsp;
+    <div class="row">
+      <div class="col-sm-12 table-CIE">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr class="table-info">
+              <td class="cie1">Période</td>
+              <td class="cie1">Date déclaration</td>
+              <td class="cie1">Cotisations dues</td>
+              <td class="cie1">Date paiement Cot</td>
+              <td class="cie1">Cotisation payé</td>
+              <td class="cie1">Majoration de retard</td>
+              <!--<td class="cie1">Debit (Montant due)</td>-->
+
+              <td class="cie1">Solde de la periode en cours</td>
+              <td class="cie1">Solde Cumulé</td>
+            </tr>
+          </thead>
+          <tbody>
+            <div *ngFor="let ci of situation , let nb = index">
+              <div *ngIf="nb < (situation.length-1)">
+                <tr *ngIf="situation[nb].periode !== situation[nb+1].periode">
+                  <td class="text-right">
+                    <a class="boutton-detail" href="#collapseCie{{nb}}" data-toggle="collapse" aria-expanded="false" aria-controls="collapseCie">
+                      <span class="fa fa-plus"></span>
+                    </a>
+                    <span>{{ ci.periode }}</span>
+                  </td>
+                  <td class="text-right">{{ ci.dateDn | date :'dd/MM/yyyy' }}</td>
+                  <td class="text-right">{{ listeSolde[ci.periode][0].cotisationDu | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.dateCotDn | date :'dd/MM/yyyy' }}</td>
+                  <td class="text-right">{{ listeSolde[ci.periode][0].cotisationPaye | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.avisMr | number:'1.2-2':'fr' }}</td>
+                  <!--<td class="text-right">{{ ci.debit | number:'1.2-2':'fr' }}</td>
+                <td class="text-right">{{ ci.credit | number:'1.2-2':'fr' }}</td>-->
+                  <td class="text-right">{{ ci.solde | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.soldeCum | number:'1.2-2':'fr' }}</td>
+                </tr>
+              </div>
+              <div *ngIf="nb === (situation.length-1)">
+                <tr>
+                  <td class="text-right">
+                    <a class="boutton-detail" href="#collapseCie{{nb}}" id="nb" data-toggle="collapse" aria-expanded="false" aria-controls="collapseCie">
+                      <span class="fa fa-plus"></span>
+                    </a>
+                    <span>{{ ci.periode }}</span>
+                  </td>
+                  <td class="text-right">{{ ci.dateDn | date :'dd/MM/yyyy' }}</td>
+                  <td class="text-right">{{ listeSolde[ci.periode][0].cotisationDu | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.dateCotDn | date :'dd/MM/yyyy' }}</td>
+                  <td class="text-right">{{ listeSolde[ci.periode][0].cotisationPaye | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.avisMr | number:'1.2-2':'fr' }}</td>
+                  <!--<td class="text-right">{{ ci.debit | number:'1.2-2':'fr' }}</td>
+                <td class="text-right">{{ ci.credit | number:'1.2-2':'fr' }}</td>-->
+                  <td class="text-right">{{ ci.solde | number:'1.2-2':'fr' }}</td>
+                  <td class="text-right">{{ ci.soldeCum | number:'1.2-2':'fr' }}</td>
+                </tr>
+              </div>
+
+              <tr>
+                <div class="collapse" id="collapseCie{{nb}}">
+                  <table class="table table-bordered table-striped">
+                    <tr class="table-detail">
+                      <td class="cie1">Observation</td>
+                      <td class="cie1">Date déclaration</td>
+                      <td class="cie1">Cotisations dues</td>
+                      <td class="cie1">Date paiement Cot</td>
+                      <td class="cie1">Cotisations payées</td>
+                      <td class="cie1">Nouveau MR</td>
+                      <td class="cie1">MR payé</td>
+                      <td class="cie1">Date paiement MR</td>
+                    </tr>
+                    <div *ngFor="let c of situation2dim[ci.periode][0]">
+                      <tr class="text-color table-info">
+                        <td class="text-right">{{ c.libelleTypePaiement }}</td>
+                        <td class="text-right">{{ c.dateDn | date :'dd/MM/yyyy' }}</td>
+                        <td class="text-right">{{ c.avisDn | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.dateCotDn | date :'dd/MM/yyyy' }}</td>
+                        <td class="text-right">{{ c.cotPayeDn | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.nouvMr | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.cotPayeMr | number:'1.2-2':'fr' }}</td>
+                        <td class="text-right">{{ c.dateCotPayeMr | date :'dd/MM/yyyy' }}</td>
+                      </tr>
+                    </div>
+                  </table>
+                </div>
+              </tr>
+            </div>
+          </tbody>
+        </table>
+      </div>
+    </div>&nbsp;
+  </div>
+</div>
+
+
+<div id="id01" [style.display]="showMessage?'none':'inherit'" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom w3-card-4">
+    <header class="w3-container w3-teal">
+      <h1>Avertissement</h1>
+    </header>
+    <div class="w3-container">
+      <div>
+        <h2>
+          <span class="fa fa-warning-sign"></span> Situation de compte vide.</h2>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button type="button" class="w3-button w3-right w3-padding  btn btn-primary btn-md" (click)="clickShowModale()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

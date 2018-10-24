@@ -1,0 +1,11 @@
+@media(max-width: 960px)
+{
+  .banniere
+  {
+    margin-top: 500px
+  }
+}
+.banniere
+{
+  margin-top: 4%
+}

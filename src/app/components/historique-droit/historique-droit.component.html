@@ -1,0 +1,35 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Historique des droits</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 texte-content"><h5>Informations principales</h5></div>
+      <div class="col-sm-12 texte-content">Date: <span style="color:black;"> <ng-container *ngIf="dataOrdLiquide"> {{dataOrdLiquide.ordreLiquidDate | date :'dd/MM/yyyy'}} </ng-container></span> </div>
+      <div class="col-sm-12 texte-content">Numéro OP: <span style="color:black;"><ng-container *ngIf="dataOrdLiquide"> {{dataOrdLiquide.ordreLiquidNumOp}} </ng-container></span></div>
+      <div class="col-sm-12 texte-content">Montant: <span style="color:black;"><ng-container *ngIf="dataOrdLiquide"> {{dataOrdLiquide.ordreLiquidMontant}} </ng-container></span></div>
+      <div class="col-sm-12 texte-content">Type prestation: <span style="color:black;"><ng-container *ngIf="dataOrdLiquide"> {{dataOrdLiquide.sousPrestationCode}} </ng-container></span></div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12 texte-content">
+        <h5>Informations sur le bénéficiaire</h5>
+      </div>
+      <div class="col-sm-12 texte-content">Matricule:
+        <span style="color:black;"><ng-container *ngIf="individu"> {{individu.id_individu}} </ng-container></span>
+      </div>
+      <div class="col-sm-12 texte-content">Nom:
+        <span style="color:black;"><ng-container *ngIf="individu"> {{individu.nom}} </ng-container></span>
+      </div>
+      <div class="col-sm-12 texte-content">Prénom(s):
+        <span style="color:black;"><ng-container *ngIf="individu"> {{individu.prenoms}} </ng-container></span>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

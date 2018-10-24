@@ -1,0 +1,294 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid" *ngIf="entity==='O'">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation règlement OP</h4>
+    </div>
+    <div id="printableArea">
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <h5 class="texte_reglement">
+            <img src="../../assets/img/logo2.png" class="img-responsive logo_menu_haut" style="margin: auto">
+          </h5>
+          <h5 class="texte_reglement">Caisse National de Prévoyance Sociale</h5>
+          <h5 class="texte_reglement">C.N.a.P.S</h5>
+          <h5 class="texte_reglement">
+            <strong>AMPEFILOHA - ANTANANARIVO</strong>
+          </h5>
+        </div>
+        <div class="col-sm-6">
+          <h3 class="texte_reglement texte-content">
+            <strong>ORDRE DE PAIEMENT</strong>
+          </h3>
+          <p class="texte_reglement">
+            <strong>
+              <div *ngIf="dataOp" class="texte-content">N° de demande : {{dataOp.id_acc}}</div>
+            </strong>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12 texte_reglement">
+          <h2>
+            <strong>
+              <div *ngIf="dataOp">N° {{dataOp.id_op}}</div>
+            </strong>
+          </h2>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12">
+          <p>
+            Par imputation du compte :
+            <strong>Paiement primaire : Indemnité Journalière (IJ/AT)</strong>
+            <br>N° 60 452 100
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Veuillez payez la somme de :
+            <br>{{lettre}} Ariary</p>
+        </div>
+        <div class="col-sm-6">
+
+          <p>
+            <ng-container *ngIf="dataUser">N° Travailleur : {{dataUser.id_individu}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataUser">Nom Travailleur : {{dataUser.prenoms}} {{dataUser.nom}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataEmployeur"> N° employeur : {{dataEmployeur.id_empl}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataEmployeur"> Nom de l'mployeur : {{dataEmployeur.employeur_nom}} </ng-container>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p *ngIf="dataBenef && dataAdresse">
+            <strong>à M.</strong>
+            <br> {{dataBenef.prenoms}} {{dataBenef.nom}}
+            <br> {{dataAdresse.complement}} {{dataAdresse.libelle}} {{dataAdresse.quartier}} B.P.{{dataAdresse.numero}} - {{dataAdresse.fokontany.firaisana.fivondronana.region.libelle}}
+            <br>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <h4 *ngIf="dataOp">
+            <strong>B.P Ar {{dataOp.montant}} </strong>
+          </h4>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Mode de paiement</p>
+        </div>
+        <div class="col-sm-6">
+          <p>{{mode_paiement_libelle}}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="mode_paiement_libelle==='CCP'||mode_paiement_libelle==='TRS'">
+        <div class="col-sm-6">
+          <p>Numéro chèque</p>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" (keyup)="onKey($event)" class="form-control" placeholder="Veuillez saisir le numéro du chèque">
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12">
+          <h5 class="texte_reglement">VISA DE L'AGENT COMPTABLE</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h6 class="texte_reglement">Observation</h6>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2 texte_reglement">
+          <strong>Payé le</strong>
+          <br>{{dataNow}}</div>
+        <div class="col-sm-2 texte_reglement">
+          <strong>Par</strong>
+          <br>{{mode_paiement_libelle}}</div>
+        <div class="col-sm-2 texte_reglement">
+          <strong>N° titre</strong>
+          <br>5669/OBO/TRS/17</div>
+        <div class="col-sm-2 texte_reglement">
+          <strong>Montant</strong>
+          <br>{{montant}}</div>
+        <div class="col-sm-2 texte_reglement">
+          <strong>Compte à créditer</strong>
+          <br>51213101</div>
+        <div class="col-sm-1"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+          <p class="texte_reglement" id="printableArea">Antananarivo, le {{dataNow}}</p>
+          <p class="texte_reglement">P/ L'Agent Comptable
+            <br>
+            <br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3">
+        <input type="button" onclick="printDiv('printableArea')" value="Imprimer" class="btn btn-block btn-success" />
+      </div>
+      <div class="col-sm-3">
+        <button (click)="saveSubmit()" class="btn btn-info btn-block">Enregistrer</button>
+      </div>
+    </div>
+    &nbsp;
+  </div>
+</div>
+
+<div class="container-fluid" *ngIf="entity==='P'">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation règlement OP</h4>
+    </div>
+    <div id="printableArea1">
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <h5 class="texte_reglement">
+            <img src="../../assets/img/logo2.png" class="img-responsive logo_menu_haut" style="margin: auto">
+          </h5>
+          <h5 class="texte_reglement">Caisse National de Prévoyance Sociale</h5>
+          <h5 class="texte_reglement">C.N.a.P.S</h5>
+          <h5 class="texte_reglement">
+            <strong>AMPEFILOHA - ANTANANARIVO</strong>
+          </h5>
+        </div>
+        <div class="col-sm-6">
+          <h3 class="texte_reglement texte-content">
+            <strong>ORDRE DE PAIEMENT</strong>
+          </h3>
+          <p class="texte_reglement">
+            <strong>
+              <div *ngIf="dataOp" class="texte-content">N° de demande : {{dataOp.id_acc}}</div>
+            </strong>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12 texte_reglement">
+          <h2>
+            <strong>
+              <div *ngIf="dataOp">N° {{dataOp.id_op}}</div>
+            </strong>
+          </h2>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12">
+          <p>
+            Par imputation du compte :
+            <strong>Paiement primaire : Indemnité Journalière (IJ/AT)</strong>
+            <br>N° 60 452 100
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Veuillez payez la somme de :
+            <br>{{lettre}} Ariary</p>
+        </div>
+        <div class="col-sm-6">
+
+          <p>
+            <ng-container *ngIf="dataUser">N° Travailleur : {{dataUser.id_individu}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataUser">Nom Travailleur : {{dataUser.prenoms}} {{dataUser.nom}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataEmployeur"> N° employeur : {{dataEmployeur.id_empl}} </ng-container>
+            <br>
+            <ng-container *ngIf="dataEmployeur"> Nom de l'mployeur : {{dataEmployeur.employeur_nom}} </ng-container>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p *ngIf="dataBenef && dataAdresse">
+            <strong>à M.</strong>
+            <br> {{dataBenef.prenoms}} {{dataBenef.nom}}
+            <br> {{dataAdresse.complement}} {{dataAdresse.libelle}} {{dataAdresse.quartier}} B.P.{{dataAdresse.numero}} - {{dataAdresse.fokontany.firaisana.fivondronana.region.libelle}}
+            <br>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <h4 *ngIf="dataOp">
+            <strong>B.P Ar {{dataOp.montant}} </strong>
+          </h4>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Mode de paiement</p>
+        </div>
+        <div class="col-sm-6">
+          <p>{{mode_paiement_libelle}}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="mode_paiement_libelle==='CCP'||mode_paiement_libelle==='TRS'">
+        <div class="col-sm-6">
+          <p>Numéro chèque</p>
+        </div>
+        <div class="col-sm-6">
+          <input type="text" (keyup)="onKey($event)" class="form-control" placeholder="Veuillez saisir le numéro du chèque">
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+          <p class="texte_reglement" id="printableArea">Antananarivo, le {{dataNow}}</p>
+          <p class="texte_reglement">P/ L'Agent Comptable
+            <br>
+            <br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3">
+        <input type="button" onclick="printDiv1('printableArea1')" value="Imprimer" class="btn btn-block btn-success" />
+      </div>
+    </div>
+    &nbsp;
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

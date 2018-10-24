@@ -1,0 +1,437 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<div id="printableDn">
+  <app-info-personnes></app-info-personnes>
+  <div class="container-fluid">
+    <div class="col-sm-12 content_page">
+      <div class="row titre_page">
+        <h4>Déclaration nominatives des salaires</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group row">
+            <div class="col-sm-5">
+              <input [(ngModel)]="periode" type="text" value="{{this.periode}}" class="form-control" placeholder="Période">
+            </div>
+            <div class="col-sm-5" *ngIf="entity!=='E'&&entity!=='T'">
+              <input [(ngModel)]="idEmpl" type="text" class="form-control" value="" placeholder="Matricule employeur">
+            </div>
+            <div class="col-sm-2">
+              <!-- <button (click)="searchDn(periode, idEmpl)" class="btn btny-info btn-block" *ngIf="entity!=='E'&&entity!=='T'">Rechercher</button>
+              <button (click)="searchDn(periode, '')" class="btn btn-info btn-block" *ngIf="entity=='E'">Rechercher</button> -->
+              <a href="/dn/{{periode}}/{{matricule}}" class="btn btny-info btn-block" *ngIf="entity!=='E'&&entity!=='T'">Rechercher</a>
+              <a href="/dn/{{periode}}" class="btn btn-info btn-block" *ngIf="entity=='E'">Rechercher</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12" *ngIf="show && !error">
+          <div class="row">
+            <div class="col-sm-3 texte-content">Statut:</div>
+            <div class="col-sm-9">{{statut}}</div>
+          </div>
+          <div class="row" *ngIf="statut == 'Déclaré'">
+            <div class="col-sm-3 texte-content">Date de la déclaration:</div>
+            <div class="col-sm-9">{{dateDeclaration | date :'dd/MM/yyyy'}}</div>
+          </div>
+
+          <div class="row" *ngIf="statut == 'Validé'">
+            <div class="col-sm-3 texte-content">Date de la validation:</div>
+            <div class="col-sm-9">{{dateValidation | date :'dd/MM/yyyy'}}</div>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="row" *ngIf="show && !error">
+        <!-- <div class="row" *ngIf="show"> -->
+        <div class="col-sm-12">
+          <h5>Liste des travailleurs</h5>
+        </div>
+        <div class="col-sm-12 table_DN">
+          <table class="" id="listeTrav">
+            <tr>
+              <td class="dn1"></td>
+              <td class="dn1">
+                <input type="text" class="input-longA droite text-center" value="A" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longB droite text-center" value="B" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longC droite text-center" value="C" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longD droite text-center" value="D" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longE droite text-center" value="E" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longF droite text-center" value="F" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longG droite text-center" value="G" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longH droite text-center" value="H" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longI droite text-center" value="I" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longJ droite text-center" value="J" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longK droite text-center" value="K" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longL droite text-center" value="L" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longM droite text-center" value="M" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longN droite text-center" value="N" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longO droite text-center" value="O" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longP droite text-center" value="P" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longQ droite text-center" value="Q" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longR droite text-center" value="R" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longS droite text-center" value="S" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longT droite text-center" value="T" disabled>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longU droite text-center" value="U" disabled>
+              </td>
+            </tr>
+            <tr>
+              <td class="dn1">
+                <input type="text" class="input-long droite text-center" value="1" disabled style="width: 50px !important;">
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longA droite table-col" value="&nbsp;&nbsp;Matricule" readonly>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longB droite table-col" value="&nbsp;&nbsp;Nom" readonly>
+              </td>
+              <td class="dn1">
+                <input type="text" class="input-longC droite table-col" value="&nbsp;&nbsp;Prénom(s)" readonly>
+              </td>
+              <td class="dn1" colspan="2">
+                <input type="text" class="input-longD-colspan droite table-col" value="&nbsp;&nbsp;Date" readonly>
+              </td>
+              <td class="dn1" colspan="3">
+                <input type="text" class="input-longF-colspan droite table-col" value="&nbsp;&nbsp;1er mois" readonly>
+              </td>
+              <td class="dn1" colspan="3">
+                <input type="text" class="input-longI-colspan droite table-col" value="&nbsp;&nbsp;2è mois" readonly>
+              </td>
+              <td class="dn1" colspan="3">
+                <input type="text" class="input-longL-colspan droite table-col" value="&nbsp;&nbsp;3è mois" readonly>
+              </td>
+              <td class="dn1" colspan="2">
+                <input type="text" class="input-longO-colspan droite table-col" value="&nbsp;&nbsp;Salaires" readonly>
+              </td>
+              <td class="dn1" colspan="5">
+                <input type="text" class="input-longQ-colspan droite table-col" value="&nbsp;&nbsp;Cotisation" readonly>
+              </td>
+            </tr>
+            <tr>
+              <td class="dn1">
+                <input type="text" class="input-long droite text-center" value="2" disabled style="width: 50px !important;">
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longA droite table-info" value="&nbsp;&nbsp;" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longB droite table-info" value="&nbsp;&nbsp;" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longC droite table-info" value="&nbsp;&nbsp;" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longD droite table-info" value="&nbsp;&nbsp;Début contrat" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longE droite table-info" value="&nbsp;&nbsp;Fin contrat" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longF droite table-info" value="&nbsp;&nbsp;Salaires" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longG droite table-info" value="&nbsp;&nbsp;Avantage" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longH droite table-info" value="&nbsp;&nbsp;TP" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longI droite table-info" value="&nbsp;&nbsp;Salaires" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longJ droite table-info" value="&nbsp;&nbsp;Avantage" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longK droite table-info" value="&nbsp;&nbsp;TP" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longL droite table-info" value="&nbsp;&nbsp;Salaires" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longM droite table-info" value="&nbsp;&nbsp;Avantage" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longN droite table-info" value="&nbsp;&nbsp;TP" readonly>
+              </td>
+              <!-- <td class="dn2">
+                <input type="text" class="input-longO droite table-info" value="&nbsp;&nbsp;" readonly>
+              </td> -->
+              <td class="dn2" *ngIf="regime != 'GENS DE MAISON'">
+                <input type="text" class="input-longO droite table-info" value="&nbsp;&nbsp;NonPlafonné" readonly>
+              </td>
+              <td class="dn2" *ngIf="regime != 'GENS DE MAISON'">
+                <input type="text" class="input-longP droite table-info" value="&nbsp;&nbsp;Plafonné" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longQ droite table-info" value="&nbsp;&nbsp;SalarialeRC" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longR droite table-info" value="&nbsp;&nbsp;PatronaleRC" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longS droite table-info" value="&nbsp;&nbsp;Salariale" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longT droite table-info" value="&nbsp;&nbsp;Patronale" readonly>
+              </td>
+              <td class="dn2">
+                <input type="text" class="input-longU droite table-info" value="&nbsp;&nbsp;Total" readonly>
+              </td>
+            </tr>
+            <tr *ngFor="let dn of listeDn; let i=index">
+              <td class="dn1">
+                <input type="text" class="input-long droite text-center" value="{{i+3}}" disabled style="width: 50px !important;">
+              </td>
+              <td>
+                <input *ngIf="dn.new == true" (keyup)="dn.matricule=$event.target.value" type="text">
+                <input *ngIf="dn.new != true" value="{{dn.matricule}}&nbsp;&nbsp;" class="input-longA droite text-right non-editable" readonly>
+              </td>
+              <td>
+                <input *ngIf="dn.new == true" (keyup)="dn.nom=$event.target.value" type="text">
+                <input *ngIf="dn.new != true" value="&nbsp;&nbsp;{{dn.nom}}" class="input-longB droite non-editable" readonly>
+              </td>
+              <td>
+                <input *ngIf="dn.new == true" (keyup)="dn.prenoms=$event.target.value" type="text">
+                <input *ngIf="dn.new != true" value="&nbsp;&nbsp;{{dn.prenoms}}" class="input-longC droite non-editable" readonly>
+              </td>
+              <td>
+                <input type="text" value="{{dn.dateDebutContrat| date :'dd/MM/yyyy'}}&nbsp;&nbsp;" class="input-longD droite text-right non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="date" (keyup)="dn.dateFinContrat=$event.target.value" value="{{dn.dateFinContrat}}"
+                  class="input-longE droite text-right editable">
+                <input *ngIf="statut !== 'Non déclaré'" type="date" (keyup)="dn.dateFinContrat=$event.target.value" value="{{dn.dateFinContrat}}"
+                  class="input-longE droite text-right non-editable" readonly>
+              </td>
+              <td>
+                <input *ngIf="regime == 'GENS DE MAISON'; else rgM1" value="{{dn.salM1}}" readonly>
+                <ng-template #rgM1>
+                  <input *ngIf="statut === 'Non déclaré'" type="number" (change)="checkSalM1(i)" (keyup)="dn.salM1=$event.target.value; calcul(i)"
+                    value="{{dn.salM1}}" class="input-longF droite text-right">
+                  <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.salM1}}" class="input-longF droite text-right non-editable"
+                    readonly>
+                </ng-template>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.avtM1=$event.target.value; calcul(i)" value="{{dn.avtM1}}"
+                  class="input-longG droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.avtM1}}" class="input-longG droite text-right non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.tpM1=$event.target.value; calcul(i)" value="{{dn.tpM1}}"
+                  class="input-longH droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.tpM1}}" class="input-longH droite text-right non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input *ngIf="regime == 'GENS DE MAISON'; else rgM2" value="{{dn.salM2}}" readonly>
+                <ng-template #rgM2>
+                  <input *ngIf="statut === 'Non déclaré'" type="number" (change)="checkSalM2(i)" (keyup)="dn.salM2=$event.target.value; calcul(i)"
+                    value="{{dn.salM2}}" class="input-longI droite text-right">
+                  <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.salM2}}" class="input-longI droite text-right non-editable"
+                    readonly>
+                </ng-template>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.avtM2=$event.target.value; calcul(i)" value="{{dn.avtM2}}"
+                  class="input-longJ droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.avtM2}}" class="input-longJ droite text-right non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.tpM2=$event.target.value; calcul(i)" value="{{dn.tpM2}}"
+                  class="input-longK droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.tpM2}}" class="input-longK droite text-right non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input *ngIf="regime == 'GENS DE MAISON'; else rgM3" value="{{dn.salM3}}" readonly>
+                <ng-template #rgM3>
+                  <input *ngIf="statut === 'Non déclaré'" type="number" (change)="checkSalM3(i)" (keyup)="dn.salM3=$event.target.value; calcul(i)"
+                    value="{{dn.salM3}}" class="input-longL droite text-right">
+                  <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.salM3}}" class="input-longL droite text-right non-editable"
+                    readonly>
+                </ng-template>
+              </td>
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.avtM3=$event.target.value; calcul(i)" value="{{dn.avtM3}}"
+                  class="input-longM droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.avtM3}}" class="input-longM droite text-right non-editable"
+                  readonly>
+              </td>
+              <!-- <td>
+                <select [(ngModel)]="dn.typeContrat" (change)="onChange($event.target.value)" class="input-longO droite">
+                  <option *ngFor="let oc of occ" [value]="oc" [selected]="oc == dn.typeContrat">{{oc}}</option>
+                </select>
+              </td> -->
+              <td>
+                <input *ngIf="statut === 'Non déclaré'" type="number" (keyup)="dn.tpM3=$event.target.value; calcul(i)" value="{{dn.tpM3}}"
+                  class="input-longN droite text-right">
+                <input *ngIf="statut !== 'Non déclaré'" type="number" value="{{dn.tpM3}}" class="input-longN droite text-right non-editable"
+                  readonly>
+              </td>
+              <td *ngIf="regime != 'GENS DE MAISON'">
+                <input type="text" value="{{dn.totSalNonPlaf}}&nbsp;&nbsp;" class="input-longO droite text-right totSalNonPlaf non-editable"
+                  readonly>
+              </td>
+              <td *ngIf="regime != 'GENS DE MAISON'">
+                <input type="text" value="{{dn.totSalPlaf}}&nbsp;&nbsp;" class="input-longP droite text-right totSalPlaf non-editable" readonly>
+              </td>
+              <td>
+                <input class="" type="text" value="{{dn.cotPartSalarialeRc}}&nbsp;&nbsp;" class="input-longQ droite text-right cotPartSalarialeRc non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input type="text" value="{{dn.cotPartPatronaleRc}}&nbsp;&nbsp;" class="input-longR droite text-right cotPartPatronaleRc non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input class="" type="text" value="{{dn.cotPartSalariale}}&nbsp;&nbsp;" class="input-longS droite text-right cotPartSalariale non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input type="text" value="{{dn.cotPartPatronale}}&nbsp;&nbsp;" class="input-longT droite text-right cotPartPatronale non-editable"
+                  readonly>
+              </td>
+              <td>
+                <input type="text" value="{{dn.cotisation}}&nbsp;&nbsp;" class="input-longU droite text-right cotisation non-editable" readonly>
+              </td>
+            </tr>
+            <tr *ngIf="!show">
+              <td colspan=""></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row" *ngIf="!show">
+        <div class="loader"></div>
+      </div>
+      &nbsp;
+      <div class="row" *ngIf="show && !error && statut==='Non déclaré'">
+        <div class="col-sm-3 embauche">
+          <a [routerLink]="['/avis-embauche-form/1']" class="btn btn2 btn-block">
+            <span class="fa fa-plus"></span>&nbsp;Déclarer une embauche</a>
+        </div>
+        <div class="col-sm-9"></div>
+      </div>
+      &nbsp;
+      <div class="row" *ngIf="show && !error">
+        <div class="col-sm-8">
+          <br>
+        </div>
+        <div class="col-sm-4 content_page1">
+          <div class="row resume-dn top1" *ngIf="regime != 'GENS DE MAISON'">
+            <div class="col-sm-7">TOTAL SALAIRE NON PLAFONNE</div>
+            <div id="somTotSalNonPlaf" class="col-sm-5 text-right">{{somTotSalNonPlaf | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row table-info" *ngIf="regime != 'GENS DE MAISON'">
+            <div class="col-sm-7">TOTAL SALAIRE PLAFONNE</div>
+            <div id="somTotSalPlaf" class="col-sm-5 text-right">{{somTotSalPlaf | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row resume-dn">
+            <div class="col-sm-7">PART SALARIALE RC</div>
+            <div id="somCotPartSalarialeRc" class="col-sm-5 text-right">{{somCotPartSalarialeRc | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row table-info">
+            <div class="col-sm-7">PART PATRONALE RC</div>
+            <div id="somCotPartPatronaleRc" class="col-sm-5 text-right">{{somCotPartPatronaleRc | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row resume-dn">
+            <div class="col-sm-7">PART SALARIALE</div>
+            <div id="somCotPartSalariale" class="col-sm-5 text-right">{{somCotPartSalariale | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row table-info">
+            <div class="col-sm-7">PART PATRONALE</div>
+            <div id="somCotPartPatronale" class="col-sm-5 text-right">{{somCotPartPatronale | number:'1.2-2':'fr'}} AR</div>
+          </div>
+          <div class="row resume-dn bot1">
+            <div class="col-sm-7">COTISATION A PAYEE</div>
+            <div id="totCotisation" class="col-sm-5 text-right">{{somTotCotisation | number:'1.2-2':'fr'}} AR</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="effectif > 20 && entity==='E' && show && !error">
+        <div class="col-sm-3 texte-content">
+          DNS au format tableur
+        </div>
+        <div class="col-sm-9">
+          <input (change)="handleFileInput($event.target.files)" type="file" class="form-control">
+        </div>
+      </div>
+      <br>
+      <div class="row" *ngIf="show && !error">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <button *ngIf="statut === 'Non déclaré'" (click)="saveDn($event)" class="btn btn-info btn-block">Déclarer</button>
+          <button *ngIf="statut !== 'Non déclaré'" type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#myModal">Imprimer</button>
+          <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <img src="../../../assets/img/DN.jpg" class="img-responsive" style="width: 100%">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-sm-2"><button (click)="saveDn()" class="btn btn1 btn-block">Déclarer</button></div> -->
+      </div>
+      <br>
+    </div>
+    &nbsp;
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

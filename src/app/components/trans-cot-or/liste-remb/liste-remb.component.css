@@ -1,0 +1,14 @@
+.liste-remb{
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+.loader {
+    border: 16px solid silver; /* Light grey */
+    border-top: 16px solid rgb(3,158,194); /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+  }

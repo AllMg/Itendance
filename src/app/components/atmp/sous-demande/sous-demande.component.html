@@ -1,0 +1,59 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Choix des prestations de la DAT n° {{reference}}
+      </h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-2">
+            <label class="texte-content">Numéro DAT :</label>
+          </div>
+          <div class="col-sm-3">
+            <input (input)="inputTyped('tipeur',$event.target.value)" class="form-control" [(ngModel)]="reference"/>
+          </div>
+          <div class="col-sm-7">
+          </div>
+
+        </div>
+
+        <br>
+      </div>
+    </div>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Sous demande </th>
+        <th>Lien</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Indemnité Journalière (IJ/AT)</td>
+        <td><a *ngIf="showLink" href="/atmp/demande/ij/{{reference}}"> Faire une demande</a> </td>
+      </tr>
+      <tr>
+        <td>Remboursement Frais de Déplacement (FD1)</td>
+        <td><a *ngIf="showLink" href="/atmp/demande/fd/{{reference}}"> Faire une demande</a> </td>
+      </tr>
+      <tr>
+        <td>Frais Prothèse (FD2)</td>
+        <td><a *ngIf="showLink" href="/atmp/demande/fp/{{reference}}"> Faire une demande</a> </td>
+      </tr>
+      <tr>
+        <td>Frais Funairaire (FF)</td>
+        <td><a *ngIf="showLink" href="/atmp/demande/ff/{{reference}}"> Faire une demande</a> </td>
+      </tr>
+      <tr>
+        <td>Frais Médicaux (FM)</td>
+        <td><a *ngIf="showLink" href="/atmp/demande/fm/{{reference}}"> Faire une demande</a> </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

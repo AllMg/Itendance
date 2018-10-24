@@ -1,0 +1,7 @@
+.tableListe
+{
+    overflow-x: scroll !important;
+    overflow-y: auto scroll !important;
+    max-height: 500px !important;
+    width: auto !important;
+}

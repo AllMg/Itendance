@@ -1,0 +1,412 @@
+<div class="container-fluid histo-indiv" *ngIf="entity==='E'">
+  <div class="row">
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service1">Demande et déclarations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li>
+              <a [routerLink]="['/avis-embauche-form/0']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration d'embauche</a>
+            </li>
+            <li>
+              <a [routerLink]="['/dn']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration nominative</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service3">Historique notifications</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <div>
+              <li *ngFor="let nofit of histoNofit; let i=index">
+                <div *ngIf="i<=3">
+                  <a (click)="onViewNotif(nofit.idNotif)">
+                    <span class="fa fa-angle-double-right"></span>&nbsp;
+                    <!--<ng-container *ngIf="nofit.lu===0">{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}} (non lu)</ng-container>
+                    <ng-container *ngIf="nofit.lu===1">{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}} (lu)</ng-container>-->
+                    <ng-container>{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}}</ng-container>
+                  </a>
+                </div>
+              </li>
+              <a data-toggle="collapse" data-target="#demo1" style="color:rgb(3,158,194)">
+                <i class="fa fa-plus"></i> Voir plus</a>
+              <div id="demo1" class="collapse">
+                <li *ngFor="let nofit of histoNofit; let i=index">
+                  <div *ngIf="i>=4">
+                    <a (click)="onView(dataOrdLiquide.idTrs)">
+                      <span class="fa fa-angle-double-right"></span>&nbsp;
+                      <ng-container>{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}}</ng-container>
+                    </a>
+                  </div>
+                </li>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service4">Historiques déclarations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li *ngFor="let hist of histo">
+              <a (click)="link(hist.periode)"><span class="fa fa-angle-double-right"></span>&nbsp;{{hist.periode}}--{{hist.statut}}</a>
+            </li>
+            <li>
+              <a [routerLink]="['/historique-dn']"><span class="fa fa-angle-double-right"></span>&nbsp;Voir plus</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service5">Historiques cotisations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li *ngFor="let histoCie of dataCIE">
+              <a href="/historique-cie-periode/{{histoCie.periode}}">
+                <span class="fa fa-angle-double-right"></span>&nbsp;{{ histoCie.periode }} &nbsp; Solde (&nbsp;{{
+                histoCie.solde
+                | number:'1.2-2':'fr' }}&nbsp;)</a>
+            </li>
+            <a [routerLink]="['/situation-compte']"><i class="fa fa-plus"></i> Voir plus</a>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid histo-indiv" *ngIf="entity==='T'">
+  <div class="row">
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service1">Demandes et déclarations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li>
+              <a [routerLink]="['/avis-embauche-form/0']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration d'embauche</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurIjClick()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Indemnité journalière 1ère tranche</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('335')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande révision droit</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurIj2Click()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Indemnité journalière 2ème tranche</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurAm1Click()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation de maternité 1ère tranche</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurAm2Click()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation de maternité 2ème tranche</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurApClick()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation prénatale</a>
+            </li>
+            <li>
+              <a (click)="onTravailleurFmClick()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais médicaux</a>
+            </li>
+            <li *ngIf="!showTransfertLink">
+              <a (click)="transfertClick()">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Transfert de cotisation</a>
+            </li>
+            <li>
+              <a [routerLink]="['/demande-paiement-or']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Paiement OR</a>
+            </li>
+            <li *ngIf="showTransfertLink">
+              <div>
+                <div class="loader" style="margin: auto"></div>
+              </div>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('332')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Majoration médaille</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('331')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Majoration conjoint</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('441')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Saisie décès enfant</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('40E')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande attestation PF</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('317')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Ouverture de droit ASVT</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('319')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Réversion de droit ASVT</a>
+            </li>
+             <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('311')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Liquidation Pension Retraite</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service3">Historique salaires</h4>
+        <div class="card-body content-lien">
+          <div *ngIf="!showSalaire">
+            <ul>
+              <div>
+                <li *ngFor="let salaireData of dataCIT;  let i=index">
+                  <div *ngIf="i<=3">
+                    <a (click)="onClickAnnee(i)">
+                      <span class="fa fa-angle-double-right"></span>&nbsp;
+                      <ng-container *ngIf="salaireData && salaireData.travailleurData"> {{salaireData.annee}} -
+                        {{salaireData.tauxcot_empl}}
+                        - {{salaireData.travailleurData.employeur_nom}}
+                      </ng-container>
+                    </a>
+                  </div>
+                </li>
+                <a data-toggle="collapse" data-target="#demo2" style="color:rgb(3,158,194)">
+                  <i class="fa fa-plus"></i> Voir plus</a>
+                <div id="demo2" class="collapse">
+                  <li *ngFor="let salaireData of dataCIT;  let i=index">
+                    <div *ngIf="i>4">
+                      <a (click)="onClickAnnee(i)">
+                        <span class="fa fa-angle-double-right"></span>&nbsp;
+                        <ng-container *ngIf="salaireData && salaireData.travailleurData"> {{salaireData.annee}} -
+                          {{salaireData.tauxcot_empl}}
+                          - {{salaireData.travailleurData.employeur_nom}}
+                        </ng-container>
+                      </a>
+                    </div>
+                  </li>
+                </div>
+              </div>
+            </ul>
+          </div>
+          <div *ngIf="showSalaire" style="margin: auto">
+            <div class="loader" style="margin: auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service4">Historique notifications</h4>
+        <div class="card-body content-lien">
+          <div *ngIf="!showNotif">
+            <ul>
+              <div>
+                <li *ngFor="let nofit of histoNofit; let i=index">
+                  <div *ngIf="i<=3">
+                    <a (click)="onViewNotif(nofit.idNotif)">
+                      <span class="fa fa-angle-double-right"></span>&nbsp;
+                      <ng-container>{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}}</ng-container>
+                    </a>
+                  </div>
+                </li>
+                <a data-toggle="collapse" data-target="#demo3" style="color:rgb(3,158,194)">
+                  <i class="fa fa-plus"></i> Voir plus
+                </a>
+                <div id="demo3" class="collapse">
+                  <li *ngFor="let nofit of histoNofit; let i=index">
+                    <div *ngIf="i>=4">
+                      <a (click)="onView(dataOrdLiquide.idTrs)">
+                        <span class="fa fa-angle-double-right"></span>&nbsp;
+                        <ng-container>{{nofit.dateEnvoi | date :'dd/MM/yyyy'}} - {{nofit.titre}}</ng-container>
+                      </a>
+                    </div>
+                  </li>
+                </div>
+              </div>
+            </ul>
+          </div>
+          <div *ngIf="showNotif" style="margin: auto">
+            <div class="loader" style="margin: auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service5">Historique droits</h4>
+        <div class="card-body content-lien">
+          <div *ngIf="!showDroit">
+            <ul>
+              <div>
+                <li *ngFor="let dataOrdLiquide of dataOrdLiquide; let i=index">
+                  <div *ngIf="i<=3">
+                    <a (click)="onView(dataOrdLiquide.idTrs)">
+                      <span class="fa fa-angle-double-right"></span>&nbsp; {{dataOrdLiquide.ordreLiquidDate | date
+                      :'dd/MM/yyyy'}}
+                      - {{dataOrdLiquide.ordreLiquidMontant}}
+                    </a>
+                  </div>
+                </li>
+                <a data-toggle="collapse" data-target="#demo4" style="color:rgb(3,158,194)">
+                  <i class="fa fa-plus"></i> Voir plus</a>
+                <div id="demo4" class="collapse">
+                  <li *ngFor="let dataOrdLiquide of dataOrdLiquide; let i=index">
+                    <div *ngIf="i>=4">
+                      <a (click)="onView(dataOrdLiquide.idTrs)">
+                        <span class="fa fa-angle-double-right"></span>&nbsp;
+                        <ng-container *ngIf="dataOrdLiquide">{{dataOrdLiquide.ordreLiquidDate | date :'dd/MM/yyyy'}} -
+                          {{dataOrdLiquide.ordreLiquidMontant}}</ng-container>
+                      </a>
+                    </div>
+                  </li>
+                </div>
+              </div>
+            </ul>
+          </div>
+          <div *ngIf="showDroit" style="margin: auto">
+            <div class="loader" style="margin: auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid histo-indiv" *ngIf="entity!=='T'&&entity!=='E'&&entity!=='C'">
+  <div class="row">
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service1">Demandes et déclarations</h4>
+        <div class="card-body content-lien" *ngIf="!showDeclaration">
+          <ul>
+            <li *ngIf="entity==='O'">
+              <a [routerLink]="['/reglement-op']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Règlement OP</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/ij-pf']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Indemnité journalière 1ère tranche</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/ij2-pf']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Indemnité journalière 2ème tranche</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/liste-demande-ap']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation prénatale</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/liste-am1']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation de maternité 1ère tranche</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/liste-am2']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Allocation de maternité 2ème tranche</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/liste-demande-rfa']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais médicaux</a>
+            </li>
+            <li *ngIf="entity==='P'">
+              <a [routerLink]="['/reglement-op']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste OP</a>
+            </li>
+            <li>
+              <a [routerLink]="['/dimm']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande d'immatriculation</a>
+            </li>
+            <li>
+              <a [routerLink]="['/dn']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration nominative</a>
+            </li>
+            <li>
+              <a [routerLink]="['/liste-transfert-cotisation']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste transfert de cotisation</a>
+            </li>
+            <li>
+              <a [routerLink]="['/demande-at']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration d'accident de travail</a>
+            </li>
+            <li>
+              <a [routerLink]="['/atmp/prestation']">
+                <span class="fa fa-angle-double-right"></span> Demande détaillé de la déclaration d'accident de travail</a>
+               </li>
+            <li>
+              <a [routerLink]="['/liste-demande-pension']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Pension</a>
+            </li>
+            <li>
+              <a [routerLink]="['/liste-demande/331']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Majoration conjoint</a>
+            </li>
+            <li>
+              <a [routerLink]="['/liste-demande/332']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Majoration médaille</a>
+            </li>
+            <li>
+              <a [routerLink]="['/liste-demande/441']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Saisie décès enfant</a>
+            </li>
+            <li>
+              <a [routerLink]="['/liste-demande/40E']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Demande attestation PF</a>
+            </li>
+            <li>
+              <a [routerLink]="['/immobilisation']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande d'immobilisations</a>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="showDeclaration" style="margin: auto">
+          <div class="loader" style="margin: auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid histo-indiv" *ngIf="entity==='C'">
+  <div class="row">
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service1">Demandes et déclarations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('317')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Ouverture de droit ASVT</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('319')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Réversion de droit ASVT</a>
+            </li>
+            <li>
+              <a style="cursor: pointer;" (click)="onClickDemande('335')">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande Révision de droit</a>
+            </li>
+            <li>
+              <a [routerLink]="['/info-pension']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Info pension ASVT</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

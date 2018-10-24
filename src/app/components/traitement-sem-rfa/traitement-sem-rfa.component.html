@@ -1,0 +1,198 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Traitement SEM RFA</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="text-center">Ref - {{reference}}</h4>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-12 col1" *ngIf="individu">
+        <div class="row titre-info">
+          <h3>&nbsp;{{individu.nom}} {{individu.prenoms}}</h3>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Matricule:</div>
+              <div class="col-sm-6">{{individu.id_individu}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-4 texte-content">Sexe:</div>
+              <div class="col-sm-8">{{individu.id_sexe.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Date de naissance:</div>
+              <div class="col-sm-6">{{individu.date_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Lieu de naissance:</div>
+              <div class="col-sm-6">{{individu.lieu_naissance}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">CIN:</div>
+              <div class="col-sm-6">{{individu.cin}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-4 texte-content">Date CIN:</div>
+              <div class="col-sm-8">{{individu.date_cin}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Firaisana:</div>
+              <div class="col-sm-6" *ngIf="adresseIndividu">{{adresseIndividu.fokontany.firaisana.libelle}}</div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="row">
+              <div class="col-sm-6 texte-content">Nationalité:</div>
+              <div class="col-sm-6">{{individu.id_nationalite.libelle}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <form (ngSubmit)="onModifTecInfReq()" class="form-horizontal" [formGroup]="ijForm">
+      <div class="">
+        <div class="col-sm-12">
+          <h6>
+            <b>Informations</b>
+          </h6>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2 texte-content" for="email">Libellé:</label>
+          <div class="col-sm-2">
+            <input type="email" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2 texte-content" for="email">Observations:</label>
+          <div class="col-sm-2">
+            <input type="email" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2 texte-content" for="email">Prolongation:</label>
+          <div class="col-sm-2">
+            <input type="email" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-1">
+            <button type="submit" class="btn btn-success btn-block">Modifier</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <hr>
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b>Pièces justificatives</b>
+        </h6>
+      </div>
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Fiche de paye</button>
+        <div id="myModal" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only">Close</span>
+                </button>
+              </div>
+              <div class="modal-body" style="width: auto">
+                <img src="../../../assets/img/slider/1.jpg" class="img-responsive" style="width: 100%">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-sm-2 texte-content">Image pièce</div>
+          <div class="col-sm-10">Valeur</div>
+          <div class="col-sm-2 texte-content">Libellé pièces</div>
+          <div class="col-sm-10">Valeur</div>
+          <div class="col-sm-2 texte-content">Observations</div>
+          <div class="col-sm-10">Valeur</div> -->
+    </div>
+    <hr>
+
+    <div class="">
+      <div class="col-sm-12">
+        <h6>
+          <b>Bénéficiaire</b>
+        </h6>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="email">Individu:</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="individu">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="pwd">Nom ou raison sociale:</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="date_depot">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 texte-content" for="pwd">Adresse:</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="date_depot">
+        </div>
+      </div>
+    </div>
+    <hr>
+    <form (ngSubmit)="onAcceptCLick()" [formGroup]="validForm">
+      <div class="">
+        <div class="col-sm-12">
+          <h6>
+            <b>Conclusion</b>
+          </h6>
+        </div>
+        <div class="col-sm-2 texte-content">Observations</div>
+        <div class="col-sm-10">
+          <textarea name="observations" formControlName="observations" class="form-control"></textarea>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-8"></div>
+        <div class="col-sm-2">
+          <a class="btn btn4 btn-block" style="color: #fff;" data-toggle="modal" data-target="#piecesJointes">Pièces jointes non conformes</a>
+          <br>
+        </div>
+        <div class="col-sm-2">
+          <div *ngIf="!show">
+            <button [disabled]="!validForm.valid" type="submit" class="btn btn-success btn-block">Valider</button>
+            <br>
+          </div>
+          <div *ngIf="show">
+            <div class="loader"></div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

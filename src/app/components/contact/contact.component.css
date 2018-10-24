@@ -1,0 +1,39 @@
+/* CONTACT */
+.titre_contact_h1
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.contact
+{
+  margin-top: -1%;
+  background-image: url('../../../assets/img/fond_contact.jpg');
+  background-attachment: fixed;
+  background-size: 100%;
+  padding: 1%;
+}
+.contact h1
+{
+  color: white;
+  text-align: center;
+  padding: 1%
+}
+.texte_contact
+{
+  color: white;
+  text-align: justify;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.textarea_contact
+{
+  min-height: 150px
+}
+.boutton_contact
+{
+  width: 100%
+}
+.detail_contact
+{
+  color: white;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}

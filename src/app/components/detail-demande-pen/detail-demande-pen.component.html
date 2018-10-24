@@ -1,0 +1,138 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page2">
+      <h4>Détails de la demande</h4>
+    </div>
+    <div class="col-sm-12" *ngIf="show">
+      <div class="loader"></div>
+      <br>
+    </div>
+    <div *ngIf="!show">
+    <div class="row">
+      <div class="col-sm-12">
+        <h4>
+          <strong class="color-text">Info Demande </strong>
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);">Date du dossier :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control text-center" readonly="" value="{{infoDemande.accueilMod.date_dossier | date :'dd/MM/yyyy'}}" style="font-weight: bold">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content" style="color:rgb(3,158,194);">Référence du demande :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control text-center" readonly="" value="{{infoDemande.accueilMod.id_acc}}" style="font-weight: bold">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content" style="color:rgb(3,158,194);">Etat dossier :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control text-center" readonly="" value="{{infoDemande.demandeMod.etat_libelle}}" style="font-weight: bold">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content" style="color:rgb(3,158,194);">Type de demande :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control text-center" readonly="" value="{{titre}}" style="font-weight: bold">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h4>
+            <strong class="color-text">Informations reçues</strong>
+          </h4>
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);">Matricule du demandeur :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" readonly="" style="text-align: center;" value="{{infoDemande.accueilMod.id_individu}}">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12"></div>
+      </div>
+      <div class="row" >
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);"> Nom du demandeur :</div>
+        <div class="col-sm-7">
+          <input type="text" class="form-control" readonly="" style="text-align: center;" value="{{infoDemandeur}}">
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12"></div>
+      </div>
+      <div class="row" *ngIf="0<infoAyontDroit">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3 texte-content color-text"> Ayant Droit :</div>
+        <div class="col-sm-5">
+          <ul>
+            <li *ngFor="let info of infoAyontDroit">{{info.nom}} {{info.prenoms}}</li>
+          </ul>
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h4>
+            <strong class="color-text">Pièces reçues</strong>
+          </h4>
+        </div>
+      </div>
+      <ng-container *ngFor="let piecesRecues of piecesRec; index as indice">
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-3 texte-content">{{piecesRecues.name}} :</div>
+          <div class="col-sm-7">
+            <a data-toggle="modal" (click)="onClickPiece(piecesRecues.file)" class="fichier menu-nav">
+              <span class="fa fa-angle-double-right"></span>&nbsp;Voir le fichier
+            </a>
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+      </ng-container>
+      <div class="row">
+        <div class="col-sm-12">
+          <hr>
+        </div>
+      </div>
+      <div class="row" *ngIf="show1">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-2">
+          <button class="btn btn-success btn-block" (click)="pieceNonConforme()">Pièce(s) non conforme</button>
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-danger btn-block" (click)="rejeter()">Rejeter</button>
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary btn-block" (click)="valider()">Valider</button>
+        </div>
+      </div>
+      <div class="row" *ngIf="!show1">
+        <div class="col-sm-12">
+          <div class="loader"></div>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

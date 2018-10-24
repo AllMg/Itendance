@@ -1,0 +1,110 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation Déclaration AT MP
+      </h4>
+    </div>
+    <div class="row titre_gris" >
+      <h4>Employeur</h4>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-4">
+        <p> Raison social : <strong><ng-container *ngIf="employeur"> <ng-container *ngIf="employeur.id_activite!==null">{{employeur.id_activite.id_regime.libelle}} </ng-container> </ng-container> </strong></p>
+        <p> Adresse : <strong><ng-container *ngIf="employeurAdresse"> {{employeurAdresse.numero}} {{employeurAdresse.libelle}}</ng-container></strong> </p>
+        <p> Tél. N° :<strong> <ng-container *ngIf="employeurAdresse"> {{employeurAdresse.adresse_telephone}}</ng-container>  </strong> </p>
+        <p> E-mail : <strong> <ng-container *ngIf="employeurAdresse"> {{employeurAdresse.adresse_e_mail}}</ng-container></strong></p>
+
+      </div>
+      <div class="col-sm-4">
+        <p> N° Stat : <strong>85000524665852</strong> </p>
+        <p> N° RC :  <strong>560000155225</strong></p>
+        <p> NIF :  <strong>7856215460464064</strong></p>
+
+      </div>
+
+      <div class="col-sm-4">
+        <p> Matricule CNaPS : <strong><ng-container *ngIf="employeur">{{employeur.id_empl}}</ng-container></strong> </p>
+      </div>
+    </div>
+    <br>
+    <div class="row titre_gris" >
+      <h4>Victime</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p> Nom : <strong><ng-container *ngIf="victime">{{victime.nom}} </ng-container></strong></p>
+        <p> Prénom : <strong><ng-container *ngIf="victime"> {{victime.prenoms}}</ng-container></strong></p>
+        <p> Date de naissane : <strong><ng-container *ngIf="victime"> {{victime.date_naissance}}</ng-container></strong> </p>
+        <p> Adresse domicile : <strong><ng-container *ngIf="employeurAdresse"> {{employeurAdresse.numero}} {{employeurAdresse.libelle}}</ng-container></strong> </p>
+        <p> Numéro du CIN : <strong><ng-container *ngIf="victime"> {{victime.cin}}</ng-container></strong> </p>
+
+      </div>
+      <div class="col-sm-4">
+        <p> Date d'embauche : <strong>85000524665852</strong> </p>
+        <p> Fonction :  <strong>Traiteur</strong></p>
+
+      </div>
+
+      <div class="col-sm-4">
+        <p> Matricule CNaPS : <strong><ng-container *ngIf="dat">{{dat.id_individu}}</ng-container></strong> </p>
+      </div>
+    </div>
+
+    <div class="row titre_gris" >
+      <h4>Circonstance de l'accident</h4>
+    </div>
+    <div class="row">
+      <ng-container *ngFor="let input of libelle">
+        <div class="col-sm-12">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label texte-content">{{input.refAccInfoTypMod.libelle_info}}</label>
+            <div class="col-sm-7">
+              <div class="input-atmp">
+                <input class="form-control" type="text" value="{{input.valeur}}" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+
+    </div>
+    <div class="row titre_gris" >
+      <h4>Piece Jointe</h4>
+    </div>
+    <div class="row">
+      <div class="col-ms-12">
+        <ng-container *ngFor="let piece of pieceJointe" >
+          <div class="row">
+
+            <div class="col-lg-12">
+
+              <ng-container *ngIf="piece.type==='image'">
+                <img src="{{piece.file}}">
+              </ng-container>
+              <br>
+              <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>télécharger {{piece.name}}</a>
+            </div>
+          </div>
+
+        </ng-container>
+
+
+      </div>
+
+    </div>
+    <br>
+    <ng-container *ngIf="dat.etat === 1">
+      <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 inline"><button (click) ="rejeter()" class="btn btn-danger btn-action"> Rejeté</button><button class="btn btn-info btn-action" (click)="convoquer()"> Convoqué</button><button class="btn btn-success btn-action" (click)="pec()">P.E.C</button></div>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

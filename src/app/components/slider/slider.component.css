@@ -1,0 +1,34 @@
+/* SLIDER */
+@media(max-width: 960px)
+{
+  .slider_cnaps
+  {
+    display: none
+  }
+}
+.slider_cnaps
+{
+  margin-top: 4%
+}
+.titre_slide
+{
+  font-size: 300%;
+  color: white;
+  border-bottom-left-radius: 35%;
+  border-bottom-right-radius: 35%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.texte_directeur
+{
+  font-size: 90%;
+  text-align: justify;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+.image_dg
+{
+  width: 20% !important;
+  margin: auto;
+  border-radius: 100%
+}

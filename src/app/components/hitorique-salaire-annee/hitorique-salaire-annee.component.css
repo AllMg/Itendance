@@ -1,0 +1,33 @@
+.texte_info
+{
+    color: rgb(3,158,194);
+}
+.liste:hover
+{
+    cursor: pointer;
+    text-decoration: underline !important;
+    color: rgb(3,158,194) !important
+}
+.liste-pri
+{
+    list-style: none;
+    text-align: center
+}
+.table-over
+{
+    overflow-x: scroll
+}
+.col1
+{
+    min-width: 250px
+}
+.col2
+{
+    min-width: 100px;
+}
+.check-icon
+{
+    color: green;
+    text-align: center !important;
+    margin: auto !important
+}

@@ -1,0 +1,49 @@
+
+<div class="row">
+  <div class="col-md-7">
+    <h3>Facture FD2</h3>
+  </div>
+
+</div>
+<table class="table table-striped table-bordered">
+  <thead>
+  <tr>
+    <th>Designation</th>
+    <th>Quantité</th>
+    <th>P.U</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let field of fieldArray; let i = index">
+    <td>
+      <input [(ngModel)]="field.designation.libelle" class="form-control" type="text" name="{{field.code}}" readonly />
+    </td>
+    <td>
+      <input [(ngModel)]="field.qte" type="number" placeholder="Ex:1 boite" name="{{field.name}}" />
+    </td>
+    <td>
+      <input [(ngModel)]="field.total" class="form-control" type="number" name="{{field.price}}" />
+    </td>
+
+    <td>
+      <button class="btn btn-default"  type="button" (click)="deleteFieldValue(i)"><i class="fa fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <ngx-select [(ngModel)]="newAttribute.designation" name="newAttributeCode" placeholder="Recherche Prothèse"  [items]="itemProthese" (typed)="inputTypedFiraisana('ngx-select', $event)"></ngx-select>
+
+    </td>
+    <td>
+      <input class="form-control" type="number" id="newAttributeName" [(ngModel)]="newAttribute.qte" name="newAttributeName" />
+    </td>
+    <td>
+      <input class="form-control" type="number" id="newAttributePrice" [(ngModel)]="newAttribute.total" name="newAttributePrice" />
+    </td>
+    <td>
+      <button class="btn btn-default" type="button" (click)="addFieldValue()"> <i class="fa fa-plus"></i> Ajouter </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -1,0 +1,46 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Liste des demandes de majoration conjoint</h4>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="sel1">Etat demande:</label>
+        <select class="form-control" id="sel1" (change)="onChangeEtat($event.target.value)">
+          <option *ngFor="let etat of etats" value="{{etat.id_type_etat}}">{{etat.libelle}}</option>
+        </select>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Référence</th>
+            <th>Date réception</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Etat</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dmd of demandes">
+            <td>{{dmd.reference}}</td>
+            <td>{{dmd.date_reception}}</td>
+            <td>{{dmd.matricule}}</td>
+            <td>{{dmd.nom_individu}}</td>
+            <td>{{dmd.etat_libelle}}</td>
+            <td><a (click)="onDetail(dmd.reference)" style="cursor: pointer">Détails</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

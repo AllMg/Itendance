@@ -1,0 +1,252 @@
+.titre_page_DN h5
+{
+    text-align: center
+}
+.table_DN
+{
+    overflow-x: scroll;
+    overflow-y: auto;
+    max-height: 500px;
+}
+.dn2
+{
+    min-width: 0px;
+}
+.dn3
+{
+    width: 50px !important
+}
+.input-long
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-long1
+{
+    width: 100%;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-long2
+{
+    width: 100%;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.droite
+{
+    margin-left: -2px
+}
+.table-col
+{
+    background-color: rgb(3,158,194);
+    color: white;
+}
+.loader {
+  border: 16px solid silver; /* Light grey */
+  border-top: 16px solid rgb(3,158,194); /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+.non-editable
+{
+    background-color: #EAF0EF
+}
+.embauche a:hover
+{
+    color: white
+}
+.resume-dn
+{
+    background-color: #A3D1E8 !important;
+}
+.input-longA
+{
+    width: 175px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longB
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver;
+}
+.input-longC
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver;
+}
+.input-longD
+{
+    width: 150px;
+    height: 39px;
+    border: solid 0.1px silver;
+}
+.input-longE
+{
+    width: 160px;
+    height: 39px;
+    border: solid 0.1px silver;
+}
+.input-longF
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver;
+}
+.input-longG
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longH
+{
+    width: 50px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longI
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longJ
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longK
+{
+    width: 50px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longL
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longM
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longN
+{
+    width: 50px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longO
+{
+    width: 110px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longP
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longQ
+{
+    width: 125px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longR
+{
+    width: 125px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longS
+{
+    width: 125px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longT
+{
+    width: 125px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.input-longU
+{
+    width: 100px;
+    height: 39px;
+    border: solid 0.1px silver
+}
+.top1
+{
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px
+}
+.bot1
+{
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px
+}
+.content_page1
+{
+  box-shadow: 2px 2px 10px silver;
+  border-radius: 15px;
+  border: solid 3px white;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+  margin-left: -1%
+}
+.input-longF-colspan
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}
+.input-longI-colspan
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}
+.input-longL-colspan
+{
+    width: 250px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}
+.input-longD-colspan
+{
+    width: 310px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}
+.input-longO-colspan
+{
+    width: 210px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}
+.input-longQ-colspan
+{
+    width: 600px;
+    height: 39px;
+    border: solid 0.1px silver;
+    text-align: center
+}

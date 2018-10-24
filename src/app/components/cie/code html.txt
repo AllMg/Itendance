@@ -1,0 +1,107 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Situation de compte</h4>
+    </div>
+    &nbsp;
+    <div class="row">
+      <div class="col-sm-12 table-CIE">
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr class="table-info">
+            <td class="cie1">Voir détails</td>
+            <td class="cie1">Période</td>
+            <td class="cie1">Taux de cotisation</td>
+            <td class="cie1">Solde période en cours</td>
+            <td class="cie1">Solde cumulé</td>
+          </tr>
+          </thead>
+          <tbody>
+          <div  *ngFor="let ci of situation , let nb = index">
+            {{ci.periode}} "===" {{situation[nb+1].periode}}
+            <div *ngIf="nb < (situation.length-1)">
+              <tr *ngIf="situation[nb].periode != situation[nb+1].periode">
+                <td class="text-right"><a href="#collapseCie{{nb}}" data-toggle="collapse" aria-expanded="false" aria-controls="collapseCie"><span class="">voir</span></a></td>
+                <td class="text-right">{{ ci.periode }}</td>
+                <td class="text-right">100%</td>
+                <td class="text-right">{{ ci.solde }}</td>
+                <td class="text-right"></td>
+              </tr>
+            </div>
+            <div *ngIf="nb == (situation.length-1)">
+              <tr *ngIf="situation[nb].periode != situation[nb-1].periode">
+                <td class="text-right"><a href="#collapseCie{{nb}}" data-toggle="collapse" aria-expanded="false" aria-controls="collapseCie"><span class="">voir</span></a></td>
+                <td class="text-right">{{ ci.periode }}</td>
+                <td class="text-right">100%</td>
+                <td class="text-right">{{ ci.solde }}</td>
+                <td class="text-right">0&nbsp;&nbsp;</td>
+              </tr>
+            </div>
+
+          <tr>
+            <div class="collapse" id="collapseCie{{nb}}">
+            <table class="table table-bordered table-striped">
+              <!--<div class="col-xs-12 col-md-12 col-sm-12 liste_sous_services">-->
+                <tr class="table-info">
+                  <td class="cie1">Montant dû</td>
+                  <td class="cie1">Date déclaration</td>
+                  <td class="cie1">Cotisation payé</td>
+                  <td class="cie1">Date paiement Cot</td>
+                  <td class="cie1">Montant MR</td>
+                  <td class="cie1">Date MR</td>
+                  <td class="cie1">MR CRG</td>
+                  <td class="cie1">CRG</td>
+                  <td class="cie1">Nouveau MR</td>
+                  <td class="cie1">Date CRG</td>
+                  <td class="cie1">MR payé</td>
+                  <td class="cie1">Date paiement MR</td>
+                </tr>
+              <!--</div>-->
+              <!--<div class="col-xs-12 col-md-12 col-sm-12 liste_sous_services">-->
+                <div *ngIf="situation[nb].periode === situation[nb+1].periode">
+                  <tr>
+                    <td class="text-right">{{ situation[nb].avisDn }}</td>
+                    <td class="text-right">{{ situation[nb].dateDn }}</td>
+                    <td class="text-right">{{ situation[nb].cotPayeDn }}</td>
+                    <td class="text-right">{{ situation[nb].dateCotDn }}</td>
+                    <td class="text-right">{{ situation[nb].avisMr }}</td>
+                    <td class="text-right">{{ situation[nb].dateAvisMr }}</td>
+                    <td class="text-right">{{ situation[nb].mrCrg }}</td>
+                    <td class="text-right">{{ situation[nb].crg }}</td>
+                    <td class="text-right">{{ situation[nb].nouvMr }}</td>
+                    <td class="text-right">{{ situation[nb].dateCrg }}</td>
+                    <td class="text-right">{{ situation[nb].cotPayeMr }}</td>
+                    <td class="text-right">{{ situation[nb].dateCotPayeMr }}</td>
+                  </tr>
+                </div>
+                <tr *ngIf="situation[nb].periode != situation[nb+1].periode">
+                  <td class="text-right">{{ situation[nb].avisDn }}</td>
+                  <td class="text-right">{{ situation[nb].dateDn }}</td>
+                  <td class="text-right">{{ situation[nb].cotPayeDn }}</td>
+                  <td class="text-right">{{ situation[nb].dateCotDn }}</td>
+                  <td class="text-right">{{ situation[nb].avisMr }}</td>
+                  <td class="text-right">{{ situation[nb].dateAvisMr }}</td>
+                  <td class="text-right">{{ situation[nb].mrCrg }}</td>
+                  <td class="text-right">{{ situation[nb].crg }}</td>
+                  <td class="text-right">{{ situation[nb].nouvMr }}</td>
+                  <td class="text-right">{{ situation[nb].dateCrg }}</td>
+                  <td class="text-right">{{ situation[nb].cotPayeMr }}</td>
+                  <td class="text-right">{{ situation[nb].dateCotPayeMr }}</td>
+                </tr>
+
+            </table>
+            </div>
+          </tr>
+          </div>
+          </tbody>
+
+        </table>
+      </div>
+    </div>&nbsp;
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

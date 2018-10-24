@@ -1,0 +1,105 @@
+<app-banniere></app-banniere>
+<!-- <app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes> -->
+<div class="container-fluid">
+  <div class="col-sm-12 content_page" *ngIf="decompte">
+    <div class="row titre_page4">
+      <h4>Décompte Indemnité première tranche</h4>
+    </div>
+    <div class="container" id="printableArea3">
+      <div class="row">
+        <div class="col-sm-8"></div>
+        <div class="col-sm-4 text-center">Date : {{dateNow| date : 'dd/MM/yyyy'}}</div>
+        <div class="col-sm-12"><br><br></div>
+        <div class="col-sm-12 bas">
+          <p class="texte-indiv" *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</p>
+          <!-- <p class="texte-indiv">PLASMAD SARL</p> -->
+          <p class="texte-indiv" *ngIf="adresseIndividu">{{adresseIndividu.quartier}} {{adresseIndividu.complement}}</p>
+          <p class="texte-indiv" *ngIf="adresseIndividu">{{adresseIndividu.fokontany.firaisana.fivondronana.region.faritany.libelle}}</p>
+        </div>
+        <hr>
+        <div class="col-sm-6" *ngIf="employeur">Employeur : {{employeur}}</div>
+        <div class="col-sm-6">N° OP : {{idop}} </div>
+        <div class="col-sm-12" *ngIf="individu">N° CNaPS : {{individu.id_individu}}</div>
+        <div class="col-sm-12"><br></div>
+        <div class="col-sm-12">
+          <p>Décompte de droits de MME</p>
+          <p *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</p>
+        </div>
+        <div class="col-sm-12 tout">
+          <h5 class="titre1">1- PERIODE PRENATALE</h5>
+          <p>Date probable d'accouchement : {{decompte.dpa | date : 'dd/MM/yyyy'}}</p>
+          <p>Arrêt de travail : {{decompte.dat | date : 'dd/MM/yyyy'}}</p>
+          <p>Montant du salaire (Ar) : {{decompte.salaire}}</p>
+          <p>Indeminté journalière (Ar) : {{decompte.demisalaire}}</p>
+          <p>Du {{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}} Au {{decompte.dpa | date : 'dd/MM/yyyy'}} Soit {{decompte.nbjourpre}} jours X {{decompte.demisalaire}} = {{decompte.prenatale}} Ar.</p>
+          <h5 class="titre1">1- PERIODE POST NATALE</h5>
+          <p>{{decompte.date_debut_postnatale | date : 'dd/MM/yyyy'}} Au {{decompte.date_fin_postnatale | date : 'dd/MM/yyyy'}} Soit {{decompte.nbjourpost}} X {{decompte.demisalaire}} = {{decompte.postnatale}} Ar.</p>
+          <p class="text-center">Net à payer : {{decompte.ij1}} Ar</p>
+        </div>
+        <div class="col-sm-6 marge">
+            <h6 class="titre1">TADIDIO</h6>
+            <ol>
+              <li>
+                  Raha vao miditra
+                  miasa ianao dia omeo ho fenoin'ny
+                  mpampiasa anao ity mba hahazoanay
+                  mandoa ny ampahany faharoa
+                  amin'ny antsasa-karamanao.
+              </li>
+              <li>
+                Ampiaraho amin'ity ny
+                kopian'ny zaza vao teraka raha mbola
+                tsy nandefa izany niaraka tamin'ny
+                carnet de maternité nofenoin'ny
+                sage femme ianao.
+              </li>
+            </ol> 
+            <h6 class="titre1">REMARQUE</h6>
+            <ol>
+              <li>
+                Dès la reprise du
+                travail, veuillez nous retourner,
+                dûment rempli par votre
+                employeur, le certificat
+                ci-contre, pour nous permettre de
+                règler la 2ème tranche de vos
+                indemnités.
+              </li>
+            </ol>
+        </div>
+        <div class="col-sm-6 tout marge">
+          <h5 class="titre1 text-center">CERTIFICAT DE REPRISE DE TRAVAIL</h5>
+          <p>Antananarivo le {{dataNow}}</p>
+          <p>Je soussigné,</p>
+          <p>Certifie que Madame</p>
+          <p *ngIf="individu">{{individu.nom}} {{individu.prenoms}}</p>
+          <p>&nbsp;</p>
+          <p>
+            a repris son travail le : ________________ après
+              son congé de maternité. 
+              En foi de quoi, je délivre ce certificat
+              pour servir et valoir ce que de droit.
+          </p>
+          <p class="text-center">
+            (Signature et cachet de l'employeur)
+          </p>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-6 text-left" *ngIf="individu">{{individu.id_individu}}</div>
+            <div class="col-sm-6 text-right" *ngIf="decompte">{{decompte.ij1}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-10"></div>
+      <div class="col-sm-2"><input type="button" onclick="printDiv1('printableArea3')" value="Imprimer" class="btn btn-block btn4"/><br></div>
+    </div>
+  </div>
+</div>
+<!-- <app-historique-indiv></app-historique-indiv> -->
+<app-lien-foot></app-lien-foot>

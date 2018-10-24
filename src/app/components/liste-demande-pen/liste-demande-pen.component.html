@@ -1,0 +1,110 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Liste des demandes</h4>
+    </div>
+    <div class="row" *ngIf="show">
+      <div class="col-sm-12">
+        <div class="loader"></div>
+        <br>
+      </div>
+    </div>
+    &nbsp;
+    &nbsp;
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <span class="custom-dropdown custom-dropdown--white menu-nav">
+                <select class="menu-nav custom-dropdown__select custom-dropdown__select--white" style="width: 90% !important;" (change)="onChangeStatut($event.target.value)" ([ngModel])="statu">
+                    <option *ngFor="let info of listeEtatDoss" [value]="info.id_type_etat" [selected]="info.id_type_etat == 4">{{info.libelle}}</option>
+                </select>
+            </span>
+            <a class="navbar-brand menu-nav menu-naviter add-color-nav-bar" id="idASVT" (click)="onClickChoisDemande('ASVT')" >Demande DLPR</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand menu-nav menu-naviter" id="idREVI" (click)="onClickChoisDemande('REVI')">Demande Révision</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--<a class="navbar-brand menu-nav menu-naviter" id="idRAP" (click)="onClickChoisDemande('RAP')">Demande Rappel</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>-->
+            <a class="navbar-brand menu-nav menu-naviter" id="idREVE" (click)="onClickChoisDemande('REVE')">Demande Réversion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--<form class="form-inline">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>-->
+          </nav>
+    </div>
+    <div class="col-sm-12" style="text-align: center;">
+        <div>
+          <h5 *ngIf="titreDemande==null||titreDemande==''">Demande DLPR</h5>
+          <h5 *ngIf="titreDemande!=''">{{titreDemande}}</h5>
+        </div>
+    </div>
+    <div class="row" *ngIf="!show">
+      <div class="col-sm-12 table-CIE">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr class="table-info">
+              <td class="cie1">Référence du demande</td>
+              <td class="cie1">Matricule</td>
+              <td class="cie1">Nom du pensionnaire</td>
+              <td class="cie1">Date depôt dossier</td>
+              <td class="cie1">Etat</td>
+              <td class="cie1">Action</td>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let info of listeDemandes,let i = index">
+                <td class="text-right">
+                  <span>{{ info.reference }}</span>
+                </td>
+                <td class="text-right">{{ info.matricule }}</td>
+                <td class="text-right">{{ info.nom_individu }}</td>
+                <td class="text-right">{{ info.date_reception | date :'dd/MM/yyyy' }}</td>
+                <td class="text-right">{{ info.etat_libelle }}</td>
+                <td class="text-right">
+                    <a class="voir" (click)="onClickDetailPen(info.reference)"><span class="fa fa-angle-double-right"></span>Voir Détail</a>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>&nbsp;
+    <div class="center" *ngIf="listeDemandes.length !== 0">
+      <div class="pagination">
+        <a (click)="onclickPresedent()" style="cursor: pointer;">&laquo;</a>
+        <a *ngFor="let info of arrayOne(nombrePage);let i = index" id="id{{i+1}}" (click)="onClickPage(i+1)" style="cursor: pointer;">{{i+1}}</a>
+        <a (click)="onclickSuivant()" style="cursor: pointer;">&raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="id01" [style.display]="showMessage?'none':'inherit'" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom w3-card-4">
+    <header class="w3-container w3-teal">
+      <h1>Avertissement</h1>
+    </header>
+    <div class="w3-container">
+      <div>
+        <h2>
+          <span class="fa fa-warning-sign"></span> Auccune information n'est disponble.</h2>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button type="button" class="w3-button w3-right w3-padding  btn btn-primary btn-md" (click)="onclickModale()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

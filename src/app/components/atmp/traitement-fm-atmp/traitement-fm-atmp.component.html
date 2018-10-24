@@ -1,0 +1,51 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div>
+    <div class="col-sm-12">
+      <h6>
+        <b>Modification Prix médicaments</b>
+      </h6>
+    </div>
+    <div class="col-sm-2 texte-content">Liste des médicaments:</div>
+    <br>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th>Mécidaments</th>
+        <th>Quantité</th>
+        <th>Montant</th>
+        <th>Prix SEM</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngIf="medicaments">
+        <tr *ngFor="let med of medoc; index as indice">
+          <td>{{med.designation}}</td>
+          <td>{{med.qte}}</td>
+          <td>{{med.pu | number}} Ar</td>
+          <td>
+            <input type="number" [(ngModel)]="medoc[indice].montantSem">
+        </tr>
+      </ng-container>
+
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6">
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12 inline"><button class="btn btn-success btn-action" (click)="save()">Enregistré</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
