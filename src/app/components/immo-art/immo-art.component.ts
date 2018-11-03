@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import { ImmoService } from '../../services/immo/immo.service';
+
+declare var $: any;
 
 @Component({
   selector: 'app-immo-art',
@@ -9,8 +11,10 @@ import { ImmoService } from '../../services/immo/immo.service';
 })
 export class ImmoArtComponent implements OnInit {
 
+  @ViewChild('modalAjout') modalAjout;
+
   Menu = {
-    menu: "demande",
+    menu: "article",
     sousMenu: ""
   };
 
@@ -25,6 +29,14 @@ export class ImmoArtComponent implements OnInit {
 
   clickSousMenu(nom){
     this.Menu.sousMenu = nom;
+  }
+
+  ouvreAjout(){
+    $(this.modalAjout.nativeElement).modal('show');
+  }
+
+  fermeAjout(){
+    $(this.modalAjout.nativeElement).modal('hide');
   }
 
   test(){

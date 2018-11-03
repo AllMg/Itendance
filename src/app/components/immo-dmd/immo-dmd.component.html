@@ -12,14 +12,15 @@
 				<li class="menu1-active"><span>DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
 
 	    <div class="conteneur-de-menu2">
 			<ul class="menu1">
-				<li (click)="clickSousMenu('dmd_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_mob'}"><span>MOBILIER/MATERIEL INFORMATIQUE</span></li>
-				<li (click)="clickSousMenu('dmd_rep_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_rep_mob'}"><span>REPARATION MOBILIER</span></li>
-				<li (click)="clickSousMenu('dmd_entr_bat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_entr_bat'}"><span>ENTRETIENT BATIMENT</span></li>
+				<li (click)="clickSousMenu('dmd_mob', 'DmdMob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_mob'}"><span>MOBILIER/MATERIEL INFORMATIQUE</span></li>
+				<li (click)="clickSousMenu('dmd_rep_mob', 'DmdRepMob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_rep_mob'}"><span>REPARATION MOBILIER</span></li>
+				<li (click)="clickSousMenu('dmd_entr_bat', 'DmdEntrBat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd_entr_bat'}"><span>ENTRETIENT BATIMENT</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -32,51 +33,63 @@
 				<hr>
 				<form>	
 					<div class="form-group">
-						<label>N° Matricule demandeur</label>
-						<input type="text" class="form-control" required/>
+						<label>Référence de la demande</label>
+						<input [value]="DmdMob.reference" name="reference" type="text" class="form-control" readonly="true">
 					</div>
 					<div class="form-group">
 						<label>Articles</label>
-						<div class="row" style="font-size: 10pt;">
-							<div class="col-5">Désignation</div>
-							<div class="col-1">Qte</div>
-							<div class="col-2">Pour</div>
-							<div class="col-2">Le</div>
-							<div class="col-2">Jusqu'à</div>
-						</div>
-						<div class="row">
-							<div class="col-5">
-								<input type="text" class="form-control" />
-							</div>
-							<div class="col-1">
-								<input type="text" class="form-control" value="1" />
-							</div>
-							<div class="col-2">
-								<select class="form-control custom-select">
-									<option>Dotation</option>
-									<option>Prêt</option>
-								</select>
-							</div>
-							<div class="col-2">
-									<input type="date" class="form-control" />
-							</div>
-							<div class="col-2">
-									<input type="date" class="form-control" />
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-2">
-								<button class="btn btn-primary btn-block">Plus d'article</button>
-							</div>
-						</div>
+						<table #art_table class="table">
+							<thead>
+								<tr>
+									<th style="min-width: 450px;">Désignation</th>
+									<th style="width: 100px;">Qte</th>
+									<th style="width: 150px;">Pour</th>
+									<th style="width: 180px;">Date début</th>
+									<th style="width: 180px;">Date fin</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let art of DmdMob.articles; let index = index">
+									<td>
+										<input [(ngModel)]="DmdMob.articles[index].designation"  name="designation{{index}}" type="text" matInput [formControl]="DmdMob.articleControls[index]" [matAutocomplete]="auto" class="form-control" [ngClass]="{'mat-input-element' : DmdMob.utiliseClass}">
+									</td>
+									<td>
+										<input [(ngModel)]="DmdMob.articles[index].quantite" [value]="DmdMob.articles[index].quantite" name="quantite{{index}}" type="number" min="1" class="form-control" value="1" />
+									</td>
+									<td>
+										<select [(ngModel)]="DmdMob.articles[index].typeDmd" [value]="DmdMob.articles[index].typeDmd" name="typeDmd{{index}}" class="form-control custom-select">
+											<option value="DOTATION">DOTATION</option>
+											<option value="PRET">PRET</option>
+										</select>
+									</td>
+									<td>
+										<input *ngIf="DmdMob.articles[index].pour=='PRET'" [(ngModel)]="DmdMob.articles[index].dateDeBesoin" [value]="DmdMob.articles[index].dateDeBesoin" name="dateDeBesoin{{index}}" type="date" class="form-control">
+									</td>
+									<td>
+										<input *ngIf="DmdMob.articles[index].pour=='PRET'" [(ngModel)]="DmdMob.articles[index].dateFinBesoin" [value]="DmdMob.articles[index].dateFinBesoin" name="dateFinBesoin{{index}}" type="date" class="form-control" />
+									</td>
+									<td>
+										<button *ngIf="index > 0" (click)="effaceChampArticle(index)" class="btn"><span class="fa fa-minus"></span></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<mat-autocomplete #auto="matAutocomplete">
+						  <mat-option *ngFor="let option of DmdMob.articleOptions" [value]="option">{{option}}</mat-option>
+						</mat-autocomplete>
+
+						<button (click)="clickPlusArticle()" class="btn btn-info" style="margin-top: 5px;">Plus d'article</button>
 					</div>
 					<div class="form-group">
 						<label>Observation</label>
-						<textarea class="form-control" rows="7" cols="50" required></textarea>
+						<textarea [(ngModel)]="DmdMob.observation" [value]="DmdMob.observation" name="observation" class="form-control" rows="7" cols="50" required></textarea>
 					</div>
 					<div class="form-group row">
 						<div class="col-md-4">
-							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<button *ngIf="!DmdMob.loader" (click)="clickEnregDmdMob()" type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<div *ngIf="DmdMob.loader" class="loader"></div>
 						</div>
 					</div>
 				</form>
@@ -87,25 +100,30 @@
 				<hr>
 				<form>
 					<div class="form-group">
-						<label>N° Matricule demandeur</label>
-						<input type="text" class="form-control" required/>
+						<label>Référence de la demande</label>
+						<input [value]="DmdRepMob.reference" type="text" name="reference" class="form-control" readonly="true">
 					</div>
 					<div class="form-group">
 						<label>Article</label>
-						<input type="text" class="form-control" required/>
+						<input [(ngModel)]="DmdRepMob.article" type="text" name="article"  matInput [formControl]="DmdRepMob.articleControl" [matAutocomplete]="autoRepMob" class="form-control" [ngClass]="{'mat-input-element' : DmdRepMob.utiliseClass}">
+
+						<mat-autocomplete #autoRepMob="matAutocomplete">
+						  <mat-option *ngFor="let option of DmdRepMob.articleOptions" [value]="option">{{option}}</mat-option>
+						</mat-autocomplete>
 					</div>
 					<div class="form-group">
 						<label>Observation (Motif)</label>
-						<textarea class="form-control" rows="7" cols="50" required></textarea>
+						<textarea  [(ngModel)]="DmdRepMob.motif" [value]="DmdRepMob.motif" name="motif" class="form-control" rows="7" cols="50"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Pièces justificatives (facultative)</label>
-						<label for="pj-dmd-rep-mob" class="form-control" style="cursor: pointer;">Parcourir mon ordinateur</label>
-						<input id="pj-dmd-rep-mob" type="file" accept="image/*" multiple style="display: none;" />
+						<label>Pièce justificative (facultative)</label>
+						<label for="pj-dmd-rep-mob" class="form-control" style="cursor: pointer;">{{DmdRepMob.pieceNom}}</label>
+						<input (change)="pieceChange($event, 'DmdRepMob')" name="pieceFichier" id="pj-dmd-rep-mob" type="file" accept="image/*" multiple style="display: none;" />
 					</div>
 					<div class="form-group row">
 						<div class="col-md-4">
-							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<button *ngIf="!DmdRepMob.loader" (click)="clickEnregDmdRepMob()" type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<div *ngIf="DmdRepMob.loader" class="loader"></div>
 						</div>
 					</div>
 				</form>
@@ -116,52 +134,93 @@
 				<hr>
 				<form>
 					<div class="form-group">
-						<label>N° Matricule demandeur</label>
-						<input type="text" class="form-control" required/>
+						<label>Référence de la demande</label>
+						<input [value]="DmdEntrBat.reference" type="text" name="reference" class="form-control" readonly="true">
 					</div>
 					<div class="form-group">
 						<label>Site de localisation</label>
-						<input type="text" class="form-control" required/>
+						<select [(ngModel)]="DmdEntrBat.site" name="site" class="form-control custom-select">
+							<option>SITE</option>
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Type</label>
-						<select class="form-control custom-select">
-							<option>Aménagement</option>
-							<option>Construction</option>
-							<option>Logement</option>
-						</select>
+						<div class="input-group mb-3">
+							<select [(ngModel)]="DmdEntrBat.type" name="type" class="form-control custom-select">
+								<option *ngFor="let t of DmdEntrBat.listeType" value="{{t.id}}">{{t.libelle}}</option>
+							</select>
+							<div class="input-group-append">
+								<button (click)="clickAjoutSpe('Type','Libellé du Type', 'listeType', 'type')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Caractéristique</label>
-						<select class="form-control custom-select">
-							<option>Toiture</option>
-							<option>Portte</option>
-						</select>
+						<div class="input-group mb-3">
+							<select [(ngModel)]="DmdEntrBat.caracteristique" name="caracteristique" class="form-control custom-select">
+								<option *ngFor="let t of DmdEntrBat.listeCaract" value="{{t.id}}">{{t.libelle}}</option>
+							</select>
+							<div class="input-group-append">
+								<button (click)="clickAjoutSpe('Caractéristique','Libellé du caractéristique', 'listeCaract', 'caracteristique')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Enumération</label>
-						<select class="form-control custom-select">
-							<option>Peinture</option>
-						</select>
+						<div class="input-group mb-3">
+							<select [(ngModel)]="DmdEntrBat.enumeration" [value]="DmdEntrBat.enumeration" name="enumeration" class="form-control custom-select">
+								<option *ngFor="let t of DmdEntrBat.listeEnum" value="{{t.id}}">{{t.libelle}}</option>
+							</select>
+							<div class="input-group-append">
+								<button (click)="clickAjoutSpe('Enumération','Libellé de l\'énumération', 'listeEnum', 'enumeration')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Observation</label>
-						<textarea class="form-control" rows="7" cols="50" required></textarea>
+						<textarea [(ngModel)]="DmdEntrBat.observation" [value]="DmdEntrBat.observation" name="observation" class="form-control" rows="7" cols="50"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Pièces justificatives (facultative)</label>
-						<label for="pj-dmd-entr-bat" class="form-control" style="cursor: pointer;">Parcourir mon ordinateur</label>
-						<input id="pj-dmd-entr-bat" type="file" accept="image/*" multiple style="display: none;" />
+						<label>Pièce justificative (facultative)</label>
+						<label for="pj-dmd-entr-bat" class="form-control" style="cursor: pointer;">{{DmdEntrBat.pieceNom}}</label>
+						<input (change)="pieceChange($event, 'DmdEntrBat')" id="pj-dmd-entr-bat" type="file" accept="image/*" multiple style="display: none;" />
 					</div>
 					<div class="form-group row">
 						<div class="col-md-4">
-							<button type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<button *ngIf="!DmdEntrBat.loader" (click)="clickEnregDmdEntrBat()" type="submit" class="btn btn-info btn-block">Enregistrer la demande</button>
+							<div *ngIf="DmdEntrBat.loader" class="loader"></div>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
 
+	</div>
+
+	<!-- MODAL -->
+	<!-- MODAL DETAIL DEMANDE MOBILIER -->
+	<div #modalAjoutSpe class="modal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Ajout de : {{Ajout.titre}}</h6>
+	        <button type="button" class="close" (click)="fermeAjoutSpe()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-content">
+	      	<div class="col-md-12">
+		      	<div class="form-group">
+		      		<label>{{Ajout.libelle}}</label>
+		      		<input [(ngModel)]="Ajout.valeur" type="text" name="valeur">
+		      	</div>
+		      </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button (click)="ajouterSpe()" type="button" class="btn btn-primary">Valider</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 </div>
 

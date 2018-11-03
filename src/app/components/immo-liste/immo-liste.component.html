@@ -12,14 +12,15 @@
 				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
 				<li class="menu1-active"><span>LISTE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
 
 	    <div class="conteneur-de-menu2">
 			<ul class="menu1">
-				<li (click)="clickSousMenu('liste_dmd_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_mob'}"><span>DEMANDE MOBILIER</span></li>
-				<li (click)="clickSousMenu('liste_dmd_rep_mob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_rep_mob'}"><span>DEMANDE REPARATION MOBILIER</span></li>
-				<li (click)="clickSousMenu('liste_dmd_bat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_bat'}"><span>DEMANDE ENTRETIENT BATIMENT</span></li>
+				<li (click)="clickSousMenu('liste_dmd_mob', 'DmdMob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_mob'}"><span>DEMANDE MOBILIER</span></li>
+				<li (click)="clickSousMenu('liste_dmd_rep_mob', 'DmdRepMob')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_rep_mob'}"><span>DEMANDE REPARATION MOBILIER</span></li>
+				<li (click)="clickSousMenu('liste_dmd_bat', 'DmdBat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd_bat'}"><span>DEMANDE ENTRETIENT BATIMENT</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -33,28 +34,28 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<input type="text" class="form-control" />
+							<select [(ngModel)]="DmdMob.filtre.service" (change)="filtreChange('DmdMob')" class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input type="text" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.Demandeur" (change)="filtreChange('DmdMob')" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input type="text" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.article" (change)="filtreChange('DmdMob')" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Statut</label>
-							<select class="form-control custom-select">
-								<option>En Attente de Traitement</option>
-								<option>En cours de réalisation</option>
-								<option>Réalisée</option>
+							<select [(ngModel)]="DmdMob.filtre.statut" (change)="filtreChange('DmdMob')" class="form-control custom-select">
+								<option *ngFor="let e of ListeEtatDmdMob" value="{{e.id_etat_dmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -63,7 +64,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date</label>
-							<input type="date" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.date" (change)="filtreChange('DmdMob')" type="date" class="form-control" />
 						</div>
 					</div>
 				</div>
@@ -89,7 +90,9 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<input type="text" class="form-control" />
+							<select class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -108,9 +111,7 @@
 						<div class="form-group">
 							<label>Statut</label>
 							<select class="form-control custom-select">
-								<option>En Attente de Traitement</option>
-								<option>En cours de réalisation</option>
-								<option>Réalisée</option>
+								<option *ngFor="let e of ListeEtatDmdMob" value="{{e.id_etat_dmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -146,7 +147,9 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<input type="text" class="form-control" />
+							<select class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -165,9 +168,7 @@
 						<div class="form-group">
 							<label>Statut</label>
 							<select class="form-control custom-select">
-								<option>En Attente de Traitement</option>
-								<option>En cours de réalisation</option>
-								<option>Réalisée</option>
+								<option *ngFor="let e of ListeEtatDmdBat" value="{{e.id_etat_dmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
 					</div>

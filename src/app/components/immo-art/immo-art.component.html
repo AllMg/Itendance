@@ -12,6 +12,7 @@
 				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
 				<li class="menu1-active"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
 
@@ -20,6 +21,8 @@
 				<li (click)="clickSousMenu('art_stock')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_stock'}"><span>STOCK</span></li>
 				<li (click)="clickSousMenu('art_spe')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_spe'}"><span>SPECIFICITE</span></li>
 				<li (click)="clickSousMenu('art_hist')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_hist'}"><span>HISTORIQUE</span></li>
+				<li (click)="clickSousMenu('art_maj')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_maj'}"><span>MISE A JOUR</span></li>
+				<li (click)="clickSousMenu('art_entree')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_entree'}"><span>ENTREE</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -74,7 +77,289 @@
 					</tbody>
 				</table>
 			</div>
+			<div *ngIf="Menu.sousMenu == 'art_spe'" class="col-md-12">
+				<div class="row">
+					<div class="col-md-4">
+						<h6 style="text-transform: uppercase;">Liste des classes</h6>
+						<hr>
+						<button (click)="ouvreAjout()" class="btn btn-info">Ajouter une classe</button><br>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Code</th>
+									<th>Classe</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>CD</td>
+									<td>NOM DE CLASSE</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-4">
+						<h6 style="text-transform: uppercase;">Liste des natures</h6>
+						<hr>
+						<button class="btn btn-info">Ajouter une nature</button><br>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Code</th>
+									<th>Nature</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>CD</td>
+									<td>NOM DE NATURE</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-4">
+						<h6 style="text-transform: uppercase;">Liste des spécificités</h6>
+						<hr>
+						<button class="btn btn-info">Ajouter une spécificité</button><br>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Code</th>
+									<th>Spécificité</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>CDE</td>
+									<td>NOM DE SPE</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="Menu.sousMenu == 'art_hist'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Historique de mouvement d'un article</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label>Code de l'article</label>
+							<div class="input-group mb-3">
+								<input type="text" class="form-control">
+								<div class="input-group-append">
+									<button class="btn btn-info">Charger</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-7">
+						<div class="form-group">
+							<label>Désignation</label>
+							<div class="input-group mb-3">
+								<input type="text" class="form-control">
+								<div class="input-group-append">
+									<button class="btn btn-info">Charger</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Classe</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Référence</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Marque</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Code service</th>
+							<th>Libellé service</th>
+							<th>Détenteur</th>
+							<th>Date début</th>
+							<th>Date fin</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>4010</td>
+							<td>AFFAIRES GENERALES</td>
+							<td>MATRICULE</td>
+							<td>12/03/2015</td>
+							<td>23/11/2015</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="Menu.sousMenu == 'art_maj'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Mise à jour de la localisation d'article</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label>Code de l'article</label>
+							<div class="input-group mb-3">
+								<input type="text" class="form-control">
+								<div class="input-group-append">
+									<button class="btn btn-info">Charger</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-7">
+						<div class="form-group">
+							<label>Désignation</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Référence</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Prix</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Imputation</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Type de mise à jour</label>
+					<select class="form-control custom-select">
+						<option>TRANSFERT</option>
+						<option>RETOUR EN STOCK</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Code service (nouveau détenteur)</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Matricule agent (nouveau détenteur)</label>
+					<input type="text" class="form-control">
+				</div>
+				<button class="btn btn-info">Enregistrer</button>
+			</div>
+			<div *ngIf="Menu.sousMenu == 'art_entree'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Saisie bon d'entrée depuis un TEF</h6>
+				<hr>
+				<div class="tef-conteneur">
+					<div class="form-group">
+						<label>N° TEF</label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control">
+							<div class="input-group-append">
+								<button class="btn btn-info">Charger</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>N° BE</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Date BE</label>
+							<input type="date" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>N° BL</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Magasin</label>
+							<select class="form-control custom-select">
+								<option>MAGASIN1</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Désignation</th>
+							<th>Cmd</th>
+							<th>PU HT Prev</th>
+							<th>Colisage</th>
+							<th>Livrée</th>
+							<th>PU TTC</th>
+							<th>Amortissable</th>
+							<th>Cout Unitaire</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
 		</div>
+	</div>
+
+	<!-- MODAL -->
+	<!-- MODAL AJOUT SPECIFICITE -->
+	<div #modalAjout class="modal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Ajout d'une spécificité</h6>
+	        <button type="button" class="close" (click)="fermeAjout()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="row">
+	      		<div class="col-3">
+	      			<div class="form-group">
+	      				<label>Code</label>
+	      				<input type="text" class="form-control">
+	      			</div>
+	      		</div>
+	      		<div class="col-9">
+	      			<div class="form-group">
+	      				<label>Spécificité</label>
+	      				<input type="text" class="form-control">
+	      			</div>
+	      		</div>
+	      	</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button (click)="fermeAjout()" type="button" class="btn btn-primary">Ajouter</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 </div>
 

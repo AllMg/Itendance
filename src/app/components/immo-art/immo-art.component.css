@@ -38,3 +38,8 @@
     color: white;
     background-color: rgb(23, 153, 180);
 }
+
+.tef-conteneur{
+    width: 500px;
+    margin: 0 auto;
+}

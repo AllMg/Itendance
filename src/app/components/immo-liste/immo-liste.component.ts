@@ -20,7 +20,43 @@ export class ImmoListeComponent implements OnInit {
     sousMenu: ""
   };
 
-  constructor(private router: Router, private immoService: ImmoService) { }
+  listeService:Array<{libelle: string, id: number}> = [];
+  ListeEtatDmdBat:Array<{libelle: string, id_etat_dmd: number}> = [];
+  ListeEtatDmdMob:Array<{libelle: string, id_etat_dmd: number}> = [];
+
+  DmdMob = {
+    liste: [],
+    fonction: "avoirListeDmdMob",
+    filtre: {
+      service: "",
+      demandeur: "",
+      article: "",
+      statut: "",
+      date: ""
+    }
+  };
+
+  constructor(
+    private router: Router, 
+    private immoService: ImmoService) {
+
+    /*let that = this;
+    this.immoService.immoTopic("avoirListeService", "").subscribe(obs=>{
+      if(obs.success){
+        that.listeService = obs.msg;
+      }
+    });
+    this.immoService.immoTopic("avoirListeEtatDmdMob", "").subscribe(obs=>{
+      if(obs.success){
+        that.ListeEtatDmdMob = obs.msg;
+      }
+    });
+    this.immoService.immoTopic("avoirListeEtatDmdBat", "").subscribe(obs=>{
+      if(obs.success){
+        that.ListeEtatDmdBat = obs.msg;
+      }
+    });*/
+  }
 
   ngOnInit() {
   }
@@ -29,8 +65,25 @@ export class ImmoListeComponent implements OnInit {
     this.router.navigate(['/'+lien]);
   }
 
-  clickSousMenu(nom){
-    this.Menu.sousMenu = nom;
+  clickSousMenu(nomSection, nomAttr){
+    this.Menu.sousMenu = nomSection;
+    if(this[nomAttr].liste.length == 0){
+      let that = this;
+      this.immoService.immoTopic(this[nomAttr].fonction, this[nomAttr].filtre).subscribe(obs=>{
+        if(obs.success){
+          that[nomAttr].liste = obs.msg;
+        }
+      });
+    }
+  }
+
+  filtreChange(nomAttr){
+    let that = this;
+    this.immoService.immoTopic(this[nomAttr].fonction, this[nomAttr].filtre).subscribe(obs=>{
+      if(obs.success){
+        that[nomAttr].liste = obs.msg;
+      }
+    });
   }
 
   ouvreDetailMob(){
@@ -55,12 +108,6 @@ export class ImmoListeComponent implements OnInit {
 
   fermeDetailBat(){
     $(this.modalDetailBat.nativeElement).modal('hide');
-  }
-
-  test(){
-  	this.immoService.immoTopic("test", "Fuck").subscribe(obs=>{
-  		console.log("Kafka response: "+JSON.stringify(obs));
-  	}).unsubscribe();
   }
 
 }

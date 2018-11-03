@@ -4,9 +4,9 @@ const kafkaConfig = require('../config/kafkaConfig');
 
 router.post('/immoTopic',function(req,res){
   const data = req.body.data;
-  const topicLogReq = "listeDmdBatreq";
-  const topicLogRes = "listeDmdBatres";
-  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(data), function(err,data){
+  const topicLogReq = data.fonction+"req";
+  const topicLogRes = data.fonction+"res";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(data.argument), function(err,data){
     if(err){
       res.json({
         sucess: !err,

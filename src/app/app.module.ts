@@ -89,7 +89,7 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatNativeDateModule, MatPaginatorModule, MatSelectModule,
-  MatStepperModule, MatTableModule
+  MatStepperModule, MatTableModule, MatAutocompleteModule
 } from '@angular/material';
 import { StatusService } from './services/status/status.service';
 import { CategorieService } from './services/categorie/categorie.service';
@@ -206,6 +206,10 @@ import {FileService} from './services/file/file.service';
 import { ImmoDmdComponent } from './components/immo-dmd/immo-dmd.component';
 import { ImmoListeComponent } from './components/immo-liste/immo-liste.component';
 import { ImmoArtComponent } from './components/immo-art/immo-art.component';
+import { ImmoInventaireComponent } from './components/immo-inventaire/immo-inventaire.component';
+import { SecVisiteurComponent } from './components/sec-visiteur/sec-visiteur.component';
+import { SecAccesComponent } from './components/sec-acces/sec-acces.component';
+import { SecAgentComponent } from './components/sec-agent/sec-agent.component';
 
 const appRoutes: Routes = [
   {path: '', component: AccueilComponent, canActivate: [UnAuthGuard]},
@@ -322,7 +326,11 @@ const appRoutes: Routes = [
   {path: 'info-pension', component: InfoDemandeComponent},
   {path: 'immo-dmd', component: ImmoDmdComponent},
   {path: 'immo-liste', component: ImmoListeComponent},
-  {path: 'immo-art', component: ImmoArtComponent}
+  {path: 'immo-art', component: ImmoArtComponent},
+  {path: 'immo-inventaire', component: ImmoInventaireComponent},
+  {path: 'sec-visiteur', component: SecVisiteurComponent},
+  {path: 'sec-acces', component: SecAccesComponent},
+  {path: 'sec-agent', component: SecAgentComponent}
 ];
 
 @NgModule({
@@ -461,7 +469,11 @@ const appRoutes: Routes = [
     InfoDemandeComponent,
     ImmoDmdComponent,
     ImmoListeComponent,
-    ImmoArtComponent
+    ImmoArtComponent,
+    ImmoInventaireComponent,
+    SecVisiteurComponent,
+    SecAccesComponent,
+    SecAgentComponent
   ],
   imports: [
     BrowserModule,
@@ -479,6 +491,7 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,

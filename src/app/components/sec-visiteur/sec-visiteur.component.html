@@ -1,0 +1,125 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>SECUTITES</h4>
+		</div>
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li  class="menu1-active"><span>VISITEURS</span></li>
+				<li (click)="clickInMenu1('sec-acces')"><span>ACCES WEEKEND / JOURS FERIES</span></li>
+				<li (click)="clickInMenu1('sec-agent')"><span>AGENT DE SECURITE</span></li>
+			</ul>
+		</div>
+
+	    <div class="conteneur-de-menu2">
+			<ul class="menu1">
+				<li (click)="clickSousMenu('entree')" [ngClass]="{'menu1-active': Menu.sousMenu == 'entree'}"><span>ENTREE</span></li>
+				<li (click)="clickSousMenu('sortie')" [ngClass]="{'menu1-active': Menu.sousMenu == 'sortie'}"><span>SORTIE</span></li>
+				<li (click)="clickSousMenu('liste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste'}"><span>LISTE</span></li>
+			</ul>
+		</div>
+		<!-- FIN MENU -->
+
+		<!-- CONTENU -->
+		<div class="row" style="padding: 10px;">
+			<!-- ENTREE VISITEUR -->
+			<div *ngIf="Menu.sousMenu == 'entree'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Enregistrement d'entrée de visieur</h6>
+				<hr>
+				<div class="form-group">
+					<label>Nom</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Prénom</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>CIN</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Service destination</label>
+					<select class="form-control custom-select">
+						<option>SERVICE</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Véhicule</label>
+					<input type="text" class="form-control" placeholder="Numéro">
+				</div>
+				<div class="form-group">
+					<label>Motif</label>
+					<textarea class="form-control" rows="7" cols="50"></textarea>
+				</div>
+				<button class="btn btn-info">Enregistrer</button>
+			</div>
+			<!-- SORTIE VISITEUR -->
+			<div *ngIf="Menu.sousMenu == 'sortie'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Enregistrement de sortie de visieur</h6>
+				<hr>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="6">Liste des visiteurs d'aujourd'hui</th>
+						</tr>
+						<tr>
+							<th>Nom</th>
+							<th>Prénom</th>
+							<th>CIN</th>
+							<th>Véhicule</th>
+							<th>Heure d'entrée</th>
+							<th>Heure de sortie</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<!-- LISTE VISITEUR -->
+			<div *ngIf="Menu.sousMenu == 'liste'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste de tous les visieurs</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Service</label>
+							<select class="form-control custom-select">
+								<option>SERVICE</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Nom/Prénom</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Date</label>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nom/Prénom</th>
+							<th>CIN</th>
+							<th>Véhicule</th>
+							<th>Date</th>
+							<th>HE</th>
+							<th>HS</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

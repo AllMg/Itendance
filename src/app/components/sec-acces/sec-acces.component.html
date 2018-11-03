@@ -1,0 +1,34 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>SECUTITES</h4>
+		</div>
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li (click)="clickInMenu1('sec-visiteur')"><span>VISITEURS</span></li>
+				<li  class="menu1-active"><span>ACCES WEEKEND / JOURS FERIES</span></li>
+				<li (click)="clickInMenu1('sec-agent')"><span>AGENT DE SECURITE</span></li>
+			</ul>
+		</div>
+
+	    <div class="conteneur-de-menu2">
+			<ul class="menu1">
+				<li (click)="clickSousMenu('dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd'}"><span>FORMULAIRE DE DEMANDE</span></li>
+				<li (click)="clickSousMenu('liste-dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste-dmd'}"><span>LISTE DES DEMANDES</span></li>
+				<li (click)="clickSousMenu('liste-acces')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste-acces'}"><span>LISTE DES ACCES</span></li>
+			</ul>
+		</div>
+		<!-- FIN MENU -->
+
+		<div class="row" style="padding: 10px;">
+			
+		</div>
+	</div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>
