@@ -26,6 +26,7 @@
 		<!-- FIN MENU -->
 
 		<!-- LISTE -->
+		<!-- LISTE DMD MOB !-->
 		<div class="row" style="padding: 10px;">
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_mob'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes de mobilier</h6>
@@ -42,7 +43,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdMob.filtre.Demandeur" (change)="filtreChange('DmdMob')" type="text" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.demandeur" (change)="filtreChange('DmdMob')" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -72,12 +73,14 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="liste-dmd-item">
-							<p>Date</p>
-							<p>Référence</p>
-							<p>Statut</p>
+							<div class="dmd-l-en-tete">
+								<span class="dmd-l-date">11/11/2018</span>
+								<span class="dmd-l-ref">Référence</span>
+							</div>
+							<label>Statut</label>
 							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
 							<p>
-								<button (click)="ouvreDetailMob()" class="btn btn-info">Voir plus de détail</button>
+								<button (click)="ouvreDetailMob(0)" class="btn btn-info">Voir plus de détail</button>
 							</p>
 						</div>
 					</div>
@@ -90,7 +93,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<select class="form-control custom-select">
+							<select [(ngModel)]="DmdRepMob.filtre.service" (change)="filtreChange('DmdRepMob')" class="form-control custom-select">
 								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
 							</select>
 						</div>
@@ -98,13 +101,13 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input type="text" class="form-control" />
+							<input [(ngModel)]="DmdRepMob.filtre.demandeur" (change)="filtreChange('DmdRepMob')" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input type="text" class="form-control" />
+							<input [(ngModel)]="DmdRepMob.filtre.article" (change)="filtreChange('DmdRepMob')" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -128,8 +131,10 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="liste-dmd-item">
-							<p>Date</p>
-							<p>Référence</p>
+							<div class="dmd-l-en-tete">
+								<span class="dmd-l-date">Date</span>
+								<span class="dmd-l-ref">Référence</span>
+							</div>
 							<p>Article</p>
 							<p>Statut</p>
 							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
@@ -212,8 +217,10 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="liste-dmd-item">
-							<p>Date</p>
-							<p>Référence</p>
+							<div class="dmd-l-en-tete">
+								<span class="dmd-l-date">Date</span>
+								<span class="dmd-l-ref">Référence</span>
+							</div>
 							<p>Site</p>
 							<p>Statut</p>
 							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
@@ -233,23 +240,34 @@
 	  <div class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h6 class="modal-title">Référence de la demande: UNE-REF</h6>
+	        <h6 class="modal-title">Référence: UNE-REF</h6>
 	        <button type="button" class="close" (click)="fermeDetailMob()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	      	<p>Le 26 Janvier 1982</p>
-			<p>Demandeur</p>
-			<p>Service</p>
-			<p>Statut</p>
+      		<span class="dmd-modal-date">Le 26 Janvier 1982</span>
+	      	<div class="form-group">
+				<label>Service</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Demandeur</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Statut</label>
+				<select class="form-control custom-select">
+					<option>STATUT</option>
+				</select>
+			</div>
 			<table class="table table-striped">
 				<thead>
 					<th>Article</th>
-					<th>Quantité</th>
+					<th>Qte</th>
 					<th>Pour</th>
-					<th>Besoin le</th>
-					<th>Jusqu'à</th>
+					<th>Date début</th>
+					<th>Date fin</th>
 				</thead>
 				<tbody>
 					<tr>
@@ -270,10 +288,9 @@
 			</table>
 			<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
 			<p>
-	        <img class="pj-dans-modal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRoHm1cMXtjv17WW9nCisgnGsCZihhJZuP3uzs3hQ1aI6r56LztQ">
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeDetailMob()" type="button" class="btn btn-primary">OK</button>
+	        <button (click)="fermeDetailMob()" type="button" class="btn btn-primary">Valider le changement</button>
 	      </div>
 	    </div>
 	  </div>
@@ -283,23 +300,36 @@
 	  <div class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h6 class="modal-title">Référence de la demande: UNE-REF</h6>
+	        <h6 class="modal-title">Référence: UNE-REF</h6>
 	        <button type="button" class="close" (click)="fermeDetailRepMob()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	      	<p>Le 26 Janvier 1982</p>
-			<p>Demandeur</p>
-			<p>Service</p>
-			<p>Article</p>
-			<p>Statut</p>
+	      	<span class="dmd-modal-date">Le 26 Janvier 1982</span>
+	      	<div class="form-group">
+				<label>Service</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Demandeur</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Article</label>
+				<input class="text" value="ARTICLE" class="form-control" readonly="true">
+			</div>	
+			<div class="form-group">
+				<label>Statut</label>
+				<select class="form-control custom-select">
+					<option>STATUT</option>
+				</select>
+			</div>
 			<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
-			<p>
 	        <img class="pj-dans-modal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRoHm1cMXtjv17WW9nCisgnGsCZihhJZuP3uzs3hQ1aI6r56LztQ">
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeDetailRepMob()" type="button" class="btn btn-primary">OK</button>
+	        <button (click)="fermeDetailRepMob()" type="button" class="btn btn-primary">Valider le changement</button>
 	      </div>
 	    </div>
 	  </div>
@@ -309,25 +339,47 @@
 	  <div class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h6 class="modal-title">Référence de la demande: UNE-REF</h6>
+	        <h6 class="modal-title">Référence: UNE-REF</h6>
 	        <button type="button" class="close" (click)="fermeDetailBat()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	      	<p>Le 26 Janvier 1982</p>
-			<p>Demandeur</p>
-			<p>Service</p>
-			<p>Type d'entretient</p>
-			<p>Caractéristique</p>
-			<p>Enumération</p>
-			<p>Statut</p>
+	      	<span class="dmd-modal-date">Le 26 Janvier 1982</span>
+	      	<div class="form-group">
+	      	</div>
+	      	<div class="form-group">
+				<label>Service</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Demandeur</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Type d'entretient</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Caractéristique</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Enumération</label>
+				<input type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Statut</label>
+				<select class="form-control custom-select">
+					<option>STATUT</option>
+				</select>
+			</div>
 			<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
 			<p>
 	        <img class="pj-dans-modal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRoHm1cMXtjv17WW9nCisgnGsCZihhJZuP3uzs3hQ1aI6r56LztQ">
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeDetailBat()" type="button" class="btn btn-primary">OK</button>
+	        <button (click)="fermeDetailBat()" type="button" class="btn btn-primary">Valider le changement</button>
 	      </div>
 	    </div>
 	  </div>

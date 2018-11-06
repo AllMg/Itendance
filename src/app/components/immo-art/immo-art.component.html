@@ -43,8 +43,7 @@
 						<div class="form-group">
 							<label>Domaine</label>
 							<select class="form-control custom-select">
-								<option>Domaine1</option>
-								<option>Domaine2</option>
+								<option *ngFor="let d of listeDomaine" value="{{d.id_domaine_art}}">{{d.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -52,8 +51,33 @@
 						<div class="form-group">
 							<label>Type</label>
 							<select class="form-control custom-select">
-								<option>Type1</option>
-								<option>Type2</option>
+								<option *ngFor="let t of listeType" value="{{t.id_type_art}}">{{t.libelle}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Classe</label><br>
+							<select class="form-control custom-select">
+								<option *ngFor="let c of listeClasse" value="{{c.id_classe_art}}">{{c.libelle}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Nature</label>
+							<select class="form-control custom-select">
+								<option *ngFor="let n of listeNature" value="{{n.id_nature_art}}">{{n.libelle}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Spécificité</label>
+							<select class="form-control custom-select">
+								<option *ngFor="let s of listeSpecificite" value="{{s.id_spe_art}}">{{s.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -67,12 +91,12 @@
 						<th>Code</th>
 					</thead>
 					<tbody>
-						<tr>
-							<td>ARTICLE</td>
-							<td>DOMAINE</td>
-							<td>TYPE</td>
-							<td>1</td>
-							<td>ARTCODE</td>
+						<tr *ngFor="let s of Stock.liste">
+							<td>{{s.libelle}}</td>
+							<td>{{avoirCaractParId('listeDomaine', 'id_domaine_art', s.id_domaine_art).libelle}}</td>
+							<td>{{avoirCaractParId('listeType', 'id_type_art', s.id_type_art).libelle}}</td>
+							<td>{{s.stock}}</td>
+							<td>{{avoirCode(s)}}</td>
 						</tr>
 					</tbody>
 				</table>

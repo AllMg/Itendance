@@ -50,3 +50,24 @@
     width: 100%;
     height: auto;
 }
+
+.dmd-l-en-tete{
+    width: 100%;
+    height: 40px;
+}
+
+.dmd-l-date{
+    opacity: 0.8;
+    float: left;
+    font-size: 12px;
+
+}
+.dmd-l-ref{
+    float: right;
+    font-weight: bold;
+}
+.dmd-modal-date{
+    float: right;
+    font-size: 12px;
+    opacity: 0.8;
+}

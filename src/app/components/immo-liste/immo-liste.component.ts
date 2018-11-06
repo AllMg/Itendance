@@ -36,6 +36,18 @@ export class ImmoListeComponent implements OnInit {
     }
   };
 
+  DmdRepMob = {
+    liste: [],
+    fonction: "avoirListeDmdRepMob",
+    filtre: {
+      service: "",
+      demandeur: "",
+      article: "",
+      statut: "",
+      date: ""
+    }
+  };
+
   constructor(
     private router: Router, 
     private immoService: ImmoService) {
@@ -67,8 +79,8 @@ export class ImmoListeComponent implements OnInit {
 
   clickSousMenu(nomSection, nomAttr){
     this.Menu.sousMenu = nomSection;
+    let that = this;
     if(this[nomAttr].liste.length == 0){
-      let that = this;
       this.immoService.immoTopic(this[nomAttr].fonction, this[nomAttr].filtre).subscribe(obs=>{
         if(obs.success){
           that[nomAttr].liste = obs.msg;
@@ -86,7 +98,7 @@ export class ImmoListeComponent implements OnInit {
     });
   }
 
-  ouvreDetailMob(){
+  ouvreDetailMob(indice){
     $(this.modalDetailMob.nativeElement).modal('show');
   }
 

@@ -26,7 +26,7 @@ export class ImmoDmdComponent implements OnInit {
 
   DmdMob = {
     reference: "",
-    articles: [{designation: "", quantite: 1, typeDmd: "", dateDeBesoin: "-", dateFinBesoin: "-"}],
+    articles: [{refArticle: "", quantite: 1, typeDmd: null, dateDeBesoin: null, dateFinBesoin: null}],
     observation: "",
     loader: false,
     articleOptions: [],
@@ -144,7 +144,7 @@ export class ImmoDmdComponent implements OnInit {
   }
 
   clickPlusArticle(){
-    this.DmdMob.articles.push({designation: "", quantite: 1, typeDmd: "", dateDeBesoin: "-", dateFinBesoin: "-"});
+    this.DmdMob.articles.push({refArticle: "", quantite: 1, typeDmd: null, dateDeBesoin: null, dateFinBesoin: null});
     let that = this;
     let formControl = new FormControl();
     formControl.valueChanges.subscribe(term => {
@@ -166,35 +166,84 @@ export class ImmoDmdComponent implements OnInit {
     this.DmdMob.articleControls.splice(index, 1);
   }
 
-  articleEstBon(article){
+  articlesSontBon(articles){
+    for(let i=0; i<articles.length; i++){
+      articles[i].refArticle = articles[i].refArticle.trim();
+      if(articles[i].refArticle == ""){
+        this.toastr.error("Une désignation est nécessaire");
+        return false;
+      }
+      if(articles[i].quantite <= 0){
+        this.toastr.error("La quantité est invalide");
+        return false;
+      }
+      if(articles[i].typeDmd == "PRET"){
+        if(articles[i].dateDeBesoin == null || articles[i].dateFinBesoin == null){
+          this.toastr.error("Il faut préciser les dates");
+          return false;
+        }
+        let dateDeBesoin = new Date(articles[i].dateDeBesoin);
+        let dateFinBesoin = new Date(articles[i].dateFinBesoin);
+        if(dateDeBesoin > dateFinBesoin){
+          this.toastr.error("La date de début est supérieur à la date de fin");
+          return false;
+        }
+      }
+      else if(articles[i].typeDmd == null){
+        this.toastr.error("Il faut préciser le type de détention");
+        return false;
+      }
+    }
+  }
 
+  avoirTableauArticle(articles){
+    let tableau = [];
+    for(let i in articles){
+      tableau.push(articles[i].refArticle);
+    }
+    return tableau;
   }
 
   clickEnregDmdMob(){
     if(this.DmdMob.reference != ""){
-      this.DmdMob.loader = true;
-      let argument = {
-        refIndividu: "0000",
-        refService: "1111",
-        reference: this.DmdMob.reference,
-        articles: this.DmdMob.articles,
-        observation: this.DmdMob.observation
-      };
-      let that = this;
-      this.immoService.immoTopic("ajoutDmdImmo", argument).subscribe(obs=>{
-        console.log(obs);
-        if(obs.success){
-          that.toastr.success(obs.msg);
-          that.DmdMob.reference = "";
-          that.DmdMob.articles = [{designation: "", quantite: 1, typeDmd: "", dateDeBesoin: "-", dateFinBesoin: "-"}];
-          that.DmdMob.articleControls = [new FormControl()];
-          that.DmdMob.observation = "";
-        }
-        else{
-          that.toastr.error(obs.msg);
-        }
-        that.DmdMob.loader = false;
-      });
+      if(this.articlesSontBon(this.DmdMob.articles)){
+        this.DmdMob.loader = true;  
+        let articlesNoms = this.avoirTableauArticle(this.DmdMob.articles);
+        let that = this;
+        this.immoService.immoTopic("prendArticleId", articlesNoms).subscribe(obs=>{
+          if(obs.success){
+            for(let i in obs.msg){
+              that.DmdMob.articles[i].refArticle = obs.msg[i];
+            }
+            let argument = {
+              refIndividu: "0000",
+              refService: "1111",
+              reference: that.DmdMob.reference,
+              articles: that.DmdMob.articles,
+              observation: that.DmdMob.observation
+            };
+            
+            that.immoService.immoTopic("ajoutDmdImmo", argument).subscribe(obs=>{
+              console.log(obs);
+              if(obs.success){
+                that.toastr.success(obs.msg);
+                that.DmdMob.reference = "";
+                that.DmdMob.articles = [{refArticle: "", quantite: 1, typeDmd: null, dateDeBesoin: null, dateFinBesoin: null}];
+                that.DmdMob.articleControls = [new FormControl()];
+                that.DmdMob.observation = "";
+              }
+              else{
+                that.toastr.error(obs.msg);
+              }
+              that.DmdMob.loader = false;
+            });
+          }
+          else{
+            that.toastr.error(obs.msg);
+            that.DmdMob.loader = false;  
+          }
+        });
+      }
     }
     else{
       this.toastr.error("La demande n'a pas de référence");
@@ -268,7 +317,7 @@ export class ImmoDmdComponent implements OnInit {
         else{
           that.toastr.error(obs.msg);
         }
-        this.DmdRepMob.loader = false;
+        that.DmdRepMob.loader = false;
       });
     }
     else{

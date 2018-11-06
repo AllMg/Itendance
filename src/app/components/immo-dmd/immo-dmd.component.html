@@ -52,7 +52,7 @@
 							<tbody>
 								<tr *ngFor="let art of DmdMob.articles; let index = index">
 									<td>
-										<input [(ngModel)]="DmdMob.articles[index].designation"  name="designation{{index}}" type="text" matInput [formControl]="DmdMob.articleControls[index]" [matAutocomplete]="auto" class="form-control" [ngClass]="{'mat-input-element' : DmdMob.utiliseClass}">
+										<input [(ngModel)]="DmdMob.articles[index].refArticle"  name="refArticle{{index}}" type="text" matInput [formControl]="DmdMob.articleControls[index]" [matAutocomplete]="auto" class="form-control" [ngClass]="{'mat-input-element' : DmdMob.utiliseClass}">
 									</td>
 									<td>
 										<input [(ngModel)]="DmdMob.articles[index].quantite" [value]="DmdMob.articles[index].quantite" name="quantite{{index}}" type="number" min="1" class="form-control" value="1" />
@@ -64,10 +64,10 @@
 										</select>
 									</td>
 									<td>
-										<input *ngIf="DmdMob.articles[index].pour=='PRET'" [(ngModel)]="DmdMob.articles[index].dateDeBesoin" [value]="DmdMob.articles[index].dateDeBesoin" name="dateDeBesoin{{index}}" type="date" class="form-control">
+										<input *ngIf="DmdMob.articles[index].typeDmd=='PRET'" [(ngModel)]="DmdMob.articles[index].dateDeBesoin" [value]="DmdMob.articles[index].dateDeBesoin" name="dateDeBesoin{{index}}" type="date" class="form-control">
 									</td>
 									<td>
-										<input *ngIf="DmdMob.articles[index].pour=='PRET'" [(ngModel)]="DmdMob.articles[index].dateFinBesoin" [value]="DmdMob.articles[index].dateFinBesoin" name="dateFinBesoin{{index}}" type="date" class="form-control" />
+										<input *ngIf="DmdMob.articles[index].typeDmd=='PRET'" [(ngModel)]="DmdMob.articles[index].dateFinBesoin" [value]="DmdMob.articles[index].dateFinBesoin" name="dateFinBesoin{{index}}" type="date" class="form-control" />
 									</td>
 									<td>
 										<button *ngIf="index > 0" (click)="effaceChampArticle(index)" class="btn"><span class="fa fa-minus"></span></button>
