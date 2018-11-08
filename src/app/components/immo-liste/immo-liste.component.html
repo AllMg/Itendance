@@ -49,7 +49,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="DmdMob.filtre.article" (change)="filtreChange('DmdMob')" type="text" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.article" (change)="filtreChange('DmdMob')" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -107,7 +107,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="DmdRepMob.filtre.article" (change)="filtreChange('DmdRepMob')" type="text" class="form-control" />
+							<input [(ngModel)]="DmdRepMob.filtre.article" (change)="filtreChange('DmdRepMob')" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -166,7 +166,9 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Site</label><br>
-							<input type="text" class="form-control" />
+							<select class="form-control custom-select">
+								<option>SITE</option>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-3">

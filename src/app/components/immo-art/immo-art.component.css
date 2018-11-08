@@ -43,3 +43,7 @@
     width: 500px;
     margin: 0 auto;
 }
+
+.input-upper{
+    text-transform: uppercase;
+}

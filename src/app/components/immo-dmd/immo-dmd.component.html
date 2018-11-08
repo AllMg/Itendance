@@ -52,7 +52,7 @@
 							<tbody>
 								<tr *ngFor="let art of DmdMob.articles; let index = index">
 									<td>
-										<input [(ngModel)]="DmdMob.articles[index].refArticle"  name="refArticle{{index}}" type="text" matInput [formControl]="DmdMob.articleControls[index]" [matAutocomplete]="auto" class="form-control" [ngClass]="{'mat-input-element' : DmdMob.utiliseClass}">
+										<input [(ngModel)]="DmdMob.articles[index].refArticle"  name="refArticle{{index}}" type="text" matInput [formControl]="DmdMob.articleControls[index]" [matAutocomplete]="auto" class="form-control input-upper" [ngClass]="{'mat-input-element' : DmdMob.utiliseClass}">
 									</td>
 									<td>
 										<input [(ngModel)]="DmdMob.articles[index].quantite" [value]="DmdMob.articles[index].quantite" name="quantite{{index}}" type="number" min="1" class="form-control" value="1" />
@@ -105,7 +105,7 @@
 					</div>
 					<div class="form-group">
 						<label>Article</label>
-						<input [(ngModel)]="DmdRepMob.article" type="text" name="article"  matInput [formControl]="DmdRepMob.articleControl" [matAutocomplete]="autoRepMob" class="form-control" [ngClass]="{'mat-input-element' : DmdRepMob.utiliseClass}">
+						<input [(ngModel)]="DmdRepMob.article" type="text" name="article"  matInput [formControl]="DmdRepMob.articleControl" [matAutocomplete]="autoRepMob" class="form-control input-upper" [ngClass]="{'mat-input-element' : DmdRepMob.utiliseClass}">
 
 						<mat-autocomplete #autoRepMob="matAutocomplete">
 						  <mat-option *ngFor="let option of DmdRepMob.articleOptions" [value]="option">{{option}}</mat-option>
@@ -212,7 +212,7 @@
 	      	<div class="col-md-12">
 		      	<div class="form-group">
 		      		<label>{{Ajout.libelle}}</label>
-		      		<input [(ngModel)]="Ajout.valeur" type="text" name="valeur">
+		      		<input [(ngModel)]="Ajout.valeur" type="text" name="valeur" class="form-control input-upper">
 		      	</div>
 		      </div>
 	      </div>

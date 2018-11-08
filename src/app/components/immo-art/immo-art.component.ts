@@ -12,7 +12,9 @@ declare var $: any;
 })
 export class ImmoArtComponent implements OnInit {
 
-  @ViewChild('modalAjout') modalAjout;
+  @ViewChild('modalAjoutDom') modalAjoutDom;
+  @ViewChild('modalAjoutSpe') modalAjoutSpe;
+  @ViewChild('modalModifArt') modalModifArt;
 
   Menu = {
     menu: "article",
@@ -26,7 +28,7 @@ export class ImmoArtComponent implements OnInit {
   listeSpecificite = [];
 
   Stock = {
-    liste: [],
+    liste: [{libelle: "ARTICLE", id_article: 1, stock: 2, id_domaine_art: 0, id_type_art: 0, id_classe_art: 0, id_nature_art: 0, id_spe_art: 0}],
     filtre: {
       article: "",
       domaine: 0,
@@ -35,6 +37,18 @@ export class ImmoArtComponent implements OnInit {
       nature: 0,
       specificite: 0
     }
+  };
+
+  Dom = {
+    valeur: "domaine",
+    btnTexte: "Ajouter une domaine",
+    titreModal: "Ajout d'une Domaine"
+  };
+
+  Spe = {
+    valeur: "classe",
+    btnTexte: "Ajouter une Classe",
+    titre: "Classe"
   };
 
   constructor(
@@ -93,16 +107,26 @@ export class ImmoArtComponent implements OnInit {
     }*/
   }
 
+  avoirLibelleParId(nomAttr, nomId, id){
+    for(let i=0; i<this[nomAttr].length; i++){
+      if(this[nomAttr][i][nomId] == id){
+        return this[nomAttr][i].libelle;
+      }
+    }
+    return '-';
+  }
+
   avoirCaractParId(nomAttr, nomId, id){
     for(let i=0; i<this[nomAttr].length; i++){
       if(this[nomAttr][i][nomId] == id){
         return this[nomAttr][i];
       }
     }
+    return '-';
   }
 
   avoirCode(article){
-    if(article.id_classe_art > 0){
+    if(article.id_classe_art > 1){
       let classe = this.avoirCaractParId("listeClasse", "id_classe_art", article.id_classe_art).code_classe;
       let nature = this.avoirCaractParId("listeNature", "id_nature_art", article.id_nature_art).code_nature;
       let spe = this.avoirCaractParId("listeSpecificite", "id_spe_art", article.id_spe_art).code_spe;
@@ -113,12 +137,54 @@ export class ImmoArtComponent implements OnInit {
     }
   }
 
-  ouvreAjout(){
-    $(this.modalAjout.nativeElement).modal('show');
+  domValeurChange(){
+    if(this.Dom.valeur == "domaine"){
+      this.Dom.btnTexte = "Ajouter une domaine";
+      this.Dom.titreModal = "Ajout d'une Domaine";
+    }
+    else{
+      this.Dom.btnTexte = "Ajouter un type"
+      this.Dom.titreModal = "Ajout d'un Type";
+    }
   }
 
-  fermeAjout(){
-    $(this.modalAjout.nativeElement).modal('hide');
+  speValeurChange(){
+    if(this.Spe.valeur == "classe"){
+      this.Spe.btnTexte = "Ajouter une Classe";
+      this.Spe.titre = "Classe";
+    }
+    else if(this.Spe.valeur == "nature"){
+      this.Spe.btnTexte = "Ajouter une Nature";
+      this.Spe.titre = "Nature";
+    }
+    else{
+      this.Spe.btnTexte = "Ajouter une Spécificité";
+      this.Spe.titre = "Spécificité";
+    }
+  }
+
+  ouvreAjoutDom(){
+    $(this.modalAjoutDom.nativeElement).modal('show');
+  }
+
+  fermeAjoutDom(){
+    $(this.modalAjoutDom.nativeElement).modal('hide');
+  }
+
+  ouvreAjoutSpe(){
+    $(this.modalAjoutSpe.nativeElement).modal('show');
+  }
+
+  fermeAjoutSpe(){
+    $(this.modalAjoutSpe.nativeElement).modal('hide');
+  }
+
+  ouvreModifArt(){
+    $(this.modalModifArt.nativeElement).modal('show');
+  }
+
+  fermeModifArt(){
+    $(this.modalModifArt.nativeElement).modal('hide');
   }
 
   test(){

@@ -48,3 +48,7 @@
     animation: spin 2s linear infinite;
     margin: auto;
 }
+
+.input-upper{
+    text-transform: uppercase;
+}
