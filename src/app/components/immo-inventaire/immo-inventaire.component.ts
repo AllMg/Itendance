@@ -29,7 +29,7 @@ export class ImmoInventaireComponent implements OnInit {
 
 	test(){
 		console.log("Start...");
-  		this.immoService.immoTopic("listeEnumEntrBat", 1).subscribe(obs=>{
+  		this.immoService.immoTopic("listeEnumEntrBat", 1, false).subscribe(obs=>{
   			console.log("Kafka response: "+JSON.stringify(obs));
   		});
 	}

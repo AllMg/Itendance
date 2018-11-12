@@ -12,6 +12,7 @@ declare var $: any;
 })
 export class ImmoArtComponent implements OnInit {
 
+  @ViewChild('modalChargement') modalChargement;
   @ViewChild('modalAjoutDom') modalAjoutDom;
   @ViewChild('modalAjoutSpe') modalAjoutSpe;
   @ViewChild('modalModifArt') modalModifArt;
@@ -35,20 +36,37 @@ export class ImmoArtComponent implements OnInit {
       type: 0,
       classe: 0,
       nature: 0,
-      specificite: 0
+      spe: 0
     }
   };
 
   Dom = {
-    valeur: "domaine",
+    select: "domaine",
+    valeur: "",
+    attr: "listeDomaine",
     btnTexte: "Ajouter une domaine",
     titreModal: "Ajout d'une Domaine"
   };
 
   Spe = {
-    valeur: "classe",
+    select: "classe",
+    valeurCode: "",
+    valeurLibelle: "",
+    topicAjout: "ajouterClasseArtInt",
+    attr: "listeClasse",
     btnTexte: "Ajouter une Classe",
-    titre: "Classe"
+    titre: "Classe",
+    tailleTexte: 2
+  };
+
+  Hist = {
+    codeArtcile: "",
+    designation: "",
+    classe: "",
+    reference: "",
+    marque: "",
+    listeHist: [],
+    listeService: []
   };
 
   constructor(
@@ -92,9 +110,9 @@ export class ImmoArtComponent implements OnInit {
 
   clickSousMenu(nom){
     this.Menu.sousMenu = nom;
+    let that = this;
     /*if(nom == "art_stock"){
       if(this.Stock.liste.length == 0){
-        let that = this;
         this.immoService.immoTopic("avoirListeStock", "").subscribe(obs=>{
           if(obs.success){
             that.Stock.liste = obs.msg;
@@ -104,7 +122,21 @@ export class ImmoArtComponent implements OnInit {
           }
         });
       }
+    }
+    if(nom == "art_hist"){
+      if(this.Hist.listeService.length == 0){
+        
+      }
     }*/
+  }
+
+  filtreChange(){
+    let that = this;
+    this.immoService.immoTopic("", "", true).subscribe(obs=>{
+      if(obs.success){
+        that.Stock.liste = obs.msg;
+      }
+    });
   }
 
   avoirLibelleParId(nomAttr, nomId, id){
@@ -138,33 +170,74 @@ export class ImmoArtComponent implements OnInit {
   }
 
   domValeurChange(){
-    if(this.Dom.valeur == "domaine"){
+    if(this.Dom.select == "domaine"){
       this.Dom.btnTexte = "Ajouter une domaine";
       this.Dom.titreModal = "Ajout d'une Domaine";
+      this.Dom.attr = "listeDomaine";
     }
     else{
       this.Dom.btnTexte = "Ajouter un type"
       this.Dom.titreModal = "Ajout d'un Type";
+      this.Dom.attr = "listeType";
     }
   }
 
   speValeurChange(){
-    if(this.Spe.valeur == "classe"){
+    this.Spe.tailleTexte = 2;
+    if(this.Spe.select == "classe"){
       this.Spe.btnTexte = "Ajouter une Classe";
       this.Spe.titre = "Classe";
+      this.Spe.attr = "listeClasse";
+      this.Spe.topicAjout = "ajouterClasseArtInt";
     }
-    else if(this.Spe.valeur == "nature"){
+    else if(this.Spe.select == "nature"){
       this.Spe.btnTexte = "Ajouter une Nature";
       this.Spe.titre = "Nature";
+      this.Spe.attr = "listeNature";
+      this.Spe.topicAjout = "ajouterNatureArtInt";
     }
     else{
       this.Spe.btnTexte = "Ajouter une Spécificité";
       this.Spe.titre = "Spécificité";
+      this.Spe.attr = "listeSpecificite";
+      this.Spe.topicAjout = "ajouterSpeArtInt";
+      this.Spe.tailleTexte = 3;
     }
   }
 
   ouvreAjoutDom(){
+    this.Dom.valeur = "";
     $(this.modalAjoutDom.nativeElement).modal('show');
+  }
+
+  ajouterDom(){
+    this.fermeAjoutDom();
+    let argument = this.Dom.valeur.trim();
+    let that = this;
+    let fonction = "ajouterDomaineArtInt";
+    if(this.Dom.select == "type"){
+      fonction = "ajouterTypeArtInt";
+    }
+    let existe = false;
+    for(let i=0; i<this[this.Dom.attr].length; i++){
+      if(this[this.Dom.attr].libelle == argument){
+        existe = true;
+        break;
+      }
+    }
+    if(!existe){
+      this.immoService.immoTopic(fonction, argument, false).subscribe(obs=>{
+        if(obs.success){
+          that[that.Dom.attr].push(obs.msg);
+        }
+        else{
+          that.toast.error(obs.msg);
+        }
+      });
+    }
+    else{
+      this.toast.error("Cette valeur existe déjà");
+    }
   }
 
   fermeAjoutDom(){
@@ -172,7 +245,35 @@ export class ImmoArtComponent implements OnInit {
   }
 
   ouvreAjoutSpe(){
+    this.Spe.valeurCode = "";
+    this.Spe.valeurLibelle = "";
     $(this.modalAjoutSpe.nativeElement).modal('show');
+  }
+
+  ajouterSpe(){
+    this.fermeAjoutSpe();
+    let code = this.Spe.valeurCode.trim();
+    let libelle = this.Spe.valeurLibelle.trim();
+    let existe = false;
+    let that = this;
+    for(let i=0; i<this[this.Spe.attr].length; i++){
+      if(this[this.Spe.attr].code == code && this[this.Spe.attr].libelle == libelle){
+        existe = true;
+      }
+    }
+    if(!existe){
+      this.immoService.immoTopic(this.Spe.topicAjout, {code: code, libelle: libelle}, true).subscribe(obs=>{
+        if(obs.success){
+          that[that.Spe.attr].push(obs.msg);
+        }
+        else{
+          that.toast.error(obs.msg);
+        }
+      });
+    }
+    else{
+      this.toast.error("Cette valeur existe déjà");
+    }
   }
 
   fermeAjoutSpe(){
@@ -187,10 +288,19 @@ export class ImmoArtComponent implements OnInit {
     $(this.modalModifArt.nativeElement).modal('hide');
   }
 
-  test(){
-  	this.immoService.immoTopic("test", "Fuck").subscribe(obs=>{
-  		console.log("Kafka response: "+JSON.stringify(obs));
-  	}).unsubscribe();
+  afficheChargement(){
+    $(this.modalChargement.nativeElement).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  fermeChargement(){
+    $(this.modalChargement.nativeElement).modal('hide');
+  }
+
+  chargerHistArt(){
+
   }
 
 }

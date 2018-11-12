@@ -116,7 +116,7 @@
 						<textarea  [(ngModel)]="DmdRepMob.motif" [value]="DmdRepMob.motif" name="motif" class="form-control" rows="7" cols="50"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Pièce justificative (facultative)</label>
+						<label>Pièces justificatives (facultative)</label>
 						<label for="pj-dmd-rep-mob" class="form-control" style="cursor: pointer;">{{DmdRepMob.pieceNom}}</label>
 						<input (change)="pieceChange($event, 'DmdRepMob')" name="pieceFichier" id="pj-dmd-rep-mob" type="file" accept="image/*" multiple style="display: none;" />
 					</div>
@@ -147,10 +147,10 @@
 						<label>Type</label>
 						<div class="input-group mb-3">
 							<select [(ngModel)]="DmdEntrBat.type" name="type" class="form-control custom-select">
-								<option *ngFor="let t of DmdEntrBat.listeType" value="{{t.id}}">{{t.libelle}}</option>
+								<option *ngFor="let t of DmdEntrBat.listeType" value="{{t.idTypeEntrBat}}">{{t.libelle}}</option>
 							</select>
 							<div class="input-group-append">
-								<button (click)="clickAjoutSpe('Type','Libellé du Type', 'listeType', 'type')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+								<button (click)="clickAjoutSpe('Type','Libellé du Type', 'listeType', 'type', 'idTypeEntrBat', 'ajoutTypeEntrBatInt')" class="btn btn-info"><span class="fa fa-plus"></span></button>
 							</div>
 						</div>
 					</div>
@@ -158,10 +158,10 @@
 						<label>Caractéristique</label>
 						<div class="input-group mb-3">
 							<select [(ngModel)]="DmdEntrBat.caracteristique" name="caracteristique" class="form-control custom-select">
-								<option *ngFor="let t of DmdEntrBat.listeCaract" value="{{t.id}}">{{t.libelle}}</option>
+								<option *ngFor="let t of DmdEntrBat.listeCaract" value="{{t.idCaractEntrBat}}">{{t.libelle}}</option>
 							</select>
 							<div class="input-group-append">
-								<button (click)="clickAjoutSpe('Caractéristique','Libellé du caractéristique', 'listeCaract', 'caracteristique')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+								<button (click)="clickAjoutSpe('Caractéristique','Libellé du caractéristique', 'listeCaract', 'caracteristique', 'idCaractEntrBat', 'ajoutCaractEntrBatInt')" class="btn btn-info"><span class="fa fa-plus"></span></button>
 							</div>
 						</div>
 					</div>
@@ -169,10 +169,10 @@
 						<label>Enumération</label>
 						<div class="input-group mb-3">
 							<select [(ngModel)]="DmdEntrBat.enumeration" [value]="DmdEntrBat.enumeration" name="enumeration" class="form-control custom-select">
-								<option *ngFor="let t of DmdEntrBat.listeEnum" value="{{t.id}}">{{t.libelle}}</option>
+								<option *ngFor="let t of DmdEntrBat.listeEnum" value="{{t.idEnumEntrBat}}">{{t.libelle}}</option>
 							</select>
 							<div class="input-group-append">
-								<button (click)="clickAjoutSpe('Enumération','Libellé de l\'énumération', 'listeEnum', 'enumeration')" class="btn btn-info"><span class="fa fa-plus"></span></button>
+								<button (click)="clickAjoutSpe('Enumération','Libellé de l\'énumération', 'listeEnum', 'enumeration', 'idEnumEntrBat', 'ajoutEnumEntrBatInt')" class="btn btn-info"><span class="fa fa-plus"></span></button>
 							</div>
 						</div>
 					</div>
@@ -181,7 +181,7 @@
 						<textarea [(ngModel)]="DmdEntrBat.observation" [value]="DmdEntrBat.observation" name="observation" class="form-control" rows="7" cols="50"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Pièce justificative (facultative)</label>
+						<label>Pièces justificatives (facultative)</label>
 						<label for="pj-dmd-entr-bat" class="form-control" style="cursor: pointer;">{{DmdEntrBat.pieceNom}}</label>
 						<input (change)="pieceChange($event, 'DmdEntrBat')" id="pj-dmd-entr-bat" type="file" accept="image/*" multiple style="display: none;" />
 					</div>
@@ -198,7 +198,7 @@
 	</div>
 
 	<!-- MODAL -->
-	<!-- MODAL DETAIL DEMANDE MOBILIER -->
+	<!-- MODAL AJOUT SPE -->
 	<div #modalAjoutSpe class="modal" tabindex="-1" role="dialog">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">

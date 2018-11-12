@@ -42,7 +42,7 @@ export class ImmoDmdComponent implements OnInit {
     pieceNom: "Parcourir mon ordinateur",
     pieceFichier: [],
     loader: false,
-    articleOptions: ["One","Omm","TOO","Tre","Free"],
+    articleOptions: [],
     articleControl: new FormControl(),
     utiliseClass: false
   };
@@ -66,8 +66,10 @@ export class ImmoDmdComponent implements OnInit {
   Ajout = {
     titre: "",
     libelle: "",
-    nomAttrA: "",
-    nomAttrS: "",
+    nomAttrA: "", // manondro ny attribut ny liste ny type na caract na enum ny DmdEntrBat (array)
+    nomAttrS: "", // manondro ny attibut ny ngModel ny select ny DmdEntrBat (id)
+    nomId: "",
+    topic: "",
     valeur: ""
   };
 
@@ -78,46 +80,76 @@ export class ImmoDmdComponent implements OnInit {
     private fileService: FileService,
     private immoService: ImmoService) {
 
-    /*let that = this;
-    this.immoService.immoTopic("avoirListeSite", "").subscribe(obs=>{
+    let that = this;
+    /*this.immoService.immoTopic("avoirListeSite", "", false).subscribe(obs=>{
       if(obs.success){
         that.DmdEntrBat.listeSite = obs.msg;
       }
-    });
-    this.immoService.immoTopic("avoirListeType", "").subscribe(obs=>{
+    });*/
+    this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
       if(obs.success){
+        that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeType = obs.msg;
       }
     });
-    this.immoService.immoTopic("avoirListeCaract", "").subscribe(obs=>{
+    this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
       if(obs.success){
+        that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeCaract = obs.msg;
       }
     });
-    this.immoService.immoTopic("avoirListeEnum", "").subscribe(obs=>{
+    this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
       if(obs.success){
+        that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeEnum = obs.msg;
       }
-    });*/
+    });
   }
 
   ngOnInit() {
     console.log("ngOnInit()");
     let that = this;
     this.DmdMob.articleControls[0].valueChanges.subscribe(term => {
-      term = term.trim();
+      term = term.toString().trim();
       if (term.length >= 3) {
-        that.immoService.immoTopic("rechercheArticle", term).subscribe(obs=>{
+        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
           if(obs.success){
-            console.log(obs.msg);
             that.DmdMob.articleOptions = obs.msg;
           }
         });
+      }
+      else{
+        that.DmdMob.articleOptions = [];
+      }
+    });
+    this.DmdRepMob.articleControl.valueChanges.subscribe(term=>{
+      term = term.toString().trim();
+      if (term.length >= 3) {
+        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
+          if(obs.success){
+            that.DmdRepMob.articleOptions = obs.msg;
+          }
+        });
+      }
+      else{
+        that.DmdRepMob.articleOptions = [];
       }
     });
     /*this.Utilisateur = JSON.parse(localStorage.getItem('user'));
     console.log("Utilisateur");
     console.log(this.Utilisateur);*/
+  }
+
+  trieParLibelle(array){
+    array.sort((a, b)=>{
+      if(a.libelle > b.libelle){
+        return 1;
+      }
+      else if(a.libelle < b.libelle){
+        return -1
+      }
+      return 0;
+    });
   }
 
   clickInMenu1(lien:string){
@@ -132,7 +164,7 @@ export class ImmoDmdComponent implements OnInit {
         prestation: "302",
         dr: "42"
       };
-      this.immoService.immoTopic("referenceDmdArticle", argument).subscribe(obs=>{
+      this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
         if(obs.success){
           that[nomAttr].reference = obs.msg;
         }
@@ -148,14 +180,16 @@ export class ImmoDmdComponent implements OnInit {
     let that = this;
     let formControl = new FormControl();
     formControl.valueChanges.subscribe(term => {
-      term = term.trim();
+      term = term.toString().trim();
       if (term.length >= 3) {
-        that.immoService.immoTopic("rechercheArticle", term).subscribe(obs=>{
+        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
           if(obs.success){
-            console.log(obs.msg);
             that.DmdMob.articleOptions = obs.msg;
           }
         });
+      }
+      else{
+        that.DmdMob.articleOptions = [];
       }
     });
     this.DmdMob.articleControls.push(formControl);
@@ -194,12 +228,13 @@ export class ImmoDmdComponent implements OnInit {
         return false;
       }
     }
+    return true;
   }
 
   avoirTableauArticle(articles){
     let tableau = [];
     for(let i in articles){
-      tableau.push(articles[i].refArticle);
+      tableau.push(articles[i].refArticle.toUpperCase());
     }
     return tableau;
   }
@@ -210,7 +245,7 @@ export class ImmoDmdComponent implements OnInit {
         this.DmdMob.loader = true;  
         let articlesNoms = this.avoirTableauArticle(this.DmdMob.articles);
         let that = this;
-        this.immoService.immoTopic("prendArticleId", articlesNoms).subscribe(obs=>{
+        this.immoService.immoTopic("verificationArticleInt", articlesNoms, true).subscribe(obs=>{
           if(obs.success){
             for(let i in obs.msg){
               that.DmdMob.articles[i].refArticle = obs.msg[i];
@@ -219,14 +254,13 @@ export class ImmoDmdComponent implements OnInit {
               refIndividu: "0000",
               refService: "1111",
               reference: that.DmdMob.reference,
-              articles: that.DmdMob.articles,
+              article: that.DmdMob.articles,
               observation: that.DmdMob.observation
             };
             
-            that.immoService.immoTopic("ajoutDmdImmo", argument).subscribe(obs=>{
-              console.log(obs);
+            that.immoService.immoTopic("ajoutDmdImmoInt", argument, true).subscribe(obs=>{
               if(obs.success){
-                that.toastr.success(obs.msg);
+                that.toastr.success("L'enregistrement est réussi");
                 that.DmdMob.reference = "";
                 that.DmdMob.articles = [{refArticle: "", quantite: 1, typeDmd: null, dateDeBesoin: null, dateFinBesoin: null}];
                 that.DmdMob.articleControls = [new FormControl()];
@@ -296,47 +330,53 @@ export class ImmoDmdComponent implements OnInit {
     if(this.DmdRepMob.reference){
       this.DmdRepMob.loader = true;
       let argument = {
-        matricule: "0000",
-        service: "1111",
+        refIndividu: "0000",
+        refService: "1111",
         reference: this.DmdRepMob.reference,
-        article: this.DmdRepMob.article,
-        motif: this.DmdRepMob.motif
+        nomArticle: this.DmdRepMob.article.toUpperCase().trim(),
+        motif: this.DmdRepMob.motif.trim()
       };
-      let that = this;
-      this.immoService.immoTopic("listeDmdImmo", argument).subscribe(obs=>{
-        console.log(obs);
-        if(obs.success){
-          that.toastr.success(obs.msg);
-          that.DmdRepMob.reference = "";
-          that.DmdRepMob.article = "";
-          that.DmdRepMob.motif = "";
-          that.DmdRepMob.pieceNom = "Parcourir mon ordinateur";
-          that.enregistreFichiers(that.DmdRepMob.pieceFichier, argument.reference);
-          that.DmdRepMob.pieceFichier = [];
-        }
-        else{
-          that.toastr.error(obs.msg);
-        }
-        that.DmdRepMob.loader = false;
-      });
+      if(argument.nomArticle != ""){
+        let that = this;
+        this.immoService.immoTopic("ajoutDmdReparationInt", argument, true).subscribe(obs=>{
+          if(obs.success){
+            that.toastr.success("L'enregistrement de la demande est réussie");
+            that.DmdRepMob.reference = "";
+            that.DmdRepMob.article = "";
+            that.DmdRepMob.motif = "";
+            that.DmdRepMob.pieceNom = "Parcourir mon ordinateur";
+            that.enregistreFichiers(that.DmdRepMob.pieceFichier, argument.reference);
+            that.DmdRepMob.pieceFichier = [];
+          }
+          else{
+            that.toastr.error(obs.msg);
+          }
+          that.DmdRepMob.loader = false;
+        });
+      }
+      else{
+        this.toastr.error("L'article n'est pas précisée");
+      }
     }
     else{
       this.toastr.error("La demande n'a pas de référence");
     }
   }
 
-  clickAjoutSpe(titre, libelle, nomAttrA, nomAttrS){
+  clickAjoutSpe(titre, libelle, nomAttrA, nomAttrS, nomID, topic){
     this.Ajout.titre = titre;
     this.Ajout.libelle = libelle;
     this.Ajout.nomAttrA = nomAttrA;
     this.Ajout.nomAttrS = nomAttrS;
+    this.Ajout.nomId = nomID;
     this.Ajout.valeur = "";
+    this.Ajout.topic = topic;
     $(this.modalAjoutSpe.nativeElement).modal('show');
   }
 
   ajouterSpe(){
     $(this.modalAjoutSpe.nativeElement).modal('hide');
-    this.Ajout.valeur = this.Ajout.valeur.trim().toUpperCase();
+    this.Ajout.valeur = this.Ajout.valeur.trim();
     if(this.Ajout.valeur != ""){
       let existe = false;
       let that = this;
@@ -350,11 +390,14 @@ export class ImmoDmdComponent implements OnInit {
         this.toastr.error("Cette valeur existe déjà");
       }
       else{
-        this.immoService.immoTopic("", this.Ajout.valeur).subscribe(obs=>{
+        let argument = {
+          libelle: this.Ajout.valeur.toUpperCase()
+        };
+        this.immoService.immoTopic(this.Ajout.topic, argument, true).subscribe(obs=>{
           if(obs.success){
             that.Ajout.valeur = "";
             that.DmdEntrBat[that.Ajout.nomAttrA].push(obs.msg);
-            that.DmdEntrBat[that.Ajout.nomAttrS] = obs.msg.id;
+            that.DmdEntrBat[that.Ajout.nomAttrS] = obs.msg[that.Ajout.nomId];
           }
         });
       }
@@ -369,20 +412,19 @@ export class ImmoDmdComponent implements OnInit {
     if(this.DmdEntrBat.reference != ""){
       this.DmdEntrBat.loader = true;
       let argument = {
-        matricule: "0000",
-        service: "1111",
+        refIndividu: "0000",
+        refService: "1111",
         reference: this.DmdEntrBat.reference,
-        ref_site: this.DmdEntrBat.site,
-        id_type_entr_bat: this.DmdEntrBat.type,
-        id_caract_entr_bat: this.DmdEntrBat.caracteristique,
-        id_enum_entr_bat: this.DmdEntrBat.enumeration,
-        motif: this.DmdEntrBat.observation
+        refSite: 22, //refSite: this.DmdEntrBat.site,
+        idTypeEntrBat: this.DmdEntrBat.type,
+        idCaractEntrBat: this.DmdEntrBat.caracteristique,
+        idEnumEntrBat: this.DmdEntrBat.enumeration,
+        motif: this.DmdEntrBat.observation.trim()
       };
       let that = this;
-      this.immoService.immoTopic("listeDmdImmo", argument).subscribe(obs=>{
-        console.log(obs);
+      this.immoService.immoTopic("ajoutDmdEntrBatInt", argument, true).subscribe(obs=>{
         if(obs.success){
-          this.toastr.success(obs.msg);
+          this.toastr.success("La demande est enregistrée");
           that.DmdEntrBat.reference = "";
           that.DmdEntrBat.site = "";
           that.DmdEntrBat.type = "";

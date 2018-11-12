@@ -36,22 +36,22 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input type="text" class="form-control input-upper" />
+							<input [(ngModel)]="Stock.filtre.article" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Domaine</label>
-							<select class="form-control custom-select">
-								<option *ngFor="let d of listeDomaine" value="{{d.id_domaine_art}}">{{d.libelle}}</option>
+							<select [(ngModel)]="Stock.filtre.domaine" (change)="filtreChange()" class="form-control custom-select">
+								<option *ngFor="let d of listeDomaine" value="{{d.idDomaineArt}}">{{d.libelle}}</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Type</label>
-							<select class="form-control custom-select">
-								<option *ngFor="let t of listeType" value="{{t.id_type_art}}">{{t.libelle}}</option>
+							<select [(ngModel)]="Stock.filtre.type" class="form-control custom-select">
+								<option *ngFor="let t of listeType" value="{{t.idTypeArt}}">{{t.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -60,24 +60,24 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Classe</label><br>
-							<select class="form-control custom-select">
-								<option *ngFor="let c of listeClasse" value="{{c.id_classe_art}}">{{c.libelle}}</option>
+							<select [(ngModel)]="Stock.filtre.classe" class="form-control custom-select">
+								<option *ngFor="let c of listeClasse" value="{{c.idClasseArt}}">{{c.libelle}}</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Nature</label>
-							<select class="form-control custom-select">
-								<option *ngFor="let n of listeNature" value="{{n.id_nature_art}}">{{n.libelle}}</option>
+							<select [(ngModel)]="Stock.filtre.nature" class="form-control custom-select">
+								<option *ngFor="let n of listeNature" value="{{n.idNatureArt}}">{{n.libelle}}</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Spécificité</label>
-							<select class="form-control custom-select">
-								<option *ngFor="let s of listeSpecificite" value="{{s.id_spe_art}}">{{s.libelle}}</option>
+							<select [(ngModel)]="Stock.filtre.spe" class="form-control custom-select">
+								<option *ngFor="let s of listeSpecificite" value="{{s.idSpeArt}}">{{s.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -108,7 +108,7 @@
 			<div *ngIf="Menu.sousMenu == 'art_spe'" class="col-md-12">
 				<div class="row">
 					<div class="col-md-6">
-						<select [(ngModel)]="Dom.valeur" (change)="domValeurChange()" class="form-control custom-select">
+						<select [(ngModel)]="Dom.select" (change)="domValeurChange()" class="form-control custom-select">
 							<option value="domaine">Liste de Domaines</option>
 							<option value="type">Liste de Types</option>
 						</select>
@@ -133,7 +133,7 @@
 						</table>
 					</div>
 					<div class="col-md-6">
-						<select [(ngModel)]="Spe.valeur" (change)="speValeurChange()" class="form-control custom-select">
+						<select [(ngModel)]="Spe.select" (change)="speValeurChange()" class="form-control custom-select">
 							<option value="classe">Liste de Classes</option>
 							<option value="nature">Liste de Natures</option>
 							<option value="spe">Liste de Spécificité</option>
@@ -177,9 +177,9 @@
 						<div class="form-group">
 							<label>Code de l'article</label>
 							<div class="input-group mb-3">
-								<input type="text" class="form-control input-upper">
+								<input [(ngModel)]="Hist.codeArtcile" type="text" class="form-control input-upper">
 								<div class="input-group-append">
-									<button class="btn btn-info">Charger</button>
+									<button (click)="chargerHistArt()" class="btn btn-info">Charger</button>
 								</div>
 							</div>
 						</div>
@@ -187,12 +187,7 @@
 					<div class="col-md-7">
 						<div class="form-group">
 							<label>Désignation</label>
-							<div class="input-group mb-3">
-								<input type="text" class="form-control input-upper">
-								<div class="input-group-append">
-									<button class="btn btn-info">Charger</button>
-								</div>
-							</div>
+							<input [(ngModel)]="Hist.designation" type="text" class="form-control input-upper" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -200,19 +195,19 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Classe</label>
-							<input type="text" class="form-control" readonly="true">
+							<input [(ngModel)]="Hist.classe" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Référence</label>
-							<input type="text" class="form-control" readonly="true">
+							<input [(ngModel)]="Hist.reference" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Marque</label>
-							<input type="text" class="form-control" readonly="true">
+							<input [(ngModel)]="Hist.marque" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -360,6 +355,13 @@
 	</div>
 
 	<!-- MODAL -->
+	<!-- MODAL CHARGEMENT -->
+	<div #modalChargement class="modal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="loader">
+		</div>
+	  </div>
+	</div>
 	<!-- MODAL AJOUT DOMAINE/TYPE -->
 	<div #modalAjoutDom class="modal" tabindex="-1" role="dialog">
 	  <div class="modal-dialog" role="document">
@@ -373,11 +375,11 @@
 	      <div class="modal-body">
   			<div class="form-group">
   				<label>Libellé</label>
-  				<input type="text" class="form-control input-upper">
+  				<input [(ngModel)]="Dom.valeur" type="text" class="form-control input-upper">
   			</div>
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeAjoutDom()" type="button" class="btn btn-primary">Ajouter</button>
+	        <button (click)="ajouterDom()" type="button" class="btn btn-primary">Ajouter</button>
 	      </div>
 	    </div>
 	  </div>
@@ -397,19 +399,19 @@
 	      		<div class="col-3">
 	      			<div class="form-group">
 	      				<label>Code</label>
-	      				<input type="text" class="form-control input-upper">
+	      				<input [(ngModel)]="Spe.valeurCode" type="text" maxlength="{{Spe.tailleTexte}}" class="form-control input-upper">
 	      			</div>
 	      		</div>
 	      		<div class="col-9">
 	      			<div class="form-group">
 	      				<label>{{Spe.titre}}</label>
-	      				<input type="text" class="form-control input-upper">
+	      				<input [(ngModel)]="Spe.valeurLibelle" type="text" class="form-control input-upper">
 	      			</div>
 	      		</div>
 	      	</div>
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeAjoutSpe()" type="button" class="btn btn-primary">Ajouter</button>
+	        <button (click)="ajouterSpe()" type="button" class="btn btn-primary">Ajouter</button>
 	      </div>
 	    </div>
 	  </div>
@@ -458,6 +460,10 @@
   				<select class="form-control custom-select">
 					<option *ngFor="let s of listeSpecificite" value="{{s.id_spe_art}}">{{s.libelle}}</option>
 				</select>
+  			</div>
+  			<div class="form-group">
+  				<label>Stock</label>
+  				<input type="number" min="0" class="form-control">
   			</div>
 	      </div>
 	      <div class="modal-footer">
