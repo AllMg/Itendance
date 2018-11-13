@@ -12,14 +12,15 @@
 				<li (click)="clickInMenu1('immo-liste')"><span>DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-mvt')"><span>MOUVEMENT</span></li>
 				<li class="menu1-active"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
 
 	    <div class="conteneur-de-menu2">
-			<ul class="menu1">
+			<ul class="menu1"><!--
 				<li (click)="clickSousMenu('detention')" [ngClass]="{'menu1-active': Menu.sousMenu == 'detention'}"><span>DETENTION</span></li>
-				<li (click)="clickSousMenu('cession')" [ngClass]="{'menu1-active': Menu.sousMenu == 'cession'}"><span>CESSION ET MISE AU REBUT</span></li>
+				<li (click)="clickSousMenu('cession')" [ngClass]="{'menu1-active': Menu.sousMenu == 'cession'}"><span>CESSION ET MISE AU REBUT</span></li>-->
 				<li (click)="clickSousMenu('inventaire')" [ngClass]="{'menu1-active': Menu.sousMenu == 'inventaire'}"><span>PV D'INVENTAIRE</span></li>
 				<li (click)="clickSousMenu('etat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'etat'}"><span>ETAT D'INVENTAIRE</span></li>
 			</ul>
@@ -28,62 +29,6 @@
 
 		<!-- CONTENU -->
 		<div class="row" style="padding: 10px;">
-			<!-- DETENTION-->
-			<div *ngIf="Menu.sousMenu == 'detention'" class="col-md-12">
-				<h6 style="text-transform: uppercase;">Etablissement d'une fiche de détention</h6>
-				<hr>
-				<div class="row">
-					<div class="col-6">
-						<div class="form-group">
-							<label>Service destinataire</label>
-							<select class="form-control custom-select">
-								<option>SERVICE LISTE</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-6">
-						<div class="form-group">
-							<label>Agent destinataire (N° Matricule)</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-				</div>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>Code</th>
-							<th>Désignation</th>
-							<th>Référence</th>
-							<th>Etat</th>
-							<th>N° TEF</th>
-							<th>Fournisseur</th>
-						</tr>
-					</thead>
-				</table>
-				<button class="btn btn-info">Valider</button>
-			</div>
-			<!-- CESSION -->
-			<div *ngIf="Menu.sousMenu == 'cession'" class="col-md-12">
-				<h6 style="text-transform: uppercase;">Etablissement des articles hors services ou non utiles</h6>
-				<hr>
-				<div class="form-group">
-					<label>Service</label>
-					<select class="form-control custom-select">
-						<option>SERVICE</option>
-					</select>
-				</div>
-				<p>Liste des immobilisations du service</p>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>Code</th>
-							<th>Désignation</th>
-							<th>Référence</th>
-							<th>Etat</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
 			<!-- INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'inventaire'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Inventaire des immobilisations</h6>

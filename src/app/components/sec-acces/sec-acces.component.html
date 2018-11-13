@@ -17,15 +17,35 @@
 
 	    <div class="conteneur-de-menu2">
 			<ul class="menu1">
-				<li (click)="clickSousMenu('dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'dmd'}"><span>FORMULAIRE DE DEMANDE</span></li>
-				<li (click)="clickSousMenu('liste-dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste-dmd'}"><span>LISTE DES DEMANDES</span></li>
-				<li (click)="clickSousMenu('liste-acces')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste-acces'}"><span>LISTE DES ACCES</span></li>
+				<li (click)="clickSousMenu('form_dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'form_dmd'}"><span>FORMULAIRE DE DEMANDE</span></li>
+				<li (click)="clickSousMenu('liste_dmd')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_dmd'}"><span>LISTE DES DEMANDES</span></li>
+				<li (click)="clickSousMenu('liste_acces')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_acces'}"><span>LISTE DES ACCES</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
 
 		<div class="row" style="padding: 10px;">
-			
+			<div *ngIf="Menu.sousMenu == 'form_dmd'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Formulaire de demande d'accès en dehors des jours ouvrables</h6>
+				<hr>
+				<div class="form-group">
+					<label>Date (Quand aurez-vous besoin d'accéder à la CNaPS ?)</label>
+					<input type="date" class="form-control">
+				</div>
+				<div class="form-group">
+					<label>Motif</label>
+					<textarea class="form-control" rows="7"></textarea>
+				</div>
+				<button class="btn btn-info">Valider</button>
+			</div>
+			<div *ngIf="Menu.sousMenu == 'liste_dmd'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des demandes d'accès</h6>
+				<hr>
+			</div>
+			<div *ngIf="Menu.sousMenu == 'liste_acces'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des accès</h6>
+				<hr>
+			</div>
 		</div>
 	</div>
 </div>

@@ -12,6 +12,7 @@
 				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
 				<li class="menu1-active"><span>LISTE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-mvt')"><span>MOUVEMENT</span></li>
 				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
@@ -35,7 +36,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<select [(ngModel)]="DmdMob.filtre.service" (change)="filtreChange('DmdMob')" class="form-control custom-select">
+							<select [(ngModel)]="DmdMob.filtre.refService" (change)="filtreChange('DmdMob')" class="form-control custom-select">
 								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
 							</select>
 						</div>
@@ -43,40 +44,40 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdMob.filtre.demandeur" (change)="filtreChange('DmdMob')" type="text" placeholder="Matricule" class="form-control input-upper" />
+							<input [(ngModel)]="DmdMob.filtre.refIndividu" (change)="filtreChange('DmdMob')" type="text" placeholder="Matricule" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Statut</label>
-							<select [(ngModel)]="DmdMob.filtre.statut" (change)="filtreChange('DmdMob')" class="form-control custom-select">
+							<select [(ngModel)]="DmdMob.filtre.idEtatDmd" (change)="filtreChange('DmdMob')" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let e of DmdMob.listeEtat" value="{{e.idEtatDmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date</label>
-							<input [(ngModel)]="DmdMob.filtre.date" (change)="filtreChange('DmdMob')" type="date" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.dateDmdImmo" (change)="filtreChange('DmdMob')" type="date" class="form-control" />
 						</div>
 					</div>
 				</div>
 				<hr>
 				<div class="row">
-					<div class="col-md-6">
+					<div *ngFor="let dmd of DmdMob.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
 						<div class="liste-dmd-item">
-							<div class="dmd-l-en-tete">
-								<span class="dmd-l-date">11/11/2018</span>
-								<span class="dmd-l-ref">Référence</span>
+							<p><span class="dmd-l-date">{{avoirDate(dmd.dateDmdImmo)}}</span></p>
+							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
+							<p><u>Statut</u> : <label>{{avoirEtatDmd(dmd.idEtatDmd, 'DmdMob')}}</label></p>
+							<div class="dmd-l-obs"><u>Observation</u> : {{dmd.observation}}</div>
+							<div class="dmd-l-btn">
+								<button (click)="ouvreDetailMob(index)" class="btn btn-info">Voir</button>
 							</div>
-							<label>Statut</label>
-							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
-							<p>
-								<button (click)="ouvreDetailMob(0)" class="btn btn-info">Voir plus de détail</button>
-							</p>
 						</div>
+					</div>
+					<div *ngIf="DmdMob.liste.length == 0" style="text-align: center;">
+						<span>Pas de résultat</span>
 					</div>
 				</div>
 			</div>
@@ -87,7 +88,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<select [(ngModel)]="DmdRepMob.filtre.service" (change)="filtreChange('DmdRepMob')" class="form-control custom-select">
+							<select [(ngModel)]="DmdRepMob.filtre.refService" (change)="filtreChange('DmdRepMob')" class="form-control custom-select">
 								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
 							</select>
 						</div>
@@ -95,19 +96,20 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdRepMob.filtre.demandeur" (change)="filtreChange('DmdRepMob')" placeholder="Matricule" type="text" class="form-control input-upper" />
+							<input [(ngModel)]="DmdRepMob.filtre.refIndividu" (change)="filtreChange('DmdRepMob')" placeholder="Matricule" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="DmdRepMob.filtre.article" (change)="filtreChange('DmdRepMob')" type="text" placeholder="Désignation" class="form-control input-upper" />
+							<input [(ngModel)]="DmdRepMob.filtre.nomArticle" (change)="filtreChange('DmdRepMob')" type="text" placeholder="Désignation" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Statut</label>
-							<select class="form-control custom-select">
+							<select [(ngModel)]="DmdRepMob.filtre.idEtatDmd" (change)="filtreChange('DmdRepMob')" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let e of DmdRepMob.listeEtat" value="{{e.idEtatDmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
@@ -117,24 +119,21 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date</label>
-							<input type="date" class="form-control" />
+							<input [(ngModel)]="DmdRepMob.filtre.dateDmdRep" (change)="filtreChange('DmdRepMob')" type="date" class="form-control" />
 						</div>
 					</div>
 				</div>
 				<hr>
 				<div class="row">
-					<div class="col-md-6">
+					<div *ngFor="let dmd of DmdRepMob.liste; let index = index" class="col-md-6">
 						<div class="liste-dmd-item">
-							<div class="dmd-l-en-tete">
-								<span class="dmd-l-date">Date</span>
-								<span class="dmd-l-ref">Référence</span>
+							<p><span class="dmd-l-date">{{avoirDate(dmd.dateDmdRep)}}</span></p>
+							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
+							<p><u>Statut</u> : <label>{{avoirEtatDmd(dmd.idEtatDmd, 'DmdRepMob')}}</label></p>
+							<div class="dmd-l-obs"><u>Motif</u> : {{dmd.motif}}</div>
+							<div class="dmd-l-btn">
+								<button (click)="ouvreDetailRepMob(index)" class="btn btn-info">Voir</button>
 							</div>
-							<p>Article</p>
-							<p>Statut</p>
-							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
-							<p>
-								<button (click)="ouvreDetailRepMob()" class="btn btn-info">Voir plus de détail</button>
-							</p>
 						</div>
 					</div>
 				</div>
@@ -146,7 +145,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Service</label><br>
-							<select [(ngModel)]="DmdBat.filtre.service" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+							<select [(ngModel)]="DmdBat.filtre.refService" (change)="filtreChange('DmdBat')" class="form-control custom-select">
 								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
 							</select>
 						</div>
@@ -154,13 +153,13 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdBat.filtre.demandeur" (change)="filtreChange('DmdBat')" type="text" placeholder="Matricule" class="form-control input-upper" />
+							<input [(ngModel)]="DmdBat.filtre.refIndividu" (change)="filtreChange('DmdBat')" type="text" placeholder="Matricule" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Site</label><br>
-							<select [(ngModel)]="DmdBat.filtre.site" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+							<select [(ngModel)]="DmdBat.filtre.refSite" (change)="filtreChange('DmdBat')" class="form-control custom-select">
 								<option>SITE</option>
 							</select>
 						</div>
@@ -168,7 +167,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Statut</label>
-							<select [(ngModel)]="DmdBat.filtre.statut" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+							<select [(ngModel)]="DmdBat.filtre.idEtatDmd" (change)="filtreChange('DmdBat')" class="form-control custom-select">
 								<option *ngFor="let e of DmdBat.listeEtat" value="{{e.idEtatDmd}}">{{e.libelle}}</option>
 							</select>
 						</div>
@@ -178,27 +177,27 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Type</label><br>
-							<select [(ngModel)]="DmdBat.filtre.type" (change)="filtreChange('DmdBat')" class="form-control custom-select">
-								<option>Aménagement</option>
-								<option>Construction</option>
-								<option>Logement</option>
+							<select [(ngModel)]="DmdBat.filtre.idTypeEntrBat" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+								<option value="0"></option>
+								<option *ngFor="let t of DmdBat.listeType" value="{{t.idTypeEntrBat}}">{{t.libelle}}</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Caractéristique</label>
-							<select [(ngModel)]="DmdBat.filtre.caracteristique" (change)="filtreChange('DmdBat')" class="form-control custom-select">
-								<option>Toiture</option>
-								<option>Porte</option>
+							<select [(ngModel)]="DmdBat.filtre.idCaractEntrBat" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+								<option value="0"></option>
+								<option *ngFor="let c of DmdBat.listeCaract" value="{{t.idCaractEntrBat}}">{{c.libelle}}</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Enumération</label>
-							<select [(ngModel)]="DmdBat.filtre.enumeration" (change)="filtreChange('DmdBat')" class="form-control custom-select">
-								<option>Peinture</option>
+							<select [(ngModel)]="DmdBat.filtre.idEnumEntrBat" (change)="filtreChange('DmdBat')" class="form-control custom-select">
+								<option value="0"></option>
+								<option *ngFor="let e of DmdBat.listeEnum" value="{{e.idEnumEntrBat}}">{{e.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -211,18 +210,15 @@
 				</div>
 				<hr>
 				<div class="row">
-					<div class="col-md-6">
+					<div *ngFor="let dmd of DmdBat.liste; let index = index" class="col-md-6">
 						<div class="liste-dmd-item">
-							<div class="dmd-l-en-tete">
-								<span class="dmd-l-date">Date</span>
-								<span class="dmd-l-ref">Référence</span>
+							<p><span class="dmd-l-date">{{avoirDate(dmd.date)}}</span></p>
+							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
+							<p><u>Statut</u> : <label>{{avoirEtatDmd(dmd.idEtatDmd, 'DmdBat')}}</label></p>
+							<div class="dmd-l-obs"><u>Motif</u> : {{dmd.motif}}</div>
+							<div class="dmd-l-btn">
+								<button (click)="ouvreDetailBat(index)" class="btn btn-info">Voir</button>
 							</div>
-							<p>Site</p>
-							<p>Statut</p>
-							<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
-							<p>
-								<button (click)="ouvreDetailBat()" class="btn btn-info">Voir plus de détail</button>
-							</p>
 						</div>
 					</div>
 				</div>
@@ -232,17 +228,17 @@
 
 	<!-- MODAL -->
 	<!-- MODAL DETAIL DEMANDE MOBILIER -->
-	<div #modalDetailMob class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog modal-lg" role="document">
+	<div #modalDetailMob class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="DmdMob.liste[DmdMob.indice] != undefined" class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h6 class="modal-title">Référence: {{DmdMob.liste[DmdMob.indice].reference}}</h6>
-	        <button type="button" class="close" (click)="fermeDetailMob()">
+	        <button *ngIf="DmdMob.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailMob()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-      		<span class="dmd-modal-date">{{convertirDateDepuisBase(DmdMob.liste[DmdMob.indice].dateDmdImmo)}}</span>
+      		<span class="dmd-modal-date">{{avoirDate(DmdMob.liste[DmdMob.indice].dateDmdImmo)}}</span>
 	      	<div class="form-group">
 				<label>Service</label>
 				<input type="text" value="{{DmdMob.liste[DmdMob.indice].refService}}" class="form-control" readonly="true">
@@ -253,8 +249,8 @@
 			</div>
 			<div class="form-group">
 				<label>Statut</label>
-				<select class="form-control custom-select">
-					<option>STATUT</option>
+				<select [(ngModel)]="DmdMob.nouveauEtat" [value]="DmdMob.nouveauEtat" (change)="etatDmdChange('DmdMob')" class="form-control custom-select">
+					<option *ngFor="let etat of DmdMob.listeEtat" value="{{etat.idEtatDmd}}">{{etat.libelle}}</option>
 				</select>
 			</div>
 			<table class="table table-striped">
@@ -266,19 +262,12 @@
 					<th>Date fin</th>
 				</thead>
 				<tbody>
-					<tr>
-						<td>TESTE</td>
-						<td>1</td>
-						<td>DOTATION</td>
-						<td>-</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td>TESTE</td>
-						<td>1</td>
-						<td>PRET</td>
-						<td>12/12/12</td>
-						<td>12/12/12</td>
+					<tr *ngFor="let art of DmdMob.articlesDmds">
+						<td>{{art.refArticle}}</td>
+						<td>{{art.quantite}}</td>
+						<td>{{art.typeDmd}}</td>
+						<td>{{avoirDateSlash(art.dateDeBesoin)}}</td>
+						<td>{{avoirDateSlash(art.dateFinBesoin)}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -286,96 +275,99 @@
 			<p>
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="validerLeChangement()" type="button" class="btn" [ngClass]="{'btn-primary': DmdMob.etatAchange}">Valider le changement</button>
+	        <button *ngIf="DmdMob.chargeStatutChange == false" (click)="validerEtatDmdMob()" type="button" class="btn" [ngClass]="{'btn-primary': DmdMob.etatAchange}">Valider le changement</button>
+	        <div *ngIf="DmdMob.chargeStatutChange" class="loader"></div>
 	      </div>
 	    </div>
 	  </div>
 	</div>
 	<!-- MODAL DETAIL DEMANDE REPARATION MOBILIER -->
-	<div #modalDetailRepMob class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog modal-lg" role="document">
+	<div #modalDetailRepMob class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="DmdRepMob.liste[DmdRepMob.indice] != undefined" class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h6 class="modal-title">Référence: UNE-REF</h6>
-	        <button type="button" class="close" (click)="fermeDetailRepMob()">
+	        <h6 class="modal-title">Référence: {{DmdRepMob.liste[DmdRepMob.indice].reference}}</h6>
+	        <button *ngIf="DmdRepMob.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailRepMob()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	      	<span class="dmd-modal-date">Le 26 Janvier 1982</span>
+	      	<span class="dmd-modal-date">{{avoirDate(DmdRepMob.liste[DmdRepMob.indice].dateDmdRep)}}</span>
 	      	<div class="form-group">
 				<label>Service</label>
-				<input type="text" class="form-control" readonly="true">
+				<input type="text" value="{{DmdRepMob.liste[DmdRepMob.indice].refService}}" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Demandeur</label>
-				<input type="text" class="form-control" readonly="true">
+				<input type="text" value="{{DmdRepMob.liste[DmdRepMob.indice].refIndividu}}" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Article</label>
-				<input class="text" value="ARTICLE" class="form-control" readonly="true">
+				<input class="text" value="{{DmdRepMob.liste[DmdRepMob.indice].nomArticle}}" class="form-control" readonly="true">
 			</div>	
 			<div class="form-group">
 				<label>Statut</label>
-				<select class="form-control custom-select">
-					<option>STATUT</option>
+				<select [(ngModel)]="DmdRepMob.nouveauEtat" [value]="DmdRepMob.nouveauEtat" (change)="etatDmdChange('DmdRepMob')" class="form-control custom-select">
+					<option *ngFor="let etat of DmdRepMob.listeEtat" value="{{etat.idEtatDmd}}">{{etat.libelle}}</option>
 				</select>
 			</div>
-			<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
-	        <img class="pj-dans-modal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRoHm1cMXtjv17WW9nCisgnGsCZihhJZuP3uzs3hQ1aI6r56LztQ">
+			<p>{{DmdRepMob.liste[DmdRepMob.indice].motif}}</p>
+	        <img *ngFor="let piece of DmdRepMob.pieces" class="pj-dans-modal" src="{{piece.file}}">
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeDetailRepMob()" type="button" class="btn btn-primary">Valider le changement</button>
+	        <button *ngIf="DmdRepMob.chargeStatutChange == false" (click)="validerEtatDmdRepMob()" type="button" class="btn" [ngClass]="{'btn-primary': DmdRepMob.etatAchange}">Valider le changement</button>
+	        <div *ngIf="DmdRepMob.chargeStatutChange" class="loader"></div>
 	      </div>
 	    </div>
 	  </div>
 	</div>
 	<!-- MODAL DETAIL DEMANDE ENTRETIENT BATIMENT -->
-	<div #modalDetailBat class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog modal-lg" role="document">
+	<div #modalDetailBat class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="DmdBat.liste[DmdBat.indice] != undefined" class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h6 class="modal-title">Référence: UNE-REF</h6>
-	        <button type="button" class="close" (click)="fermeDetailBat()">
+	        <h6 class="modal-title">Référence: {{DmdBat.liste[DmdBat.indice].reference}}</h6>
+	        <button *ngIf="DmdBat.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailBat()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	      	<span class="dmd-modal-date">Le 26 Janvier 1982</span>
+	      	<span class="dmd-modal-date">{{avoirDate(DmdBat.liste[DmdBat.indice].date)}}</span>
 	      	<div class="form-group">
 	      	</div>
 	      	<div class="form-group">
 				<label>Service</label>
-				<input type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].refService}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Demandeur</label>
-				<input type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].refIndividu}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Type d'entretient</label>
-				<input type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].idTypeEntrBat}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Caractéristique</label>
-				<input type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].idCaractEntrBat}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Enumération</label>
-				<input type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].idEnumEntrBat}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Statut</label>
-				<select class="form-control custom-select">
-					<option>STATUT</option>
+				<select [(ngModel)]="DmdBat.nouveauEtat" [value]="DmdBat.nouveauEtat" (change)="etatDmdChange('DmdRepMob')" class="form-control custom-select">
+					<option *ngFor="let etat of DmdBat.listeEtat" value="{{etat.idEtatDmd}}">{{etat.libelle}}</option>
 				</select>
 			</div>
-			<p>Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.</p>
+			<p>{{DmdBat.liste[DmdBat.indice].motif}}</p>
 			<p>
-	        <img class="pj-dans-modal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRoHm1cMXtjv17WW9nCisgnGsCZihhJZuP3uzs3hQ1aI6r56LztQ">
+	        <img *ngFor="let piece of DmdBat.pieces" class="pj-dans-modal" src="{{piece.file}}">
 	      </div>
 	      <div class="modal-footer">
-	        <button (click)="fermeDetailBat()" type="button" class="btn btn-primary">Valider le changement</button>
+	        <button *ngIf="DmdBat.chargeStatutChange == false" (click)="validerEtatDmdBat()" type="button" class="btn" [ngClass]="{'btn-primary': DmdBat.etatAchange}">Valider le changement</button>
+	        <div *ngIf="DmdBat.chargeStatutChange" class="loader"></div>
 	      </div>
 	    </div>
 	  </div>

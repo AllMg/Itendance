@@ -12,6 +12,7 @@
 				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
 				<li class="menu1-active"><span>ARTICLE</span></li>
+				<li (click)="clickInMenu1('immo-mvt')"><span>MOUVEMENT</span></li>
 				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
 			</ul>
 		</div>
@@ -22,7 +23,6 @@
 				<li (click)="clickSousMenu('art_spe')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_spe'}"><span>SPECIFICITE</span></li>
 				<li (click)="clickSousMenu('art_hist')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_hist'}"><span>HISTORIQUE</span></li>
 				<li (click)="clickSousMenu('art_maj')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_maj'}"><span>MISE A JOUR</span></li>
-				<li (click)="clickSousMenu('art_entree')" [ngClass]="{'menu1-active': Menu.sousMenu == 'art_entree'}"><span>ENTREE</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -106,6 +106,8 @@
 				</table>
 			</div>
 			<div *ngIf="Menu.sousMenu == 'art_spe'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Gestion des caractéristiques d'article</h6>
+				<hr>
 				<div class="row">
 					<div class="col-md-6">
 						<select [(ngModel)]="Dom.select" (change)="domValeurChange()" class="form-control custom-select">
@@ -290,66 +292,6 @@
 					<input type="text" class="form-control">
 				</div>
 				<button class="btn btn-info">Enregistrer</button>
-			</div>
-			<div *ngIf="Menu.sousMenu == 'art_entree'" class="col-md-12">
-				<h6 style="text-transform: uppercase;">Saisie bon d'entrée depuis un TEF</h6>
-				<hr>
-				<div class="tef-conteneur">
-					<div class="form-group">
-						<label>N° TEF</label>
-						<div class="input-group mb-3">
-							<input type="text" class="form-control">
-							<div class="input-group-append">
-								<button class="btn btn-info">Charger</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>N° BE</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Date BE</label>
-							<input type="date" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>N° BL</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Magasin</label>
-							<select class="form-control custom-select">
-								<option>MAGASIN1</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th>Désignation</th>
-							<th>Cmd</th>
-							<th>PU HT Prev</th>
-							<th>Colisage</th>
-							<th>Livrée</th>
-							<th>PU TTC</th>
-							<th>Amortissable</th>
-							<th>Cout Unitaire</th>
-						</tr>
-					</thead>
-					<tbody>
-						
-					</tbody>
-				</table>
 			</div>
 		</div>
 	</div>

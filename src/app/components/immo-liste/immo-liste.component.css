@@ -58,14 +58,19 @@
 
 .dmd-l-date{
     opacity: 0.8;
-    float: left;
     font-size: 12px;
-
 }
 .dmd-l-ref{
-    float: right;
     font-weight: bold;
 }
+.dmd-l-obs{
+    height: 50px;
+    overflow: hidden;
+}
+.dmd-l-btn{
+    text-align: right;
+}
+
 .dmd-modal-date{
     float: right;
     font-size: 12px;
@@ -74,4 +79,14 @@
 
 .input-upper{
     text-transform: uppercase;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid rgb(92, 92, 226); /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: auto;
 }
