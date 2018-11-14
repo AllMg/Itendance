@@ -36,13 +36,14 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="Stock.filtre.article" type="text" class="form-control input-upper" />
+							<input [(ngModel)]="Stock.filtre.libelle" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Domaine</label>
-							<select [(ngModel)]="Stock.filtre.domaine" (change)="filtreChange()" class="form-control custom-select">
+							<select [(ngModel)]="Stock.filtre.idDomaineArt" (change)="filtreChange()" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let d of listeDomaine" value="{{d.idDomaineArt}}">{{d.libelle}}</option>
 							</select>
 						</div>
@@ -50,7 +51,8 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Type</label>
-							<select [(ngModel)]="Stock.filtre.type" class="form-control custom-select">
+							<select [(ngModel)]="Stock.filtre.idTypeArt" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let t of listeType" value="{{t.idTypeArt}}">{{t.libelle}}</option>
 							</select>
 						</div>
@@ -60,7 +62,8 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Classe</label><br>
-							<select [(ngModel)]="Stock.filtre.classe" class="form-control custom-select">
+							<select [(ngModel)]="Stock.filtre.idClasseArt" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let c of listeClasse" value="{{c.idClasseArt}}">{{c.libelle}}</option>
 							</select>
 						</div>
@@ -68,7 +71,8 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Nature</label>
-							<select [(ngModel)]="Stock.filtre.nature" class="form-control custom-select">
+							<select [(ngModel)]="Stock.filtre.idNatureArt" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let n of listeNature" value="{{n.idNatureArt}}">{{n.libelle}}</option>
 							</select>
 						</div>
@@ -76,7 +80,8 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Spécificité</label>
-							<select [(ngModel)]="Stock.filtre.spe" class="form-control custom-select">
+							<select [(ngModel)]="Stock.filtre.idSpeArt" class="form-control custom-select">
+								<option value="0"></option>
 								<option *ngFor="let s of listeSpecificite" value="{{s.idSpeArt}}">{{s.libelle}}</option>
 							</select>
 						</div>
@@ -94,8 +99,8 @@
 					<tbody>
 						<tr *ngFor="let s of Stock.liste">
 							<td>{{s.libelle}}</td>
-							<td>{{avoirLibelleParId('listeDomaine', 'id_domaine_art', s.id_domaine_art)}}</td>
-							<td>{{avoirLibelleParId('listeType', 'id_type_art', s.id_type_art)}}</td>
+							<td>{{avoirLibelleParId('listeDomaine', 'idDomaineArt', s.idDomaineArt)}}</td>
+							<td>{{avoirLibelleParId('listeType', 'idTypeArt', s.idTypeArt)}}</td>
 							<td>{{s.stock}}</td>
 							<td>{{avoirCode(s)}}</td>
 							<td>
@@ -359,7 +364,7 @@
 	  </div>
 	</div>
 	<!-- MODAL MODIF ARTICLE -->
-	<div #modalModifArt class="modal" tabindex="-1" role="dialog">
+	<div #modalModifArt class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">

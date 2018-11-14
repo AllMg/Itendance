@@ -29,14 +29,23 @@ export class ImmoArtComponent implements OnInit {
   listeSpecificite = [];
 
   Stock = {
-    liste: [{libelle: "ARTICLE", id_article: 1, stock: 2, id_domaine_art: 0, id_type_art: 0, id_classe_art: 0, id_nature_art: 0, id_spe_art: 0}],
+    liste: [],
     filtre: {
-      article: "",
-      domaine: 0,
-      type: 0,
-      classe: 0,
-      nature: 0,
-      spe: 0
+      libelle: "",
+      idDomaineArt: 0,
+      idTypeArt: 0,
+      idClasseArt: 0,
+      idNatureArt: 0,
+      idSpeArt: 0
+    },
+    edition: {
+      libelle: "",
+      idDomaineArt: 0,
+      idTypeArt: 0,
+      idClasseArt: 0,
+      idNatureArt: 0,
+      idSpeArt: 0,
+      stock: 0
     }
   };
 
@@ -74,29 +83,13 @@ export class ImmoArtComponent implements OnInit {
     private toast: ToastrService,
     private immoService: ImmoService) {
     /*let that = this;
-    this.immoService.immoTopic("avoirListeDomaine", "").subscribe(obs=>{
+    this.immoService.immoTopic("listeUtilesArtInt", "", false).subscribe(obs=>{
       if(obs.success){
-        that.listeDomaine = obs.msg;
-      }
-    });
-    this.immoService.immoTopic("avoirListeType", "").subscribe(obs=>{
-      if(obs.success){
-        that.listeType = obs.msg;
-      }
-    });
-    this.immoService.immoTopic("avoirListeClasse", "").subscribe(obs=>{
-      if(obs.success){
-        that.listeClasse = obs.msg;
-      }
-    });
-    this.immoService.immoTopic("avoirListeNature", "").subscribe(obs=>{
-      if(obs.success){
-        that.listeNature = obs.msg;
-      }
-    });
-    this.immoService.immoTopic("avoirListeSpecificite", "").subscribe(obs=>{
-      if(obs.success){
-        that.listeSpecificite = obs.msg;
+        that.listeDomaine = obs.msg.listeDomaine;
+        that.listeType = obs.msg.listeType;
+        that.listeClasse = obs.msg.listeClasse;
+        that.listeNature = obs.msg.listeNature;
+        that.listeSpecificite = obs.msg.listeSpecificite;
       }
     });*/
   }
@@ -159,9 +152,9 @@ export class ImmoArtComponent implements OnInit {
 
   avoirCode(article){
     if(article.id_classe_art > 1){
-      let classe = this.avoirCaractParId("listeClasse", "id_classe_art", article.id_classe_art).code_classe;
-      let nature = this.avoirCaractParId("listeNature", "id_nature_art", article.id_nature_art).code_nature;
-      let spe = this.avoirCaractParId("listeSpecificite", "id_spe_art", article.id_spe_art).code_spe;
+      let classe = this.avoirCaractParId("listeClasse", "idClasseArt", article.idClasseArt).codeClasse;
+      let nature = this.avoirCaractParId("listeNature", "idNatureArt", article.idNatureArt).codeNature;
+      let spe = this.avoirCaractParId("listeSpecificite", "idSpeArt", article.idSpeArt).codeSpe;
       return classe+nature+spe;
     }
     else{

@@ -44,7 +44,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdMob.filtre.refIndividu" (change)="filtreChange('DmdMob')" type="text" placeholder="Matricule" class="form-control input-upper" />
+							<input [(ngModel)]="DmdMob.filtre.refIndividu" (ngModelChange)="filtreChange('DmdMob')" type="text" placeholder="Matricule" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -59,7 +59,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date</label>
-							<input [(ngModel)]="DmdMob.filtre.dateDmdImmo" (change)="filtreChange('DmdMob')" type="date" class="form-control" />
+							<input [(ngModel)]="DmdMob.filtre.dateDmdImmo" (ngModelChange)="filtreChange('DmdMob')" type="date" class="form-control" />
 						</div>
 					</div>
 				</div>
@@ -76,10 +76,21 @@
 							</div>
 						</div>
 					</div>
-					<div *ngIf="DmdMob.liste.length == 0" style="text-align: center;">
-						<span>Pas de résultat</span>
-					</div>
 				</div>
+				<div *ngIf="DmdMob.liste.length == 0 && chargeListe == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="DmdMob.liste.length > 0" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="DmdMob.page > 1" (click)="pagePrecedent('DmdMob')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{DmdMob.page}}</span></li>
+				    <li *ngIf="DmdMob.liste.length == ligneMax" (click)="pageSuivant('DmdMob')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
 			</div>
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_rep_mob'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes de réparation de mobilier</h6>
@@ -96,13 +107,13 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Demandeur</label><br>
-							<input [(ngModel)]="DmdRepMob.filtre.refIndividu" (change)="filtreChange('DmdRepMob')" placeholder="Matricule" type="text" class="form-control input-upper" />
+							<input [(ngModel)]="DmdRepMob.filtre.refIndividu" (ngModelChange)="filtreChange('DmdRepMob')" placeholder="Matricule" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="DmdRepMob.filtre.nomArticle" (change)="filtreChange('DmdRepMob')" type="text" placeholder="Désignation" class="form-control input-upper" />
+							<input [(ngModel)]="DmdRepMob.filtre.nomArticle" (ngModelChange)="filtreChange('DmdRepMob')" type="text" placeholder="Désignation" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -119,13 +130,13 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date</label>
-							<input [(ngModel)]="DmdRepMob.filtre.dateDmdRep" (change)="filtreChange('DmdRepMob')" type="date" class="form-control" />
+							<input [(ngModel)]="DmdRepMob.filtre.dateDmdRep" (ngModelChange)="filtreChange('DmdRepMob')" type="date" class="form-control" />
 						</div>
 					</div>
 				</div>
 				<hr>
 				<div class="row">
-					<div *ngFor="let dmd of DmdRepMob.liste; let index = index" class="col-md-6">
+					<div *ngFor="let dmd of DmdRepMob.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
 						<div class="liste-dmd-item">
 							<p><span class="dmd-l-date">{{avoirDate(dmd.dateDmdRep)}}</span></p>
 							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
@@ -137,6 +148,20 @@
 						</div>
 					</div>
 				</div>
+				<div *ngIf="DmdRepMob.liste.length == 0 && chargeListe == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="DmdRepMob.liste.length > 0" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="DmdRepMob.page > 1" (click)="pagePrecedent('DmdRepMob')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{DmdRepMob.page}}</span></li>
+				    <li *ngIf="DmdRepMob.liste.length == ligneMax" (click)="pageSuivant('DmdRepMob')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
 			</div>
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_bat'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes d'entretient de batiment</h6>
@@ -210,7 +235,7 @@
 				</div>
 				<hr>
 				<div class="row">
-					<div *ngFor="let dmd of DmdBat.liste; let index = index" class="col-md-6">
+					<div *ngFor="let dmd of DmdBat.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
 						<div class="liste-dmd-item">
 							<p><span class="dmd-l-date">{{avoirDate(dmd.date)}}</span></p>
 							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
@@ -222,7 +247,22 @@
 						</div>
 					</div>
 				</div>
+				<div *ngIf="DmdBat.liste.length == 0 && chargeListe == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="DmdBat.liste.length > 0" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="DmdBat.page > 1" (click)="pagePrecedent('DmdBat')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{DmdBat.page}}</span></li>
+				    <li *ngIf="DmdBat.liste.length == ligneMax" (click)="pageSuivant('DmdBat')" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
 			</div>
+			<div *ngIf="chargeListe" class="loader"></div>
 		</div>
 	</div>
 

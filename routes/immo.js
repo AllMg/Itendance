@@ -6,7 +6,14 @@ router.post('/immoTopic',function(req,res){
   const data = req.body.data;
   const topicLogReq = data.fonction+"req";
   const topicLogRes = data.fonction+"res";
-  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(data.argument), function(err,data){
+  var argument = null;
+  if(data.enJSON == true){
+    argument = JSON.stringify(data.argument);
+  }
+  else{
+    argument = data.argument;
+  }
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
     if(err){
       res.json({
         sucess: !err,

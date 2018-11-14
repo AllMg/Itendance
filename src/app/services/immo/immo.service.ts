@@ -14,10 +14,11 @@ export class ImmoService {
   	fonction: anaran'ny fonction an'ilay topic atsona
   	argument: ny valeur ilain'ny fonction, objet na string mety daolo
   */
-  immoTopic(fonction:string, argument:any) {
+  immoTopic(fonction:string, argument:any, enJSON: boolean) {
     let msg = {
       data: {
       	fonction: fonction,
+        enJSON: enJSON,
       	argument: argument
       }
     };

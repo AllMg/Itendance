@@ -210,6 +210,7 @@ import { ImmoInventaireComponent } from './components/immo-inventaire/immo-inven
 import { SecVisiteurComponent } from './components/sec-visiteur/sec-visiteur.component';
 import { SecAccesComponent } from './components/sec-acces/sec-acces.component';
 import { SecAgentComponent } from './components/sec-agent/sec-agent.component';
+import { ImmoMvtComponent } from './components/immo-mvt/immo-mvt.component';
 
 const appRoutes: Routes = [
   {path: '', component: AccueilComponent, canActivate: [UnAuthGuard]},
@@ -327,6 +328,7 @@ const appRoutes: Routes = [
   {path: 'immo-dmd', component: ImmoDmdComponent},
   {path: 'immo-liste', component: ImmoListeComponent},
   {path: 'immo-art', component: ImmoArtComponent},
+  {path: 'immo-mvt', component: ImmoMvtComponent},
   {path: 'immo-inventaire', component: ImmoInventaireComponent},
   {path: 'sec-visiteur', component: SecVisiteurComponent},
   {path: 'sec-acces', component: SecAccesComponent},
@@ -473,7 +475,8 @@ const appRoutes: Routes = [
     ImmoInventaireComponent,
     SecVisiteurComponent,
     SecAccesComponent,
-    SecAgentComponent
+    SecAgentComponent,
+    ImmoMvtComponent
   ],
   imports: [
     BrowserModule,
