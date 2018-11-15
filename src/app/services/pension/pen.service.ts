@@ -142,5 +142,4 @@ export class PenService {
     return this.http.post(this.host + 'pen/verifierSiPensionExist', msg, {headers: headers})
       .map(res => res.json());
   }
-
 }

@@ -1,0 +1,75 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page2">
+      <h4>Informations pension DLPR</h4>
+    </div>
+    <div class="col-sm-12" *ngIf="show">
+      <div class="loader"></div>
+      <br>
+    </div>
+    <div *ngIf="!show">
+        <div class="col-sm-12">
+         
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);">Matricule du bénéficiaire :</div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" readonly="" style="text-align: center; width: 100%;"
+                     value="{{infoIndiv.id_individu}}">
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+          <br/>
+           <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);">Date Depart :</div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" readonly="" style="text-align: center; width: 100%;"
+                     value="{{infoDemandePension.dateDepart}}">
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);"> Nom du Pensionaire :</div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" readonly="" style="text-align: center; ; width: 100%;"
+                     value="{{infoDemandeur}}">
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+          <br/>
+          
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);"> Type de pension :</div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control"  readonly="" style="text-align: center; ; width: 100%;"
+                     value="{{infoDemandePension.typePension}}">
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+        
+          <br/>
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 texte-content color-text" style="color:rgb(3,158,194);"> Montant acquise :</div>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" style="text-align: right !important;" readonly="" style="text-align: center; ; width: 100%;"
+                     value="{{montantTotal  | number:'2.2-5'}}">
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-sm-12"></div>
+          </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

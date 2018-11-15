@@ -22,7 +22,6 @@ export class HistoriqueIndivComponent implements OnInit {
   public showDroit: boolean;
   public showSalaire: boolean;
   public showNotif: boolean;
-  public showDeclaration: boolean;
   showTransfertLink: boolean;
   private user: any;
   entity: string;
@@ -59,7 +58,6 @@ export class HistoriqueIndivComponent implements OnInit {
     this.showDroit = false;
     this.showSalaire = false;
     this.showNotif = false;
-    this.showDeclaration = false;
   }
 
   ngOnInit() {
@@ -321,9 +319,8 @@ export class HistoriqueIndivComponent implements OnInit {
     this.router.navigate(['/dn/' + periode]);
   }
 
-  findIsDemandeDLPR(type_prestation,dataR) {
+  findIsDemandeDLPR(type_prestation) {
     let result = false;
-    let conteur = 0;
     let listeDLPRJson = {
       '317': ['317', '318', '319', '320'],
       '319': ['319', '320', '317', '318']
@@ -336,66 +333,39 @@ export class HistoriqueIndivComponent implements OnInit {
       };
       this.penService.findIsDemandeIndividu(msg).subscribe(data => {
         if (data.success) {
-          conteur++;
           if (data.msg !== 'vide') {
             result = true;
           }
         }
-        if(conteur === listeDLPRJson[type_prestation].length){
-          if(!result){
-            if(type_prestation === '317'){
-              this.router.navigate(['/ouverture-droit-asvt-pen']);
-            } else{
-              this.router.navigate(['/demande-reversion-pen']);
-            }
-          }
-          else {
-            if (dataR.msg.demandeMod.etat === 6) {
-              this.toastr.warning('Pièce non conforme', 'Information');
-              this.router.navigate(['/detail-modif/' + dataR.msg.accueilMod.id_acc]);
-            }
-            else if (dataR.msg.demandeMod.etat === 5) {
-              this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
-              this.router.navigate(['/detail-modif/' + dataR.msg.accueilMod.id_acc]);
-            }
-          }
-          this.showDeclaration = false;
-        }
       });
     }
-    
   }
 
   onClickDemande(type_prestation) {
-    this.showDeclaration = true;
     let that = this;
     if (type_prestation === '317' || type_prestation === '318' || type_prestation === '319' || type_prestation === '320') {
       this.familleService.infoFamille(this.user.id_acces).subscribe(data => {
         if (data.success) {
-          if(data.msg.length > 0){
-            this.listFamilleUser = this.getConjointForUser(data.msg);
-            for (const info of this.listFamilleUser) {
-              that.matriculeTravailleur = info.matricule;
-            }
-            let msgPension = {
-              'idtrav': that.matriculeTravailleur,
-              'idBenef': that.user.id_acces
-            };
-            this.penService.findSiPensionExist(msgPension).subscribe(dataR => {
-              if (dataR.success) {
-                if (dataR.msg > 0) {
-                  this.toastr.warning('Votre droit a dèja été ouvert.', 'Information');
-                  that.findPenExist = true;
-                } else {
-                  that.verifiDemande(type_prestation);
-                }
-              }
-            });
-          } else {
-            this.toastr.error('Erreur reference famille travailleur :');
+          this.listFamilleUser = this.getConjointForUser(data.msg);
+          for (const info of this.listFamilleUser) {
+            that.matriculeTravailleur = info.matricule;
           }
+          let msgPension = {
+            'idtrav': that.matriculeTravailleur,
+            'idBenef': that.user.id_acces
+          };
+          this.penService.findSiPensionExist(msgPension).subscribe(dataR => {
+            if (dataR.success) {
+              if (dataR.msg > 0) {
+                this.toastr.warning('Votre droit a dèja été ouvert.', 'Information');
+                that.findPenExist = true;
+              } else {
+                that.verifiDemande(type_prestation);
+              }
+            }
+          });
         } else {
-          this.toastr.error('Erreur reference famille travailleur :');
+          this.toastr.error('Erreur reference famille travailleur :' + data.msg);
         }
       });
     } else {
@@ -425,10 +395,32 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('Data msg => ', data.msg);
         if (data.msg === 'vide') {
           if (type_prestation === '317') {
-            this.findIsDemandeDLPR(type_prestation,data);
+            if (!this.findIsDemandeDLPR(type_prestation))
+              this.router.navigate(['/ouverture-droit-asvt-pen']);
+            else {
+              if (data.msg.demandeMod.etat === 6) {
+                this.toastr.warning('Pièce non conforme', 'Information');
+                this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
+              }
+              else if (data.msg.demandeMod.etat === 5) {
+                this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
+                this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
+              }
+            }
           }
           else if (type_prestation === '319') {
-            this.findIsDemandeDLPR(type_prestation, data);
+            if (!this.findIsDemandeDLPR(type_prestation))
+              this.router.navigate(['/demande-reversion-pen']);
+            else {
+              if (data.msg.demandeMod.etat === 6) {
+                this.toastr.warning('Pièce non conforme', 'Information');
+                this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
+              }
+              else if (data.msg.demandeMod.etat === 5) {
+                this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
+                this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
+              }
+            }
           }
           else if (type_prestation === '335') {
             this.router.navigate(['/demande-revision-pen']);
@@ -451,7 +443,6 @@ export class HistoriqueIndivComponent implements OnInit {
           else if (type_prestation === '311') {
             this.router.navigate(['/dlpr']);
           }
-          this.showDeclaration = false;
         }
         else {
           if (type_prestation !== '335') {
@@ -476,7 +467,6 @@ export class HistoriqueIndivComponent implements OnInit {
           if (data.msg.demandeMod.etat === 4) {
             this.toastr.warning('Votre demande est en attente de contrôle', 'Information');
           }
-          this.showDeclaration = false;
         }
       }
     });

@@ -160,6 +160,14 @@
               <a style="cursor: pointer;" (click)="onClickDemande('319')">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Demande Réversion de droit ASVT</a>
             </li>
+            <li>
+              <a [routerLink]="['/demande-at']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration d'accident de travail</a>
+            </li>
+            <li>
+              <a [routerLink]="['/atmp/prestation']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande détaillé de la déclaration d'accident de travail</a>
+            </li>
              <li>
               <a style="cursor: pointer;" (click)="onClickDemande('311')">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Demande Liquidation Pension Retraite</a>
@@ -293,7 +301,7 @@
     <div class="col-xs-12 col-md-3 col-sm-12 div_service">
       <div class="card h-100 content_service">
         <h4 class="card-header titre_service1">Demandes et déclarations</h4>
-        <div class="card-body content-lien" *ngIf="!showDeclaration">
+        <div class="card-body content-lien">
           <ul>
             <li *ngIf="entity==='O'">
               <a [routerLink]="['/reglement-op']">
@@ -327,6 +335,10 @@
               <a [routerLink]="['/reglement-op']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste OP</a>
             </li>
+            <li *ngIf="entity==='S'">
+              <a [routerLink]="['/liste-demande-rfa']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes RFA en attente de validation</a>
+            </li>
             <li>
               <a [routerLink]="['/dimm']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Demande d'immatriculation</a>
@@ -339,14 +351,6 @@
               <a [routerLink]="['/liste-transfert-cotisation']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste transfert de cotisation</a>
             </li>
-            <li>
-              <a [routerLink]="['/demande-at']">
-                <span class="fa fa-angle-double-right"></span>&nbsp;Déclaration d'accident de travail</a>
-            </li>
-            <li>
-              <a [routerLink]="['/atmp/prestation']">
-                <span class="fa fa-angle-double-right"></span> Demande détaillé de la déclaration d'accident de travail</a>
-               </li>
             <li>
               <a [routerLink]="['/liste-demande-pension']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Pension</a>
@@ -367,18 +371,51 @@
               <a [routerLink]="['/liste-demande/40E']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Demande attestation PF</a>
             </li>
-            <li>
-              <a [routerLink]="['/immo-dmd']">
-                <span class="fa fa-angle-double-right"></span>&nbsp;Immobilisations</a>
+             <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/215/Frais Funeraire/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Funeraire</a>
+            </li>
+             <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/228/Rente IPP/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Rente IPP</a>
+            </li>
+            <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/214/Frais deplacement FD/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Deplacement FD1</a>
+            </li>
+            <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/213/Frais Prothese/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Prothese</a>
+            </li>
+            <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/211/IJ ATMP/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste IJ (ATMP)</a>
+            </li>
+             <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/212/Frais Medicaux/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Medicaux</a>
+            </li>
+            <li *ngIf="entity==='O'">
+              <a [routerLink]="['/liste-atmp/227/Rente Mortelle/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste Rente Mortelle</a>
+            </li>
+            <li >
+              <a [routerLink]="['/sem/liste-fm']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Medicaux (SEM)</a>
             </li>
             <li>
-              <a [routerLink]="['/sec-visiteur']">
-                <span class="fa fa-angle-double-right"></span>&nbsp;Sécurités</a>
+              <a [routerLink]="['/sem/liste-fp']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (SEM)</a>
+            </li>
+            <li >
+              <a [routerLink]="['/atmp/liste-fm']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Medicaux (AT)</a>
+            </li>
+            <li>
+              <a [routerLink]="['/atmp/liste-fp']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (AT)</a>
             </li>
           </ul>
-        </div>
-        <div *ngIf="showDeclaration" style="margin: auto">
-          <div class="loader" style="margin: auto"></div>
         </div>
       </div>
     </div>
@@ -407,6 +444,10 @@
             <li>
               <a [routerLink]="['/info-pension']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Info pension ASVT</a>
+            </li>
+             <li>
+              <a [routerLink]="['/info-pension-dlpr']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Info pension DLPR</a>
             </li>
           </ul>
         </div>

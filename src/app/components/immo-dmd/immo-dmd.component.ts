@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -58,9 +58,9 @@ export class ImmoDmdComponent implements OnInit {
     pieceFichier: [],
     loader: false,
     listeSite: [],
-    listeType: [{libelle: "AMENAGEMENT", id: 0},{libelle: "CONSTRUCTION", id: 1},{libelle: "LOGEMENT", id: 2}],
-    listeCaract: [{libelle: "TOITURE", id: 0},{libelle: "PORTE", id: 1}],
-    listeEnum: [{libelle: "PEINTURE", id: 0}]
+    listeType: [],
+    listeCaract: [],
+    listeEnum: []
   };
 
   Ajout = {
@@ -86,36 +86,46 @@ export class ImmoDmdComponent implements OnInit {
         that.DmdEntrBat.listeSite = obs.msg;
       }
     });*/
-    this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
+    //let obs1 = this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
+    let obs1 = this.immoService.listeTypeEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeType = obs.msg;
       }
+      console.log("listeTypeEntrBatInt", obs);
+      obs1.unsubscribe();
     });
-    this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
+    //let obs2 = this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
+    let obs2 = this.immoService.listeCaractEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeCaract = obs.msg;
       }
+      console.log("listeCaractEntrBatInt", obs);
+      obs2.unsubscribe();
     });
-    this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
+    //let obs3 = this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
+    let obs3 = this.immoService.listeEnumEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeEnum = obs.msg;
       }
+      console.log("listeEnumEntrBatInt", obs);
+      obs3.unsubscribe();
     });
   }
 
   ngOnInit() {
-    console.log("ngOnInit()");
+    console.log("INIT IMMO DMD");
     let that = this;
     this.DmdMob.articleControls[0].valueChanges.subscribe(term => {
       term = term.toString().trim();
       if (term.length >= 3) {
-        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
+        let observ = that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
           if(obs.success){
             that.DmdMob.articleOptions = obs.msg;
           }
+          observ.unsubscribe();
         });
       }
       else{
@@ -125,10 +135,11 @@ export class ImmoDmdComponent implements OnInit {
     this.DmdRepMob.articleControl.valueChanges.subscribe(term=>{
       term = term.toString().trim();
       if (term.length >= 3) {
-        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
+        let observ = that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
           if(obs.success){
             that.DmdRepMob.articleOptions = obs.msg;
           }
+          observ.unsubscribe();
         });
       }
       else{
@@ -138,6 +149,14 @@ export class ImmoDmdComponent implements OnInit {
     /*this.Utilisateur = JSON.parse(localStorage.getItem('user'));
     console.log("Utilisateur");
     console.log(this.Utilisateur);*/
+  }
+
+  ngOnDestroy(){
+    console.log("DESTROYED IMMO DMD");
+    this.DmdRepMob = null;
+    this.DmdEntrBat = null;
+    this.DmdMob = null;
+    this.Ajout = null;
   }
 
   trieParLibelle(array){
@@ -164,13 +183,15 @@ export class ImmoDmdComponent implements OnInit {
         prestation: "302",
         dr: "42"
       };
-      this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
         if(obs.success){
           that[nomAttr].reference = obs.msg;
         }
         else{
           that.toastr.error(obs.msg);
         }
+        console.log("referenceDmdArticleInt", obs);
+        observ.unsubscribe();
       });
     }
   }
@@ -182,10 +203,11 @@ export class ImmoDmdComponent implements OnInit {
     formControl.valueChanges.subscribe(term => {
       term = term.toString().trim();
       if (term.length >= 3) {
-        that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
+        let observ = that.immoService.immoTopic("rechercheArticleInt", term, false).subscribe(obs=>{
           if(obs.success){
             that.DmdMob.articleOptions = obs.msg;
           }
+          observ.unsubscribe();
         });
       }
       else{
@@ -245,7 +267,7 @@ export class ImmoDmdComponent implements OnInit {
         this.DmdMob.loader = true;  
         let articlesNoms = this.avoirTableauArticle(this.DmdMob.articles);
         let that = this;
-        this.immoService.immoTopic("verificationArticleInt", articlesNoms, true).subscribe(obs=>{
+        let observ = this.immoService.immoTopic("verificationArticleInt", articlesNoms, true).subscribe(obs=>{
           if(obs.success){
             for(let i in obs.msg){
               that.DmdMob.articles[i].refArticle = obs.msg[i];
@@ -258,7 +280,7 @@ export class ImmoDmdComponent implements OnInit {
               observation: that.DmdMob.observation
             };
             
-            that.immoService.immoTopic("ajoutDmdImmoInt", argument, true).subscribe(obs=>{
+            let observ1 = that.immoService.immoTopic("ajoutDmdImmoInt", argument, true).subscribe(obs=>{
               if(obs.success){
                 that.toastr.success("L'enregistrement est réussi");
                 that.DmdMob.reference = "";
@@ -270,12 +292,14 @@ export class ImmoDmdComponent implements OnInit {
                 that.toastr.error(obs.msg);
               }
               that.DmdMob.loader = false;
+              observ1.unsubscribe();
             });
           }
           else{
             that.toastr.error(obs.msg);
             that.DmdMob.loader = false;  
           }
+          observ.unsubscribe();
         });
       }
     }
@@ -314,12 +338,13 @@ export class ImmoDmdComponent implements OnInit {
           id_files: reference,
           file: filereader.result,
           serviceName: "Intendance",
-          name: fichiers[index].name
+          name: "piece justificative"//fichiers[index].name
         };
-        that.fileService.save(fichier).subscribe(obs=>{
+        let observ = that.fileService.save(fichier).subscribe(obs=>{
           if(!obs.success){
             that.toastr.error("L'enregistrement du fichier "+fichier.name+" a échoué");
           }
+          observ.unsubscribe();
         });
       };
       filereader.readAsDataURL(fichiers[index]);
@@ -338,7 +363,7 @@ export class ImmoDmdComponent implements OnInit {
       };
       if(argument.nomArticle != ""){
         let that = this;
-        this.immoService.immoTopic("ajoutDmdReparationInt", argument, true).subscribe(obs=>{
+        let observ = this.immoService.immoTopic("ajoutDmdReparationInt", argument, true).subscribe(obs=>{
           if(obs.success){
             that.toastr.success("L'enregistrement de la demande est réussie");
             that.DmdRepMob.reference = "";
@@ -352,6 +377,7 @@ export class ImmoDmdComponent implements OnInit {
             that.toastr.error(obs.msg);
           }
           that.DmdRepMob.loader = false;
+          observ.unsubscribe();
         });
       }
       else{
@@ -393,12 +419,16 @@ export class ImmoDmdComponent implements OnInit {
         let argument = {
           libelle: this.Ajout.valeur.toUpperCase()
         };
-        this.immoService.immoTopic(this.Ajout.topic, argument, true).subscribe(obs=>{
+        let observ = this.immoService.immoTopic(this.Ajout.topic, argument, true).subscribe(obs=>{
           if(obs.success){
             that.Ajout.valeur = "";
             that.DmdEntrBat[that.Ajout.nomAttrA].push(obs.msg);
             that.DmdEntrBat[that.Ajout.nomAttrS] = obs.msg[that.Ajout.nomId];
           }
+          else{
+            that.toastr.error(obs.msg);
+          }
+          observ.unsubscribe();
         });
       }
     }
@@ -422,7 +452,7 @@ export class ImmoDmdComponent implements OnInit {
         motif: this.DmdEntrBat.observation.trim()
       };
       let that = this;
-      this.immoService.immoTopic("ajoutDmdEntrBatInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("ajoutDmdEntrBatInt", argument, true).subscribe(obs=>{
         if(obs.success){
           this.toastr.success("La demande est enregistrée");
           that.DmdEntrBat.reference = "";
@@ -439,6 +469,7 @@ export class ImmoDmdComponent implements OnInit {
           this.toastr.error(obs.msg);
         }
         this.DmdEntrBat.loader = false;
+        observ.unsubscribe();
       });
     }
     else{

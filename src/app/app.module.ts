@@ -1,88 +1,88 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
-import { registerLocaleData } from '@angular/common';
-import { CommonModule, DatePipe } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { ChartsModule } from 'ng2-charts';
-import { NgxSelectModule } from 'ngx-select-ex';
-import { HttpClientModule } from '@angular/common/http';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpModule, Http} from '@angular/http';
+import {registerLocaleData} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule, ToastrService} from 'ngx-toastr';
+import {ChartsModule} from 'ng2-charts';
+import {NgxSelectModule} from 'ngx-select-ex';
+import {HttpClientModule} from '@angular/common/http';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
 
-import { AuthGuard } from './guards/auth.guard';
-import { UnAuthGuard } from './guards/unauth.guard';
-import { FemininGuard } from './guards/Femin.guard';
+import {AuthGuard} from './guards/auth.guard';
+import {UnAuthGuard} from './guards/unauth.guard';
+import {FemininGuard} from './guards/Femin.guard';
 
-import { AuthService } from './services/auth/auth.service';
+import {AuthService} from './services/auth/auth.service';
 // service
-import { TravailleurService } from './services/travailleur/travailleur.service';
-import { AppComponent } from './app.component';
-import { MenuHautComponent } from './components/menu-haut/menu-haut.component';
-import { SliderComponent } from './components/slider/slider.component';
-import { MenuCentreComponent } from './components/menu-centre/menu-centre.component';
-import { CnapsServiceComponent } from './components/cnaps-service/cnaps-service.component';
-import { ActualiteComponent } from './components/actualite/actualite.component';
-import { AutreLienComponent } from './components/autre-lien/autre-lien.component';
-import { ContactComponent } from './components/contact/contact.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { CnapsMapComponent } from './components/cnaps-map/cnaps-map.component';
-import { ConnexionComponent } from './components/connexion/connexion.component';
-import { AccueilComponent } from './components/accueil/accueil.component';
-import { ReglementOpComponent } from './components/reglement-op/reglement-op.component';
-import { ReglementOpValidationComponent } from './components/reglement-op-validation/reglement-op-validation.component';
-import { DimmComponent } from './components/dimm/dimm.component';
-import { AvisEmbaucheFormComponent } from './components/avis-embauche-form/avis-embauche-form.component';
-import { NewIndividusComponent } from './components/new-individus/new-individus.component';
-import { InfoIndividusComponent } from './components/info-individus/info-individus.component';
-import { DnComponent } from './components/dn/dn.component';
-import { BanniereComponent } from './components/banniere/banniere.component';
-import { AjoutAdresseComponent } from './components/ajout-adresse/ajout-adresse.component';
-import { ModifierResponsableComponent } from './components/modifier-responsable/modifier-responsable.component';
-import { ModifierCompteBancaireComponent } from './components/modifier-compte-bancaire/modifier-compte-bancaire.component';
-import { IjComponent } from './components/demande/ij/ij.component';
-import { ListeIndicateursComponent } from './components/liste-indicateurs/liste-indicateurs.component';
-import { AccueilConnecteComponent } from './components/accueil-connecte/accueil-connecte.component';
-import { HitoriqueSalaireAnneeComponent } from './components/hitorique-salaire-annee/hitorique-salaire-annee.component';
-import { DynamicInputComponent } from './components/dynamic-input/dynamic-input.component';
-import { LienFootComponent } from './components/lien-foot/lien-foot.component';
-import { HistoriqueIndivComponent } from './components/historique-indiv/historique-indiv.component';
-import { InfoEmployeursComponent } from './components/info-employeurs/info-employeurs.component';
-import { InfoAgentsComponent } from './components/info-agents/info-agents.component';
-import { InfoPersonnesComponent } from './components/info-personnes/info-personnes.component';
-import { LiquidationComponent } from './components/liquidation/liquidation.component';
-import { DetailsIjComponent } from './components/traitement/traitement-pf/ij1/details-ij/details-ij.component';
-import { IjPfComponent } from './components/traitement/traitement-pf/ij1/ij-pf/ij-pf.component';
-import { InfoDemandeComponent } from './components/detail-demande-pen/info-demande/info-demande.component';
+import {TravailleurService} from './services/travailleur/travailleur.service';
+import {AppComponent} from './app.component';
+import {MenuHautComponent} from './components/menu-haut/menu-haut.component';
+import {SliderComponent} from './components/slider/slider.component';
+import {MenuCentreComponent} from './components/menu-centre/menu-centre.component';
+import {CnapsServiceComponent} from './components/cnaps-service/cnaps-service.component';
+import {ActualiteComponent} from './components/actualite/actualite.component';
+import {AutreLienComponent} from './components/autre-lien/autre-lien.component';
+import {ContactComponent} from './components/contact/contact.component';
+import {FooterComponent} from './components/footer/footer.component';
+import {CnapsMapComponent} from './components/cnaps-map/cnaps-map.component';
+import {ConnexionComponent} from './components/connexion/connexion.component';
+import {AccueilComponent} from './components/accueil/accueil.component';
+import {ReglementOpComponent} from './components/reglement-op/reglement-op.component';
+import {ReglementOpValidationComponent} from './components/reglement-op-validation/reglement-op-validation.component';
+import {DimmComponent} from './components/dimm/dimm.component';
+import {AvisEmbaucheFormComponent} from './components/avis-embauche-form/avis-embauche-form.component';
+import {NewIndividusComponent} from './components/new-individus/new-individus.component';
+import {InfoIndividusComponent} from './components/info-individus/info-individus.component';
+import {DnComponent} from './components/dn/dn.component';
+import {BanniereComponent} from './components/banniere/banniere.component';
+import {AjoutAdresseComponent} from './components/ajout-adresse/ajout-adresse.component';
+import {ModifierResponsableComponent} from './components/modifier-responsable/modifier-responsable.component';
+import {ModifierCompteBancaireComponent} from './components/modifier-compte-bancaire/modifier-compte-bancaire.component';
+import {IjComponent} from './components/demande/ij/ij.component';
+import {ListeIndicateursComponent} from './components/liste-indicateurs/liste-indicateurs.component';
+import {AccueilConnecteComponent} from './components/accueil-connecte/accueil-connecte.component';
+import {HitoriqueSalaireAnneeComponent} from './components/hitorique-salaire-annee/hitorique-salaire-annee.component';
+import {DynamicInputComponent} from './components/dynamic-input/dynamic-input.component';
+import {LienFootComponent} from './components/lien-foot/lien-foot.component';
+import {HistoriqueIndivComponent} from './components/historique-indiv/historique-indiv.component';
+import {InfoEmployeursComponent} from './components/info-employeurs/info-employeurs.component';
+import {InfoAgentsComponent} from './components/info-agents/info-agents.component';
+import {InfoPersonnesComponent} from './components/info-personnes/info-personnes.component';
+import {LiquidationComponent} from './components/liquidation/liquidation.component';
+import {DetailsIjComponent} from './components/traitement/traitement-pf/ij1/details-ij/details-ij.component';
+import {IjPfComponent} from './components/traitement/traitement-pf/ij1/ij-pf/ij-pf.component';
+import {InfoDemandeComponent} from './components/detail-demande-pen/info-demande/info-demande.component';
 import localeFr from '@angular/common/locales/fr';
 
 // service
 
-import { Am1Service } from './services/pf/am1/am1.service';
-import { Am2Service } from './services/pf/am2/am2.service';
-import { ApService } from './services/pf/ap/ap.service';
-import { RfaService } from './services/pf/rfa/rfa.service';
-import { FmService } from './services/fm/fm.service';
-import { Ij2Service } from './services/ij2/ij2.service';
-import { ChartService } from './services/chart/chart.service';
-import { InfoService } from './services/info/info.service';
-import { AdresseService } from './services/adresse/adresse.service';
-import { CompteEService } from './services/compte-e/compte-e.service';
-import { CompteTService } from './services/compte-t/compte-t.service';
-import { FamilleService } from './services/famille/famille.service';
-import { IndividuService } from './services/individu/individu.service';
-import { PaysService } from './services/pays/pays.service';
-import { EmployeurService } from './services/employeur/employeur.service';
-import { BanqueService } from './services/banque/banque.service';
-import { IjPfService } from './services/ij-pf/ij-pf.service';
-import { IjService } from './services/ij/ij.service';
-import { InputService } from './services/ij/input-service/input.service';
-import { Globals } from './services/Global';
-import { OpService } from './services/op/op.service';
-import { DlprService } from './services/dlpr/dlpr.service';
-import { AtmpService } from './services/atmp/atmp.service';
+import {Am1Service} from './services/pf/am1/am1.service';
+import {Am2Service} from './services/pf/am2/am2.service';
+import {ApService} from './services/pf/ap/ap.service';
+import {RfaService} from './services/pf/rfa/rfa.service';
+import {FmService} from './services/fm/fm.service';
+import {Ij2Service} from './services/ij2/ij2.service';
+import {ChartService} from './services/chart/chart.service';
+import {InfoService} from './services/info/info.service';
+import {AdresseService} from './services/adresse/adresse.service';
+import {CompteEService} from './services/compte-e/compte-e.service';
+import {CompteTService} from './services/compte-t/compte-t.service';
+import {FamilleService} from './services/famille/famille.service';
+import {IndividuService} from './services/individu/individu.service';
+import {PaysService} from './services/pays/pays.service';
+import {EmployeurService} from './services/employeur/employeur.service';
+import {BanqueService} from './services/banque/banque.service';
+import {IjPfService} from './services/ij-pf/ij-pf.service';
+import {IjService} from './services/ij/ij.service';
+import {InputService} from './services/ij/input-service/input.service';
+import {Globals} from './services/Global';
+import {OpService} from './services/op/op.service';
+import {DlprService} from './services/dlpr/dlpr.service';
+import {AtmpService} from './services/atmp/atmp.service';
 import {
   MatButtonModule,
   MatDatepickerModule,
@@ -91,96 +91,97 @@ import {
   MatNativeDateModule, MatPaginatorModule, MatSelectModule,
   MatStepperModule, MatTableModule, MatAutocompleteModule
 } from '@angular/material';
-import { StatusService } from './services/status/status.service';
-import { CategorieService } from './services/categorie/categorie.service';
-import { ActiviteService } from './services/activite/activite.service';
-import { HistoriqueDroitComponent } from './components/historique-droit/historique-droit.component';
-import { DnService } from './services/dn/dn.service';
-import { DnValidationComponent } from './components/dn-validation/dn-validation.component';
-import { DirectionService } from './services/direction/direction.service';
-import { CieComponent } from './components/cie/cie.component';
-import { CieService } from './services/cie/cie.service';
-import { CrgComponent } from './components/crg/crg.component';
-import { CrgService } from './services/crg/crg.service';
-import { MrComponent } from './components/mr/mr.component';
-import { MrService } from './services/mr/mr.service';
-import { SoldeComponent } from './components/solde/solde.component';
-import { SoldeService } from './services/solde/solde.service';
-import { DecompteComponent } from './components/decompte/decompte.component';
-import { PratiquesComponent } from './components/pratiques/pratiques.component';
-import { AProposComponent } from './components/a-propos/a-propos.component';
-import { CnapsSportComponent } from './components/cnaps-sport/cnaps-sport.component';
-import { CclComponent } from './components/ccl/ccl.component';
+import {StatusService} from './services/status/status.service';
+import {CategorieService} from './services/categorie/categorie.service';
+import {ActiviteService} from './services/activite/activite.service';
+import {HistoriqueDroitComponent} from './components/historique-droit/historique-droit.component';
+import {DnService} from './services/dn/dn.service';
+import {DnValidationComponent} from './components/dn-validation/dn-validation.component';
+import {DirectionService} from './services/direction/direction.service';
+import {CieComponent} from './components/cie/cie.component';
+import {CieService} from './services/cie/cie.service';
+import {CrgComponent} from './components/crg/crg.component';
+import {CrgService} from './services/crg/crg.service';
+import {MrComponent} from './components/mr/mr.component';
+import {MrService} from './services/mr/mr.service';
+import {SoldeComponent} from './components/solde/solde.component';
+import {SoldeService} from './services/solde/solde.service';
+import {DecompteComponent} from './components/decompte/decompte.component';
+import {PratiquesComponent} from './components/pratiques/pratiques.component';
+import {AProposComponent} from './components/a-propos/a-propos.component';
+import {CnapsSportComponent} from './components/cnaps-sport/cnaps-sport.component';
+import {CclComponent} from './components/ccl/ccl.component';
+
 registerLocaleData(localeFr, 'fr');
-import { HistoriqueDnComponent } from './components/historique-dn/historique-dn.component';
-import { GeolocationService } from './services/geolocation/geolocation.service';
-import { NotificationService } from './services/notification/notification.service';
-import { CiePeriodeComponent } from './components/cie-periode/cie-periode.component';
-import { ListesTravailleursComponent } from './components/listes-travailleurs/listes-travailleurs.component';
-import { HistoriqueNotificationComponent } from './components/historique-notification/historique-notification.component';
-import { DemandeReversionComponent } from './components/demande-reversion/demande-reversion.component';
-import { DemandeReversionService } from './services/reversion-pension/demande-reversion.service';
-import { OuvertureDroitAsvtPenComponent } from './components/ouverture-droit-asvt-pen/ouverture-droit-asvt-pen.component';
-import { DemandeRappelPenComponent } from './components/demande-rappel-pen/demande-rappel-pen.component';
-import { DemandeRevisionPenComponent } from './components/demande-revision-pen/demande-revision-pen.component';
-import { DemandeRappelService } from './services/rappel-pension/demande-rappel.service';
-import { DemandeRevisionService } from './services/revision-pension/demande-revision.service';
-import { PenService } from './services/pension/pen.service';
-import { OuvertureDroitAsvtService } from './services/ouverture-droit-asvt-pension/ouverture-droit-asvt.service';
-import { TraitementSemIj2Component } from './components/traitement-sem-ij2/traitement-sem-ij2.component';
-import { Ij2Component } from './components/demande/ij2/ij2.component';
-import { DynamicPiecesComponent } from './components/dynamic-pieces/dynamic-pieces.component';
-import { Am2Component } from './components/demande/am2/am2.component';
-import { ApComponent } from './components/demande/ap/ap.component';
-import { Am1Component } from './components/demande/am1/am1.component';
-import { FmComponent } from './components/demande/fm/fm.component';
-import { ListAmComponent } from './components/traitement/traitement-pf/am1/list-am/list-am.component';
-import { ListAm2Component } from './components/traitement/traitement-pf/am2/list-am2/list-am2.component';
-import { FicheAmComponent } from './components/traitement/traitement-pf/am1/fiche-am/fiche-am.component';
-import { FicheAm2Component } from './components/traitement/traitement-pf/am2/fiche-am2/fiche-am2.component';
-import { DlprComponent } from './components/dlpr/dlpr.component';
-import { OrdoComponent } from './components/ordo/ordo.component';
+import {HistoriqueDnComponent} from './components/historique-dn/historique-dn.component';
+import {GeolocationService} from './services/geolocation/geolocation.service';
+import {NotificationService} from './services/notification/notification.service';
+import {CiePeriodeComponent} from './components/cie-periode/cie-periode.component';
+import {ListesTravailleursComponent} from './components/listes-travailleurs/listes-travailleurs.component';
+import {HistoriqueNotificationComponent} from './components/historique-notification/historique-notification.component';
+import {DemandeReversionComponent} from './components/demande-reversion/demande-reversion.component';
+import {DemandeReversionService} from './services/reversion-pension/demande-reversion.service';
+import {OuvertureDroitAsvtPenComponent} from './components/ouverture-droit-asvt-pen/ouverture-droit-asvt-pen.component';
+import {DemandeRappelPenComponent} from './components/demande-rappel-pen/demande-rappel-pen.component';
+import {DemandeRevisionPenComponent} from './components/demande-revision-pen/demande-revision-pen.component';
+import {DemandeRappelService} from './services/rappel-pension/demande-rappel.service';
+import {DemandeRevisionService} from './services/revision-pension/demande-revision.service';
+import {PenService} from './services/pension/pen.service';
+import {OuvertureDroitAsvtService} from './services/ouverture-droit-asvt-pension/ouverture-droit-asvt.service';
+import {TraitementSemIj2Component} from './components/traitement-sem-ij2/traitement-sem-ij2.component';
+import {Ij2Component} from './components/demande/ij2/ij2.component';
+import {DynamicPiecesComponent} from './components/dynamic-pieces/dynamic-pieces.component';
+import {Am2Component} from './components/demande/am2/am2.component';
+import {ApComponent} from './components/demande/ap/ap.component';
+import {Am1Component} from './components/demande/am1/am1.component';
+import {FmComponent} from './components/demande/fm/fm.component';
+import {ListAmComponent} from './components/traitement/traitement-pf/am1/list-am/list-am.component';
+import {ListAm2Component} from './components/traitement/traitement-pf/am2/list-am2/list-am2.component';
+import {FicheAmComponent} from './components/traitement/traitement-pf/am1/fiche-am/fiche-am.component';
+import {FicheAm2Component} from './components/traitement/traitement-pf/am2/fiche-am2/fiche-am2.component';
+import {DlprComponent} from './components/dlpr/dlpr.component';
+import {OrdoComponent} from './components/ordo/ordo.component';
 
 
-import { DemPaiementOrComponent } from './components/trans-cot-or/dem-paiement-or/dem-paiement-or.component';
-import { ListeOrComponent } from './components/trans-cot-or/liste-or/liste-or.component';
-import { DemTransCotComponent } from './components/trans-cot-or/dem-trans-cot/dem-trans-cot.component';
-import { ListeRembComponent } from './components/trans-cot-or/liste-remb/liste-remb.component';
-import { ListeTransCotComponent } from './components/trans-cot-or/liste-trans-cot/liste-trans-cot.component';
-import { DetailsTransCotComponent } from './components/trans-cot-or/details-trans-cot/details-trans-cot.component';
-import { Ij2PfComponent } from './components/traitement/traitement-pf/ij2/ij2-pf/ij2-pf.component';
-import { DetailsIj2Component } from './components/traitement/traitement-pf/ij2/details-ij2/details-ij2.component';
-import { TraitAtmpComponent } from './components/trait-atmp/trait-atmp.component';
-import { DetailAtmpComponent } from './components/detail-atmp/detail-atmp.component';
+import {DemPaiementOrComponent} from './components/trans-cot-or/dem-paiement-or/dem-paiement-or.component';
+import {ListeOrComponent} from './components/trans-cot-or/liste-or/liste-or.component';
+import {DemTransCotComponent} from './components/trans-cot-or/dem-trans-cot/dem-trans-cot.component';
+import {ListeRembComponent} from './components/trans-cot-or/liste-remb/liste-remb.component';
+import {ListeTransCotComponent} from './components/trans-cot-or/liste-trans-cot/liste-trans-cot.component';
+import {DetailsTransCotComponent} from './components/trans-cot-or/details-trans-cot/details-trans-cot.component';
+import {Ij2PfComponent} from './components/traitement/traitement-pf/ij2/ij2-pf/ij2-pf.component';
+import {DetailsIj2Component} from './components/traitement/traitement-pf/ij2/details-ij2/details-ij2.component';
+import {TraitAtmpComponent} from './components/trait-atmp/trait-atmp.component';
+import {DetailAtmpComponent} from './components/detail-atmp/detail-atmp.component';
 
-import { PrestationChoixComponent } from './components/atmp/prestation-choix/prestation-choix.component';
-import { DemandeIjComponent } from './components/atmp/demande-ij/demande-ij.component';
-import { DemandeFfComponent } from './components/atmp/demande-ff/demande-ff.component';
-import { DemandeFdComponent } from './components/atmp/demande-fd/demande-fd.component';
-import { DemandeFpComponent } from './components/atmp/demande-fp/demande-fp.component';
-import { DemandeFmComponent } from './components/atmp/demande-fm/demande-fm.component';
-import { DemandeRmComponent } from './components/atmp/demande-rm/demande-rm.component';
-import { DemandeRippComponent } from './components/atmp/demande-ripp/demande-ripp.component';
-import { DemandeAtComponent } from './components/demande-at/demande-at.component';
-import { ValidationDatComponent } from './components/validation-dat/validation-dat.component';
-import { ListeDemandePenComponent } from './components/liste-demande-pen/liste-demande-pen.component';
-import { DetailDemandePenComponent } from './components/detail-demande-pen/detail-demande-pen.component';
-import { DetailModifComponent } from './components/detail-demande-pen/detail-modif/detail-modif.component';
+import {PrestationChoixComponent} from './components/atmp/prestation-choix/prestation-choix.component';
+import {DemandeIjComponent} from './components/atmp/demande-ij/demande-ij.component';
+import {DemandeFfComponent} from './components/atmp/demande-ff/demande-ff.component';
+import {DemandeFdComponent} from './components/atmp/demande-fd/demande-fd.component';
+import {DemandeFpComponent} from './components/atmp/demande-fp/demande-fp.component';
+import {DemandeFmComponent} from './components/atmp/demande-fm/demande-fm.component';
+import {DemandeRmComponent} from './components/atmp/demande-rm/demande-rm.component';
+import {DemandeRippComponent} from './components/atmp/demande-ripp/demande-ripp.component';
+import {DemandeAtComponent} from './components/demande-at/demande-at.component';
+import {ValidationDatComponent} from './components/validation-dat/validation-dat.component';
+import {ListeDemandePenComponent} from './components/liste-demande-pen/liste-demande-pen.component';
+import {DetailDemandePenComponent} from './components/detail-demande-pen/detail-demande-pen.component';
+import {DetailModifComponent} from './components/detail-demande-pen/detail-modif/detail-modif.component';
 
-import { TransfertCotisationService } from './services/transfert-cotisation/transfert-cotisation.service';
-import { SousDemandeComponent } from './components/atmp/sous-demande/sous-demande.component';
-import { ProtheseComponent } from './components/prothese/prothese.component';
-import { AtmpFfComponent } from './components/atmp-ff/atmp-ff.component';
-import { AtmpRenteComponent } from './components/atmp-rente/atmp-rente.component';
-import { AtmpFd1Component } from './components/atmp-fd1/atmp-fd1.component';
-import { RenteIppComponent } from './components/rente-ipp/rente-ipp.component';
-import { AtmpFmComponent } from './components/atmp-fm/atmp-fm.component';
-import { AtmpFpComponent } from './components/atmp-fp/atmp-fp.component';
-import { TraitementFmComponent } from './components/atmp/traitement-fm/traitement-fm.component';
-import { TraitementFmAtmpComponent } from './components/atmp/traitement-fm-atmp/traitement-fm-atmp.component';
-import { TraitementFpComponent } from './components/atmp/traitement-fp/traitement-fp.component';
-import { TraitementFpAtmpComponent } from './components/atmp/traitement-fp-atmp/traitement-fp-atmp.component';
-import { LoaderComponent } from './components/loader/loader.component';
+import {TransfertCotisationService} from './services/transfert-cotisation/transfert-cotisation.service';
+import {SousDemandeComponent} from './components/atmp/sous-demande/sous-demande.component';
+import {ProtheseComponent} from './components/prothese/prothese.component';
+import {AtmpFfComponent} from './components/atmp-ff/atmp-ff.component';
+import {AtmpRenteComponent} from './components/atmp-rente/atmp-rente.component';
+import {AtmpFd1Component} from './components/atmp-fd1/atmp-fd1.component';
+import {RenteIppComponent} from './components/rente-ipp/rente-ipp.component';
+import {AtmpFmComponent} from './components/atmp-fm/atmp-fm.component';
+import {AtmpFpComponent} from './components/atmp-fp/atmp-fp.component';
+import {TraitementFmComponent} from './components/atmp/traitement-fm/traitement-fm.component';
+import {TraitementFmAtmpComponent} from './components/atmp/traitement-fm-atmp/traitement-fm-atmp.component';
+import {TraitementFpComponent} from './components/atmp/traitement-fp/traitement-fp.component';
+import {TraitementFpAtmpComponent} from './components/atmp/traitement-fp-atmp/traitement-fp-atmp.component';
+import {LoaderComponent} from './components/loader/loader.component';
 import {PmdMailComponent} from './components/pmd/pmd-mail/pmd-mail.component';
 import {DetailsTransCotPiecesComponent} from './components/trans-cot-or/details-trans-cot-pieces/details-trans-cot-pieces.component';
 import {ListeDemandeApComponent} from './components/traitement/traitement-pf/ap/liste-demande-ap/liste-demande-ap.component';
@@ -189,28 +190,34 @@ import {ListeDemandeRfaComponent} from './components/traitement/traitement-pf/fm
 import {DetailsRfaComponent} from './components/traitement/traitement-pf/fm/details-rfa/details-rfa.component';
 import {DynamicAtmpService} from './services/atmp/dynamic-atmp/dynamic-atmp.service';
 
-import { FicheApComponent } from './components/fiche-ap/fiche-ap.component';
-import { ListeDatComponent } from './components/liste-dat/liste-dat.component';
-import { TraitementSemRfaComponent } from './components/traitement-sem-rfa/traitement-sem-rfa.component';
-import { CiePeriodeService } from './services/cie-periode/cie-periode.service';
-import { DecompteIj2Component } from './components/decompte-ij2/decompte-ij2.component';
-import { PmdService } from './services/pmd/pmd.service';
+import {FicheApComponent} from './components/fiche-ap/fiche-ap.component';
+import {ListeDatComponent} from './components/liste-dat/liste-dat.component';
+import {TraitementSemRfaComponent} from './components/traitement-sem-rfa/traitement-sem-rfa.component';
+import {CiePeriodeService} from './services/cie-periode/cie-periode.service';
+import {DecompteIj2Component} from './components/decompte-ij2/decompte-ij2.component';
+import {PmdService} from './services/pmd/pmd.service';
 import {DemandeAtmpService} from './services/atmp/demande-atmp/demande-atmp.service';
-import { PenComponent } from './components/demande/pen/pen.component';
+import {PenComponent} from './components/demande/pen/pen.component';
 import {DemandePensionService} from './services/pension/demande-pension.service';
-import {ImmoService} from './services/immo/immo.service';
-import { ListeDemandeComponent } from './components/demande/pen/liste-demande/liste-demande.component';
-import { DetailDemandeComponent } from './components/demande/pen/detail-demande/detail-demande.component';
-import { AjoutEnfantComponent } from './components/demande/pen/ajout-enfant/ajout-enfant.component';
+import {ListeDemandeComponent} from './components/demande/pen/liste-demande/liste-demande.component';
+import {DetailDemandeComponent} from './components/demande/pen/detail-demande/detail-demande.component';
+import {AjoutEnfantComponent} from './components/demande/pen/ajout-enfant/ajout-enfant.component';
 import {FileService} from './services/file/file.service';
+import {InfoPensionComponent} from './components/dlpr/info-pension/info-pension.component';
+import {ListeFmComponent} from './components/atmp/sem/liste-fm/liste-fm.component';
+import {ListeFpComponent} from './components/atmp/sem/liste-fp/liste-fp.component';
+import {ListeFmAtmpComponent} from './components/atmp/liste-fm-atmp/liste-fm-atmp.component';
+import {ListeFpAtmpComponent} from './components/atmp/liste-fp-atmp/liste-fp-atmp.component';
+
+import {ImmoService} from './services/immo/immo.service';
 import { ImmoDmdComponent } from './components/immo-dmd/immo-dmd.component';
 import { ImmoListeComponent } from './components/immo-liste/immo-liste.component';
 import { ImmoArtComponent } from './components/immo-art/immo-art.component';
 import { ImmoInventaireComponent } from './components/immo-inventaire/immo-inventaire.component';
+import { ImmoMvtComponent } from './components/immo-mvt/immo-mvt.component';
 import { SecVisiteurComponent } from './components/sec-visiteur/sec-visiteur.component';
 import { SecAccesComponent } from './components/sec-acces/sec-acces.component';
 import { SecAgentComponent } from './components/sec-agent/sec-agent.component';
-import { ImmoMvtComponent } from './components/immo-mvt/immo-mvt.component';
 
 const appRoutes: Routes = [
   {path: '', component: AccueilComponent, canActivate: [UnAuthGuard]},
@@ -225,6 +232,7 @@ const appRoutes: Routes = [
   {path: 'liste-demande-pension', component: ListeDemandePenComponent, canActivate: [AuthGuard]},
   {path: 'detail-demande-pension/:indice', component: DetailDemandePenComponent, canActivate: [AuthGuard]},
   {path: 'demande-paiement-or', component: DemPaiementOrComponent},
+
   { path: '', component: AccueilComponent, canActivate: [UnAuthGuard] },
   { path: 'ordonance', component: OrdoComponent },
   { path: 'reglement-op', component: ReglementOpComponent, canActivate: [AuthGuard] },
@@ -297,15 +305,21 @@ const appRoutes: Routes = [
   { path: 'historique-cie-periode/:periode', component: CiePeriodeComponent, canActivate: [AuthGuard] },
   { path: 'liste-am1', component: ListAmComponent },
   { path: 'liste-am2', component: ListAm2Component },
-  { path: 'fiche-ap/:id', component: FicheApComponent },
-  { path: 'liste-atmp/:prestation/:nom_prest', component: TraitAtmpComponent },
-  { path: 'detail-atmp/:id', component: DetailAtmpComponent },
-  { path: 'detail-FF/:id', component: AtmpFfComponent },
-  { path: 'atmp-rente/:id', component: AtmpRenteComponent },
+  
+  {path: 'liste-atmp/:prestation/:nom_prest/:page/:size', component: TraitAtmpComponent, canActivate: [AuthGuard]},
+ { path: 'detail-atmp/:id', component: DetailAtmpComponent, canActivate: [AuthGuard] },
+   {path: 'detail-FM/:id', component: AtmpFmComponent, canActivate: [AuthGuard]},
+    {path: 'detail-FF/:id', component: AtmpFfComponent, canActivate: [AuthGuard]},
+   {path: 'detail-IPP/:id', component: RenteIppComponent, canActivate: [AuthGuard]},
+   {path: 'detail-FD1/:id', component: AtmpFd1Component, canActivate: [AuthGuard]},
+   {path: 'detail-FP/:id', component: AtmpFpComponent, canActivate: [AuthGuard]},
+   {path: 'atmp-rente/:id', component: AtmpRenteComponent, canActivate: [AuthGuard]},
+
   { path: 'pmd-mail', component: PmdMailComponent, canActivate: [AuthGuard] },
   { path: 'liste-am1', component: ListAmComponent, canActivate: [AuthGuard] },
   { path: 'liste-am2', component: ListAm2Component, canActivate: [AuthGuard] },
   { path: 'fiche-ap/:id', component: FicheApComponent, canActivate: [AuthGuard] },
+
   {path: 'atmp/prestation/:id', component: SousDemandeComponent, canActivate: [AuthGuard]},
   {path: 'atmp/prestation', component: SousDemandeComponent, canActivate: [AuthGuard]},
   {path: 'atmp/demande/ij/:id', component: DemandeIjComponent, canActivate: [AuthGuard]},
@@ -318,13 +332,18 @@ const appRoutes: Routes = [
   {path: 'atmp/validation/fp/:id', component: TraitementFpComponent, canActivate: [AuthGuard]},
   {path: 'atmp/traitement/fm/:id', component: TraitementFmAtmpComponent, canActivate: [AuthGuard]},
   {path: 'atmp/traitement/fp/:id', component: TraitementFpAtmpComponent, canActivate: [AuthGuard]},
-  { path: 'pmd-mail', component: PmdMailComponent },
+  {path: 'pmd-mail', component: PmdMailComponent},
   {path: 'demande/:prestation', component: PenComponent, canActivate: [UnAuthGuard]},
   {path: 'liste-demande/:prestation', component: ListeDemandeComponent, canActivate: [AuthGuard]},
   {path: 'detail-demande/:accueil', component: DetailDemandeComponent, canActivate: [AuthGuard]},
   {path: 'ajouter-enfant/:accueil', component: AjoutEnfantComponent, canActivate: [AuthGuard]},
   {path: 'detail-modif/:indice', component: DetailModifComponent, canActivate: [AuthGuard]},
   {path: 'info-pension', component: InfoDemandeComponent},
+  {path: 'info-pension-dlpr', component: InfoPensionComponent},
+  {path: 'sem/liste-fm', component: ListeFmComponent},
+  {path: 'sem/liste-fp', component: ListeFpComponent},
+  {path: 'atmp/liste-fm', component: ListeFmAtmpComponent},
+  {path: 'atmp/liste-fp', component: ListeFpAtmpComponent},
   {path: 'immo-dmd', component: ImmoDmdComponent},
   {path: 'immo-liste', component: ImmoListeComponent},
   {path: 'immo-art', component: ImmoArtComponent},
@@ -469,14 +488,19 @@ const appRoutes: Routes = [
     DetailDemandeComponent,
     AjoutEnfantComponent,
     InfoDemandeComponent,
+    InfoPensionComponent,
+    ListeFmComponent,
+    ListeFpComponent,
+    ListeFmAtmpComponent,
+    ListeFpAtmpComponent,
     ImmoDmdComponent,
     ImmoListeComponent,
     ImmoArtComponent,
     ImmoInventaireComponent,
+    ImmoMvtComponent,
     SecVisiteurComponent,
     SecAccesComponent,
-    SecAgentComponent,
-    ImmoMvtComponent
+    SecAgentComponent
   ],
   imports: [
     BrowserModule,
@@ -494,7 +518,6 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
@@ -504,6 +527,7 @@ const appRoutes: Routes = [
     PdfViewerModule,
     MatPaginatorModule,
     MatTableModule,
+    MatAutocompleteModule
   ],
   providers: [
     DlprService,

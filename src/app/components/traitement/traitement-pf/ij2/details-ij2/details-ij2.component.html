@@ -95,7 +95,8 @@
         <div class="row" *ngIf="decompte">
           <div class="col-sm-2 texte-content">Date d'arrêt</div>
           <div class="col-sm-2">
-            <input type="text" class="form-control" value="{{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}}" readonly>
+            <input type="text" class="form-control" value="{{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}}"
+              readonly>
           </div>
           <div class="col-sm-2 texte-content">Date de naissance</div>
           <div class="col-sm-2">
@@ -110,11 +111,13 @@
         <div class="row" *ngIf="decompte">
           <div class="col-sm-2 texte-content">Début période postnatal</div>
           <div class="col-sm-2">
-            <input type="text" class="form-control" value="{{decompte.date_debut_postnatale | date : 'dd/MM/yyyy'}}" readonly>
+            <input type="text" class="form-control" value="{{decompte.date_debut_postnatale | date : 'dd/MM/yyyy'}}"
+              readonly>
           </div>
           <div class="col-sm-2 texte-content">Fin période postnatal</div>
           <div class="col-sm-2">
-            <input type="text" class="form-control" value="{{decompte.date_fin_postnatale | date : 'dd/MM/yyyy'}}" readonly>
+            <input type="text" class="form-control" value="{{decompte.date_fin_postnatale | date : 'dd/MM/yyyy'}}"
+              readonly>
           </div>
           <div class="col-sm-2 texte-content">Nombre de jours postnatal</div>
           <div class="col-sm-2">
@@ -173,35 +176,38 @@
       </div>
     </div>
     <hr>
-    <form (ngSubmit)="onAcceptCLick()" [formGroup]="validForm">
-      <div class="row">
-        <div class="col-sm-12">
-          <h6>Conclusion</h6>
+    <div *ngIf="cant_validate==true">
+      <form (ngSubmit)="onAcceptCLick()" [formGroup]="validForm">
+        <div class="row">
+          <div class="col-sm-12">
+            <h6>Conclusion</h6>
+          </div>
+          <div class="col-sm-2 texte-content">Observations</div>
+          <div class="col-sm-10">
+            <textarea name="observations" formControlName="observations" class="form-control"></textarea>
+          </div>
         </div>
-        <div class="col-sm-2 texte-content">Observations</div>
-        <div class="col-sm-10">
-          <textarea name="observations" formControlName="observations" class="form-control"></textarea>
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-6"></div>
-        <div class="col-sm-3">
-          <a *ngIf="cant_validate==true" class="btn btn4 btn-block" style="color: #fff;" data-toggle="modal" data-target="#piecesJointes">Pièces jointes
-            non conformes</a>
-          <br>
-        </div>
-        <div class="col-sm-3">
-          <div *ngIf="!show">
-            <button *ngIf="cant_validate==true" [disabled]="!validForm.valid" type="submit" class="btn btn1 btn-block">Valider</button>
+        <hr>
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-3">
+            <a *ngIf="cant_validate==true" class="btn btn4 btn-block" style="color: #fff;" data-toggle="modal"
+              data-target="#piecesJointes">Pièces jointes
+              non conformes</a>
             <br>
           </div>
-          <div *ngIf="show">
-            <div class="loader"></div>
+          <div class="col-sm-3">
+            <div *ngIf="!show">
+              <button *ngIf="cant_validate==true" [disabled]="!validForm.valid" type="submit" class="btn btn1 btn-block">Valider</button>
+              <br>
+            </div>
+            <div *ngIf="show">
+              <div class="loader"></div>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 <div class="modal fade" id="piecesJointes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

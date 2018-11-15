@@ -15,7 +15,19 @@ router.post('/refDemande', function (req, res) {
     }
   });
 });
-
+router.post('/getinfopension', function (req, res) {
+   const msg = req.body.data;
+  console.log("demande DLPR ",msg);
+  var topicLogReq = "getInfoPensionReq";
+  var topicLogRes = "getInfoPensionRes";
+  kafkaConfig.kafkaConnector(topicLogReq,topicLogRes,JSON.stringify(msg),function(err,data){
+    if(err){
+      res.json({sucess:!err,msg:"Info get Info pension, demande : "+data})
+    }else {
+      res.json({success:!err,msg:data});
+    }
+  });
+});
 router.post('/SaveDlpr', function (req, res) {
   
    const msg = req.body.data.data;

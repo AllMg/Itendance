@@ -15,9 +15,9 @@ import { DatePipe } from '@angular/common';
 })
 export class TraitAtmpComponent implements OnInit {
 
-    
    nom_prestation : any;
    etat : number;
+   typechoose :number;
    pagination:any;
    prestation: number ;
    listdem :any[];
@@ -38,7 +38,7 @@ export class TraitAtmpComponent implements OnInit {
     private adresseService: AdresseService,
     private toastr: ToastrService 
   	) { 
-  	this.show= false;
+  	this.show= true;
   }
     
 
@@ -62,7 +62,9 @@ export class TraitAtmpComponent implements OnInit {
             console.log('finish 2');
             if (data.success) {
               this.listdem = data.msg;
+              this.show= false;
             } else {
+              this.show= false;
               setTimeout(() => this.toastr.error(data.msg));
             }
           });
@@ -85,7 +87,9 @@ export class TraitAtmpComponent implements OnInit {
     this.atmpservice.getDemandes(this.etat, this.page, this.prestation, this.size).subscribe( data => {
       if (data.success) {
         this.listdem = data.msg;
+        this.show= false;
       } else {
+        this.show= false;
         setTimeout(() => this.toastr.error(data.msg));
       }
     });
@@ -98,16 +102,24 @@ export class TraitAtmpComponent implements OnInit {
     });
 
   }
-    onChangeEtatDmd(idetat)
+    onChangeEtatDmd()
  {
- 	 
-     this.atmpservice.getDemandes(idetat,this.pagination,this.prestation , 10) .subscribe(data => {
+   this.show= true;
+   this.listdem=[];
+ 	   this.atmpservice.getDemandes(this.typechoose, this.page, this.prestation, this.size).subscribe( data => {
       if (data.success) {
-      	console.log("test");
+        this.show= false;
         this.listdem = data.msg;
-        console.log(this.listdem);
       } else {
-        this.toastr.error('Erreur Recuperation liste DLPR :' + data.msg);
+        this.show= false;
+        setTimeout(() => this.toastr.error(data.msg));
+      }
+    });
+    this.atmpservice.pageSize(this.typechoose, this.page, this.prestation, this.size).subscribe( data => {
+      if (data.success) {
+        this.pageCount =  Array(+data.msg).map((x, i) => i) ;
+      } else {
+        setTimeout(() => this.toastr.error(data.msg));
       }
     });
   
@@ -125,12 +137,19 @@ export class TraitAtmpComponent implements OnInit {
      if(this.prestation==228)
      {
        this.routes.navigate(['/detail-IPP/' + iddem]);
-     }
-     
-     if(this.prestation==211)
+     } 
+      if(this.prestation==211)
      {
        this.routes.navigate(['/detail-atmp/' + iddem]);
      }
+     if(this.prestation==212)
+     {
+       this.routes.navigate(['/atmp/traitement/fm/' + iddem]);
+     } 
+     if(this.prestation==213)
+     {
+       this.routes.navigate(['/atmp/traitement/fp/' + iddem]);
+     } 
      if(this.prestation==214)
      {
        this.routes.navigate(['/detail-FD1/' + iddem]);

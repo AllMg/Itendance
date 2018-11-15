@@ -83,10 +83,9 @@ export class NotificationService {
             const adress = adr.msg;
             // adress[0].adresse_e_mail et adress[0].adresse_telephone;
             const sms = {
-              // numero: '0340392296',
+              numero: '0340392296',
               //numero: '0349759678',
               // numero: '0341536309',
-              numero: '0326594517',
               message: content.message
             };
             this.sendSMS(sms).subscribe(

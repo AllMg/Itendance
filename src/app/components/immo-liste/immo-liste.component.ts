@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -27,7 +27,6 @@ export class ImmoListeComponent implements OnInit {
   listeService:Array<{libelle: string, id: number}> = [];
 
   ligneMax = 15;
-  chargeListe = false;
 
   DmdMob = {
     estVue: false, // mba ts amerenana maka ny liste refa oatra ka f tao @onglet teo alo ilay user
@@ -45,7 +44,8 @@ export class ImmoListeComponent implements OnInit {
     listeEtat: [],
     etatAchange: false, // refa niova ny etat ny demande dia affichena o manga ny button (azo clickena)
     nouveauEtat: 0,
-    chargeStatutChange: false
+    chargeStatutChange: false,
+    chargeListe: false
   };
 
   DmdRepMob = {
@@ -65,7 +65,8 @@ export class ImmoListeComponent implements OnInit {
     listeEtat: [],
     etatAchange: false,
     nouveauEtat: 0,
-    chargeStatutChange: false
+    chargeStatutChange: false,
+    chargeListe: false
   };
 
   DmdBat = {
@@ -73,7 +74,7 @@ export class ImmoListeComponent implements OnInit {
     liste: [],
     pieces: [],
     indice: 0,
-    fonction: "avoirListeDmdBat",
+    fonction: "listeDmdBatInt",
     page: 1,
     filtre: {
       refService: 0,
@@ -83,7 +84,8 @@ export class ImmoListeComponent implements OnInit {
       idTypeEntrBat: 0,
       idCaractEntrBat: 0,
       idEnumEntrBat: 0,
-      date: null    },
+      date: null    
+    },
     listeSite: [],
     listeEtat: [],
     listeType: [],
@@ -91,7 +93,8 @@ export class ImmoListeComponent implements OnInit {
     listeEnum: [],
     etatAchange: false,
     nouveauEtat: 0,
-    chargeStatutChange: false
+    chargeStatutChange: false,
+    chargeListe: false
   };
 
   constructor(
@@ -100,7 +103,7 @@ export class ImmoListeComponent implements OnInit {
     private fileService: FileService,
     private immoService: ImmoService) {
 
-    let that = this;
+    //let that = this;
     /*this.immoService.immoTopic("avoirListeService", "").subscribe(obs=>{
       if(obs.success){
         that.listeService = obs.msg;
@@ -109,23 +112,36 @@ export class ImmoListeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("Init IMMO LISTE");
+    console.log("INIT IMMO LISTE");
     let that = this;
-    this.immoService.immoTopic("listeEtatDmdMobInt", 1, false).subscribe(obs=>{
+    //let observ = this.immoService.immoTopic("listeEtatDmdMobInt", 1, false).subscribe(obs=>{
+    let observ = this.immoService.listeEtatDmdMobInt().subscribe(obs=>{
       if(obs.success){
         that.DmdMob.listeEtat = obs.msg.listeEtatMob;
         that.DmdRepMob.listeEtat = obs.msg.listeEtatRepMob;
       }
+      console.log("listeEtatDmdMobInt",obs);
+      observ.unsubscribe();
     });
 
-    /*this.immoService.immoTopic("listeUtilesDmdBatInt","",false).subscribe(obs=>{
+    //let observ1 = this.immoService.immoTopic("listeUtilesDmdBatInt","",false).subscribe(obs=>{
+    let observ1 = this.immoService.listeUtilesDmdBatInt().subscribe(obs=>{
       if(obs.success){
-        that.DmdBat.listeEtat = obs.msg.listeEtat;
-        that.DmdBat.listeType = obs.msg.listeType;
-        that.DmdBat.listeCaract = obs.msg.listeCaract;
-        that.DmdBat.listeEnum = obs.msg.listeEnum;
+        that.DmdBat.listeEtat = obs.msg.etatBat;
+        that.DmdBat.listeType = obs.msg.typeBat;
+        that.DmdBat.listeCaract = obs.msg.caractBat;
+        that.DmdBat.listeEnum = obs.msg.enumBat;
       }
-    });*/
+      console.log("listeUtilesDmdBatInt",obs);
+      observ1.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(){
+    console.log("DESTROYED IMMO LISTE");
+    this.DmdMob = null;
+    this.DmdRepMob = null;
+    this.DmdBat = null;
   }
 
   clickInMenu1(lien:string){
@@ -146,25 +162,26 @@ export class ImmoListeComponent implements OnInit {
   }
 
   liste(nomAttr){
-    this.chargeListe = true;
+    this[nomAttr].chargeListe = true;
     let that = this;
     let argument = {
       pagination: this[nomAttr].page,
       filtre: this[nomAttr].filtre
     };
-    console.log(this[nomAttr].fonction);
-    console.log(argument);
-    this.immoService.immoTopic(this[nomAttr].fonction, argument, true).subscribe(obs=>{
+    console.log("nomAttr: "+nomAttr);
+    let observ = this.immoService.immoTopic(this[nomAttr].fonction, argument, true).subscribe(obs=>{
       if(obs.success){
         that[nomAttr].liste = obs.msg;
       }
-      this.chargeListe = false;
+      that[nomAttr].chargeListe = false;
+      console.log(that[nomAttr].fonction, obs);
+      observ.unsubscribe();
     });
   }
 
   pageSuivant(nomAttr){
-    if(!this.chargeListe){
-      if(this[nomAttr].liste.length <= this.ligneMax){
+    if(!this[nomAttr].chargeListe){
+      if(this[nomAttr].liste.length == this.ligneMax){
         this[nomAttr].page++;
         this.liste(nomAttr);
       }
@@ -172,7 +189,7 @@ export class ImmoListeComponent implements OnInit {
   }
 
   pagePrecedent(nomAttr){
-    if(!this.chargeListe){
+    if(!this[nomAttr].chargeListe){
       if(this[nomAttr].page > 1){
         this[nomAttr].page--;
         this.liste(nomAttr);
@@ -190,12 +207,12 @@ export class ImmoListeComponent implements OnInit {
   }
 
   ouvreDetailMob(indice){
-    $(this.modalDetailMob.nativeElement).modal('show');
+    $(this.modalDetailMob.nativeElement).modal('show');  
     this.DmdMob.indice = indice;
     this.DmdMob.etatAchange = false;
     this.DmdMob.nouveauEtat = this.DmdMob.liste[indice].idEtatDmd;
     let that = this;
-    this.immoService.immoTopic("detailDmdImmoInt", this.DmdMob.liste[indice].idDmdImmo, false).subscribe(obs=>{
+    let observ = this.immoService.immoTopic("detailDmdImmoInt", this.DmdMob.liste[indice].idDmdImmo, false).subscribe(obs=>{
       if(obs.success){
         that.DmdMob.articlesDmds = obs.msg;
         let listeID = [];
@@ -210,6 +227,7 @@ export class ImmoListeComponent implements OnInit {
           }
         });
       }
+      observ.unsubscribe();
     });
   }
 
@@ -235,7 +253,7 @@ export class ImmoListeComponent implements OnInit {
         idEtatDmd: this.DmdMob.nouveauEtat,
         idDmdImmo: this.DmdMob.liste[this.DmdMob.indice].idDmdImmo
       };
-      this.immoService.immoTopic("modifierEtatDmdMobInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("modifierEtatDmdMobInt", argument, true).subscribe(obs=>{
         if(obs.success){
           that.DmdMob.chargeStatutChange = false;
           that.DmdMob.etatAchange = false;
@@ -245,6 +263,7 @@ export class ImmoListeComponent implements OnInit {
         else{
           that.toast.error(obs.msg);
         }
+        observ.unsubscribe();
       });
     }
   }
@@ -257,13 +276,14 @@ export class ImmoListeComponent implements OnInit {
     let that = this;
     let fileQuery = new FileModel();
     fileQuery.id_files = this.DmdRepMob.liste[this.DmdRepMob.indice].reference;
-    this.fileService.readQuery(fileQuery).subscribe(data => {
+    let observ = this.fileService.readQuery(fileQuery).subscribe(data => {
       if (data.success) {
         that.DmdRepMob.pieces = data.msg;
       }
       else{
         that.toast.error(data.msg);
       }
+      observ.unsubscribe();
     });
   }
 
@@ -275,7 +295,7 @@ export class ImmoListeComponent implements OnInit {
         idEtatDmd: this.DmdRepMob.nouveauEtat,
         idDmdRep: this.DmdRepMob.liste[this.DmdRepMob.indice].idDmdRep
       };
-      this.immoService.immoTopic("modifierEtatDmdRepMobInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("modifierEtatDmdRepMobInt", argument, true).subscribe(obs=>{
         if(obs.success){
           that.DmdRepMob.chargeStatutChange = false;
           that.DmdRepMob.etatAchange = false;
@@ -285,6 +305,7 @@ export class ImmoListeComponent implements OnInit {
         else{
           that.toast.error(obs.msg);
         }
+        observ.unsubscribe();
       });
     }
   }
@@ -292,6 +313,15 @@ export class ImmoListeComponent implements OnInit {
   fermeDetailRepMob(){
     $(this.modalDetailRepMob.nativeElement).modal('hide');
     this.DmdRepMob.pieces = [];
+  }
+
+  avoirSpeBat(nomListe, idNom, idValeur){
+    for(let i=0; i<this.DmdBat[nomListe].length; i++){
+      if(this.DmdBat[nomListe][i][idNom] == idValeur){
+        return this.DmdBat[nomListe][i].libelle;
+      }
+    }
+    return "-";
   }
 
   ouvreDetailBat(indice){
@@ -302,13 +332,14 @@ export class ImmoListeComponent implements OnInit {
     let that = this;
     let fileQuery = new FileModel();
     fileQuery.id_files = this.DmdBat.liste[this.DmdBat.indice].reference;
-    this.fileService.readQuery(fileQuery).subscribe(data => {
+    let observ = this.fileService.readQuery(fileQuery).subscribe(data => {
       if (data.success) {
         that.DmdBat.pieces = data.msg;
       }
       else{
         that.toast.error(data.msg);
       }
+      observ.unsubscribe();
     });
   }
 
@@ -320,7 +351,7 @@ export class ImmoListeComponent implements OnInit {
         idEtatDmd: this.DmdBat.nouveauEtat,
         idDmdEntrBat: this.DmdBat.liste[this.DmdBat.indice].idDmdEntrBat
       };
-      this.immoService.immoTopic("modifierEtatDmdBatInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("modifierEtatDmdBatInt", argument, true).subscribe(obs=>{
         if(obs.success){
           that.DmdBat.chargeStatutChange = false;
           that.DmdBat.etatAchange = false;
@@ -330,6 +361,7 @@ export class ImmoListeComponent implements OnInit {
         else{
           that.toast.error(obs.msg);
         }
+        observ.unsubscribe();
       });
     }
   }

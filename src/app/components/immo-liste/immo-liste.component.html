@@ -1,5 +1,5 @@
-<app-banniere></app-banniere>
-<app-info-agents></app-info-agents>
+<!--<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>-->
 
 <div class="container-fluid">
 	<div class="col-sm-12 content_page">
@@ -77,10 +77,11 @@
 						</div>
 					</div>
 				</div>
-				<div *ngIf="DmdMob.liste.length == 0 && chargeListe == false" style="text-align: center;">
+				<div *ngIf="DmdMob.chargeListe" class="loader"></div>
+				<div *ngIf="DmdMob.liste.length == 0 && DmdMob.chargeListe == false" style="text-align: center;">
 					<span>Pas de résultat</span>
 				</div>
-				<nav *ngIf="DmdMob.liste.length > 0" aria-label="Page navigation example">
+				<nav *ngIf="DmdMob.liste.length > 0 && DmdMob.chargeListe == false" aria-label="Page navigation example">
 				  <ul class="pagination justify-content-center">
 				    <li *ngIf="DmdMob.page > 1" (click)="pagePrecedent('DmdMob')" class="page-item">
 				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
@@ -148,10 +149,11 @@
 						</div>
 					</div>
 				</div>
-				<div *ngIf="DmdRepMob.liste.length == 0 && chargeListe == false" style="text-align: center;">
+				<div *ngIf="DmdRepMob.chargeListe" class="loader"></div>
+				<div *ngIf="DmdRepMob.liste.length == 0 && DmdRepMob.chargeListe == false" style="text-align: center;">
 					<span>Pas de résultat</span>
 				</div>
-				<nav *ngIf="DmdRepMob.liste.length > 0" aria-label="Page navigation example">
+				<nav *ngIf="DmdRepMob.liste.length > 0 && DmdRepMob.chargeListe == false" aria-label="Page navigation example">
 				  <ul class="pagination justify-content-center">
 				    <li *ngIf="DmdRepMob.page > 1" (click)="pagePrecedent('DmdRepMob')" class="page-item">
 				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
@@ -213,7 +215,7 @@
 							<label>Caractéristique</label>
 							<select [(ngModel)]="DmdBat.filtre.idCaractEntrBat" (change)="filtreChange('DmdBat')" class="form-control custom-select">
 								<option value="0"></option>
-								<option *ngFor="let c of DmdBat.listeCaract" value="{{t.idCaractEntrBat}}">{{c.libelle}}</option>
+								<option *ngFor="let c of DmdBat.listeCaract" value="{{c.idCaractEntrBat}}">{{c.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -247,10 +249,11 @@
 						</div>
 					</div>
 				</div>
-				<div *ngIf="DmdBat.liste.length == 0 && chargeListe == false" style="text-align: center;">
+				<div *ngIf="DmdBat.chargeListe" class="loader"></div>
+				<div *ngIf="DmdBat.liste.length == 0 && DmdBat.chargeListe == false" style="text-align: center;">
 					<span>Pas de résultat</span>
 				</div>
-				<nav *ngIf="DmdBat.liste.length > 0" aria-label="Page navigation example">
+				<nav *ngIf="DmdBat.liste.length > 0 && DmdBat.chargeListe == false" aria-label="Page navigation example">
 				  <ul class="pagination justify-content-center">
 				    <li *ngIf="DmdBat.page > 1" (click)="pagePrecedent('DmdBat')" class="page-item">
 				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
@@ -262,7 +265,6 @@
 				  </ul>
 				</nav>
 			</div>
-			<div *ngIf="chargeListe" class="loader"></div>
 		</div>
 	</div>
 
@@ -384,20 +386,24 @@
 				<input value="{{DmdBat.liste[DmdBat.indice].refIndividu}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
+				<label>Site</label>
+				<input value="{{DmdBat.liste[DmdBat.indice].refSite}}" type="text" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
 				<label>Type d'entretient</label>
-				<input value="{{DmdBat.liste[DmdBat.indice].idTypeEntrBat}}" type="text" class="form-control" readonly="true">
+				<input value="{{avoirSpeBat('listeType','idTypeEntrBat',DmdBat.liste[DmdBat.indice].idTypeEntrBat)}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Caractéristique</label>
-				<input value="{{DmdBat.liste[DmdBat.indice].idCaractEntrBat}}" type="text" class="form-control" readonly="true">
+				<input value="{{avoirSpeBat('listeCaract','idCaractEntrBat',DmdBat.liste[DmdBat.indice].idCaractEntrBat)}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Enumération</label>
-				<input value="{{DmdBat.liste[DmdBat.indice].idEnumEntrBat}}" type="text" class="form-control" readonly="true">
+				<input value="{{avoirSpeBat('listeEnum','idEnumEntrBat',DmdBat.liste[DmdBat.indice].idEnumEntrBat)}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Statut</label>
-				<select [(ngModel)]="DmdBat.nouveauEtat" [value]="DmdBat.nouveauEtat" (change)="etatDmdChange('DmdRepMob')" class="form-control custom-select">
+				<select [(ngModel)]="DmdBat.nouveauEtat" [value]="DmdBat.nouveauEtat" (change)="etatDmdChange('DmdBat')" class="form-control custom-select">
 					<option *ngFor="let etat of DmdBat.listeEtat" value="{{etat.idEtatDmd}}">{{etat.libelle}}</option>
 				</select>
 			</div>
@@ -414,5 +420,5 @@
 	</div>
 </div>
 
-<app-historique-indiv></app-historique-indiv>
-<app-lien-foot></app-lien-foot>
+<!--<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>-->

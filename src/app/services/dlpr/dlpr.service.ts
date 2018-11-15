@@ -29,6 +29,16 @@ export class DlprService {
     return this.http.post(this.host + 'dlpr/SaveDlpr', msg, {headers: headers})
       .map(res => res.json());
   }
+  getinfopen(identifiant:string)
+  {
+    const msg = {
+      data : identifiant
+    }
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post(this.host + 'dlpr/getinfopension', msg, {headers: headers})
+      .map(res => res.json());
+  }
   libelleDlprReq(prestation:string) {
   	const msg = {
       data : prestation

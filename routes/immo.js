@@ -3,16 +3,176 @@ const router = express.Router();
 const kafkaConfig = require('../config/kafkaConfig');
 
 router.post('/immoTopic',function(req,res){
-  const data = req.body.data;
-  const topicLogReq = data.fonction+"req";
-  const topicLogRes = data.fonction+"res";
+  const datas = req.body.data;
+  const topicLogReq = datas.fonction+"req";
+  const topicLogRes = datas.fonction+"res";
   var argument = null;
-  if(data.enJSON == true){
-    argument = JSON.stringify(data.argument);
+  if(datas.enJSON == true){
+    argument = JSON.stringify(datas.argument);
   }
   else{
-    argument = data.argument;
+    argument = datas.argument;
   }
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeTypeEntrBatInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "listeTypeEntrBatIntreq";
+  const topicLogRes = "listeTypeEntrBatIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeCaractEntrBatInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "listeCaractEntrBatIntreq";
+  const topicLogRes = "listeCaractEntrBatIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeEnumEntrBatInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "listeEnumEntrBatIntreq";
+  const topicLogRes = "listeEnumEntrBatIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeEtatDmdMobInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "listeEtatDmdMobIntreq";
+  const topicLogRes = "listeEtatDmdMobIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeUtilesDmdBatInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "listeUtilesDmdBatIntreq";
+  const topicLogRes = "listeUtilesDmdBatIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/rechercheArticleInt',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "rechercheArticleIntreq";
+  const topicLogRes = "rechercheArticleIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/referenceDmdArticleInt',function(req,res){
+  const argument = JSON.stringify(req.body.data);
+  const topicLogReq = "referenceDmdArticleIntreq";
+  const topicLogRes = "referenceDmdArticleIntres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/listeArticleInt',function(req,res){
+  const argument = JSON.stringify(req.body.data);
+  const topicLogReq = "listeArticleIntreq";
+  const topicLogRes = "listeArticleIntres";
   kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
     if(err){
       res.json({

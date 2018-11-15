@@ -68,9 +68,9 @@ export class DetailsRfaComponent implements OnInit {
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user'));
-    if (this.user.type_entite != 'P') {
+   /* if (this.user.type_entite != 'P' || this.user.type_entite != 'S') {
       this.router.navigate(['/accueil-connecte']);
-    }
+    }*/
     this.route.params.subscribe((params: Params) => {
       this.reference = params['id'];
       this.ijpf.getEtatDmd(this.reference).subscribe(data => {
@@ -131,9 +131,8 @@ export class DetailsRfaComponent implements OnInit {
           //   }
           // });
         });
-      } else if (this.user.type_entite === 'P') {
-
-
+      } 
+      else if (this.user.type_entite === 'P') {
         this.estPF = true;
         const tempo = {
           'id_acc': this.reference,

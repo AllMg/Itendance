@@ -96,7 +96,7 @@ export class InfoDemandeComponent implements OnInit {
     this.penService.infoDemandePen(msg).subscribe(data => {
       if (data.success) {
 		  console.log("Info pension => ",data.msg);
-        if(data.msg !== undefined){
+        if(data.msg !== undefined||data.msg==null ){
           this.infoDemandePension = data.msg;
           this.montantTotal = (this.infoDemandePension.tauxPercu * this.infoDemandePension.montant) / 100;
           this.show = false;
