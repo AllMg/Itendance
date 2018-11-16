@@ -1,5 +1,5 @@
-<!--<app-banniere></app-banniere>
-<app-info-agents></app-info-agents>-->
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
 
 <div class="container-fluid">
 	<div class="col-sm-12 content_page">
@@ -36,7 +36,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Article</label><br>
-							<input [(ngModel)]="Stock.filtre.libelle" type="text" class="form-control input-upper" />
+							<input [(ngModel)]="Stock.filtre.libelle" (ngModelChange)="filtreChange()" type="text" class="form-control input-upper" />
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -110,6 +110,7 @@
 					</tbody>
 				</table>
 				<div *ngIf="Stock.chargeListe" class="loader"></div>
+				<div *ngIf="Stock.liste.length == 0 && !Stock.chargeListe" style="text-align: center;">Pas de résultat</div>
 				<nav *ngIf="Stock.liste.length > 0 && Stock.chargeListe == false" aria-label="Page navigation example">
 				  <ul class="pagination justify-content-center">
 				    <li *ngIf="Stock.page > 1" (click)="pagePrecedent()" class="page-item">
@@ -139,12 +140,12 @@
 									<th>Libellé</th>
 								</tr>
 							</thead>
-							<tbody *ngIf="Dom.valeur == 'domaine'">
+							<tbody *ngIf="Dom.select == 'domaine'">
 								<tr *ngFor="let d of listeDomaine">
 									<td>{{d.libelle}}</td>
 								</tr>
 							</tbody>
-							<tbody *ngIf="Dom.valeur == 'type'">
+							<tbody *ngIf="Dom.select == 'type'">
 								<tr *ngFor="let t of listeType">
 									<td>{{t.libelle}}</td>
 								</tr>
@@ -166,21 +167,21 @@
 									<th>{{Spe.titre}}</th>
 								</tr>
 							</thead>
-							<tbody *ngIf="Spe.valeur == 'classe'">
+							<tbody *ngIf="Spe.select == 'classe'">
 								<tr *ngFor="let c of listeClasse">
-									<td>{{c.code_classe}}</td>
+									<td>{{c.codeClasse}}</td>
 									<td>{{c.libelle}}</td>
 								</tr>
 							</tbody>
-							<tbody *ngIf="Spe.valeur == 'nature'">
+							<tbody *ngIf="Spe.select == 'nature'">
 								<tr *ngFor="let n of listeNature">
-									<td>{{n.code_nature}}</td>
+									<td>{{n.codeNature}}</td>
 									<td>{{n.libelle}}</td>
 								</tr>
 							</tbody>
-							<tbody *ngIf="Spe.valeur == 'spe'">
+							<tbody *ngIf="Spe.select == 'spe'">
 								<tr *ngFor="let s of listeSpecificite">
-									<td>{{s.code_spe}}</td>
+									<td>{{s.codeSpe}}</td>
 									<td>{{s.libelle}}</td>
 								</tr>
 							</tbody>
@@ -196,7 +197,7 @@
 						<div class="form-group">
 							<label>Code de l'article</label>
 							<div class="input-group mb-3">
-								<input [(ngModel)]="Hist.codeArtcile" type="text" class="form-control input-upper">
+								<input [(ngModel)]="Hist.codeArticle.idCodeArt" type="text" class="form-control input-upper">
 								<div class="input-group-append">
 									<button (click)="chargerHistArt()" class="btn btn-info">Charger</button>
 								</div>
@@ -206,7 +207,7 @@
 					<div class="col-md-7">
 						<div class="form-group">
 							<label>Désignation</label>
-							<input [(ngModel)]="Hist.designation" type="text" class="form-control input-upper" readonly="true">
+							<input value="{{Hist.article.libelle}}" type="text" class="form-control input-upper" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -214,19 +215,19 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Classe</label>
-							<input [(ngModel)]="Hist.classe" type="text" class="form-control" readonly="true">
+							<input value="{{avoirLibelleParId('listeClasse', 'idClasseArt', Hist.article.idClasseArt)}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Référence</label>
-							<input [(ngModel)]="Hist.reference" type="text" class="form-control" readonly="true">
+							<input value="{{Hist.codeArticle.reference}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Marque</label>
-							<input [(ngModel)]="Hist.marque" type="text" class="form-control" readonly="true">
+							<input value="{{Hist.codeArticle.marque}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -241,12 +242,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>4010</td>
-							<td>AFFAIRES GENERALES</td>
-							<td>MATRICULE</td>
-							<td>12/03/2015</td>
-							<td>23/11/2015</td>
+						<tr *ngFor="let det of Hist.listeDetention">
+							<td>{{det.refService}}</td>
+							<td>{{det.libelleService}}</td>
+							<td>{{det.refIndividu}}</td>
+							<td>{{avoirDateSlash(det.dateDet)}}</td>
+							<td>{{avoirDateSlash(det.dateFinDet)}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -259,9 +260,9 @@
 						<div class="form-group">
 							<label>Code de l'article</label>
 							<div class="input-group mb-3">
-								<input type="text" class="form-control input-upper">
+								<input [(ngModel)]="Maj.codeArticle.idCodeArt" type="text" class="form-control input-upper">
 								<div class="input-group-append">
-									<button class="btn btn-info">Charger</button>
+									<button (click)="chargerCodeArt()" class="btn btn-info">Charger</button>
 								</div>
 							</div>
 						</div>
@@ -269,7 +270,7 @@
 					<div class="col-md-7">
 						<div class="form-group">
 							<label>Désignation</label>
-							<input type="text" class="form-control input-upper">
+							<input value="{{Maj.article.libelle}}" type="text" class="form-control input-upper" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -277,45 +278,53 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Référence</label>
-							<input type="text" class="form-control">
+							<input value="{{Maj.codeArticle.reference}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Prix</label>
-							<input type="text" class="form-control">
+							<input value="{{Maj.codeArticle.prix}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Imputation</label>
-							<input type="text" class="form-control">
+							<input value="{{Maj.codeArticle.imputation}}" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label>Type de mise à jour</label>
-					<select class="form-control custom-select">
-						<option>TRANSFERT</option>
-						<option>RETOUR EN STOCK</option>
+					<select [(ngModel)]="Maj.typeMaj" class="form-control custom-select">
+						<option value="transfert">TRANSFERT</option>
+						<option value="retour">RETOUR EN STOCK</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<label>Code service (nouveau détenteur)</label>
-					<input type="text" class="form-control">
+				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">
+					<label>Service (nouveau détenteur)</label>
+					<select [(ngModel)]="Maj.refService" class="form-control custom-select">
+					</select>
 				</div>
-				<div class="form-group">
+				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">
 					<label>Matricule agent (nouveau détenteur)</label>
-					<input type="text" class="form-control">
+					<input [(ngModel)]="Maj.refIndividu" type="text" class="form-control">
 				</div>
-				<button class="btn btn-info">Enregistrer</button>
+				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">
+					<label>Type de détention</label>
+					<select [(ngModel)]="Maj.typeDet" class="form-control custom-select">
+						<option value="DOTATION">DOTATION</option>
+						<option value="PRET">PRÊT</option>
+					</select>
+				</div>
+				<button (click)="enregistrerMaj()" class="btn" [ngClass]="{'btn-info': Maj.codeArticle.refArticle != ''}">Enregistrer</button>
 			</div>
 		</div>
 	</div>
 
 	<!-- MODAL -->
 	<!-- MODAL CHARGEMENT -->
-	<div #modalChargement class="modal" tabindex="-1" role="dialog">
+	<div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 		<div class="loader">
 		</div>
@@ -434,5 +443,5 @@
 	</div>
 </div>
 
-<!--<app-historique-indiv></app-historique-indiv>
-<app-lien-foot></app-lien-foot>-->
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

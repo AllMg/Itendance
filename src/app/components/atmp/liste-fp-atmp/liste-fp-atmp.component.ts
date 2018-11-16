@@ -14,7 +14,6 @@ export class ListeFpAtmpComponent implements OnInit {
   size = 100;
   pageCount: any[];
   etat: number;
-  typeChoose: number;
   types: any[];
   user: any;
 
@@ -39,7 +38,6 @@ export class ListeFpAtmpComponent implements OnInit {
       if (params['size']) {
         this.size = params['size'];
       }
-      this.typeChoose = this.types[0].id_type_etat;
       this.atmpService.getDemandes(12, this.page, 213, this.size).subscribe(data => {
         console.log('finish 2');
         if (data.success) {

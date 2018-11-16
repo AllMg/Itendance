@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { ImmoService } from '../../services/immo/immo.service';
+import { InfoService } from '../../services/info/info.service';
 
 declare var $: any;
 
@@ -68,7 +69,7 @@ export class ImmoArtComponent implements OnInit {
     select: "classe",
     valeurCode: "",
     valeurLibelle: "",
-    topicAjout: "ajouterClasseArtInt",
+    topicAjout: "ajoutClasseArticleInt",
     attr: "listeClasse",
     btnTexte: "Ajouter une Classe",
     titre: "Classe",
@@ -76,19 +77,42 @@ export class ImmoArtComponent implements OnInit {
   };
 
   Hist = {
-    codeArtcile: "",
-    designation: "",
-    classe: "",
+    codeArticle: {
+      idCodeArt: "",
+      refArticle: "",
+      marque: "",
+      reference: ""
+    },
+    article: {
+      libelle: ""
+    },
     reference: "",
     marque: "",
-    listeHist: [],
-    listeService: []
+    listeDetention: []
+  };
+
+  Maj = {
+    codeArticle: {
+      idCodeArt: "",
+      refArticle: "",
+      prix: 0,
+      reference: "",
+      imputation: ""
+    },
+    article: {
+      libelle: ""
+    },
+    refService: 0,
+    refIndividu: "",
+    typeMaj: "transfert",
+    typeDet: "DOTATION"
   };
 
   constructor(
     private router: Router, 
     private toast: ToastrService,
-    private immoService: ImmoService) {
+    private immoService: ImmoService,
+    private infoService: InfoService) {
   }
 
   ngOnInit() {
@@ -111,6 +135,7 @@ export class ImmoArtComponent implements OnInit {
     this.Dom = null;
     this.Spe = null;
     this.Hist = null;
+    this.Maj = null;
     this.listeDomaine = null;
     this.listeClasse = null;
     this.listeType = null;
@@ -159,6 +184,7 @@ export class ImmoArtComponent implements OnInit {
 
   filtreChange(){
     this.Stock.page = 1;
+    this.Stock.filtre.libelle = this.Stock.filtre.libelle.toUpperCase();
     this.listeStock();
   }
 
@@ -229,19 +255,19 @@ export class ImmoArtComponent implements OnInit {
       this.Spe.btnTexte = "Ajouter une Classe";
       this.Spe.titre = "Classe";
       this.Spe.attr = "listeClasse";
-      this.Spe.topicAjout = "ajouterClasseArtInt";
+      this.Spe.topicAjout = "ajoutClasseArticleInt";
     }
     else if(this.Spe.select == "nature"){
       this.Spe.btnTexte = "Ajouter une Nature";
       this.Spe.titre = "Nature";
       this.Spe.attr = "listeNature";
-      this.Spe.topicAjout = "ajouterNatureArtInt";
+      this.Spe.topicAjout = "ajoutNatureArticleInt";
     }
     else{
       this.Spe.btnTexte = "Ajouter une Spécificité";
       this.Spe.titre = "Spécificité";
       this.Spe.attr = "listeSpecificite";
-      this.Spe.topicAjout = "ajouterSpeArtInt";
+      this.Spe.topicAjout = "ajoutSpecificiteArticleInt";
       this.Spe.tailleTexte = 3;
     }
   }
@@ -253,11 +279,11 @@ export class ImmoArtComponent implements OnInit {
 
   ajouterDom(){
     this.fermeAjoutDom();
-    let argument = this.Dom.valeur.trim();
+    let argument = this.Dom.valeur.trim().toUpperCase();
     let that = this;
-    let fonction = "ajouterDomaineArtInt";
+    let fonction = "ajoutDomaineArticleInt";
     if(this.Dom.select == "type"){
-      fonction = "ajouterTypeArtInt";
+      fonction = "ajoutTypeArticleInt";
     }
     let existe = false;
     for(let i=0; i<this[this.Dom.attr].length; i++){
@@ -269,6 +295,7 @@ export class ImmoArtComponent implements OnInit {
     if(!existe){
       this.immoService.immoTopic(fonction, argument, false).subscribe(obs=>{
         if(obs.success){
+          console.log(obs.msg);
           that[that.Dom.attr].push(obs.msg);
         }
         else{
@@ -293,8 +320,8 @@ export class ImmoArtComponent implements OnInit {
 
   ajouterSpe(){
     this.fermeAjoutSpe();
-    let code = this.Spe.valeurCode.trim();
-    let libelle = this.Spe.valeurLibelle.trim();
+    let code = this.Spe.valeurCode.trim().toUpperCase();
+    let libelle = this.Spe.valeurLibelle.trim().toUpperCase();
     let existe = false;
     let that = this;
     for(let i=0; i<this[this.Spe.attr].length; i++){
@@ -303,14 +330,29 @@ export class ImmoArtComponent implements OnInit {
       }
     }
     if(!existe){
-      this.immoService.immoTopic(this.Spe.topicAjout, {code: code, libelle: libelle}, true).subscribe(obs=>{
-        if(obs.success){
-          that[that.Spe.attr].push(obs.msg);
+      if(code != "" && libelle != ""){
+        let argument = {libelle: libelle};
+        if(this.Spe.select == "classe"){
+          argument["codeClasse"] = code;
+        }
+        else if(this.Spe.select == "nature"){
+          argument["codeNature"] = code;
         }
         else{
-          that.toast.error(obs.msg);
+          argument["codeSpe"] = code;
         }
-      });
+        this.immoService.immoTopic(this.Spe.topicAjout, argument, true).subscribe(obs=>{
+          if(obs.success){
+            that[that.Spe.attr].push(obs.msg);
+          }
+          else{
+            that.toast.error(obs.msg);
+          }
+        });
+      }
+      else{
+        this.toast.error("Valeur invalide");
+      }
     }
     else{
       this.toast.error("Cette valeur existe déjà");
@@ -364,10 +406,7 @@ export class ImmoArtComponent implements OnInit {
   }
 
   afficheChargement(){
-    $(this.modalChargement.nativeElement).modal({
-      backdrop: 'static',
-      keyboard: false
-    });
+    $(this.modalChargement.nativeElement).modal("show");
   }
 
   fermeChargement(){
@@ -375,7 +414,188 @@ export class ImmoArtComponent implements OnInit {
   }
 
   chargerHistArt(){
+    this.Hist.codeArticle.idCodeArt = this.Hist.codeArticle.idCodeArt.trim().toUpperCase();
+    if(this.Hist.codeArticle.idCodeArt != "" && this.Hist.codeArticle.idCodeArt.length > 7){
+      this.afficheChargement();
+      let that = this;
+      let observ = this.immoService.immoTopic("histDetentionArticleInt", this.Hist.codeArticle.idCodeArt, false).subscribe(obs=>{
+        if(obs.success){
+          if(obs.msg.codeArticle == undefined){
+            that.fermeChargement();
+            that.toast.error("Ce code article n'existe pas");
+          }
+          else{
+            that.Hist.codeArticle = obs.msg.codeArticle;
+            that.Hist.listeDetention = obs.msg.detention;
+            for(let i=0; i<that.Hist.listeDetention.length; i++){
+              let indice = i;
+              that.immoService.getByIdRefDrhService(that.Hist.listeDetention[i].refService).subscribe(obss=>{
+                console.log("getByIdRefDrhService", obss);
+                if(obss.success){
+                  that.Hist.listeDetention[indice]["libelleService"] = obss.libelle_service;
+                }
+              });
+            }
+            let observ1 = that.immoService.immoTopic("detailsArticleInt", that.Hist.codeArticle.refArticle, false).subscribe(obs1=>{
+              that.fermeChargement();
+              if(obs1.success){
+                that.Hist.article = obs1.msg;
+              }
+              else{
+                that.toast.error(obs1.msg);
+              }
+              observ1.unsubscribe();
+            });
+          }
+        }
+        else{
+          that.fermeChargement();
+          that.toast.error(obs.msg);
+        }
+        observ.unsubscribe();
+      });
+    }
+    else{
+      this.toast.error("Le code article est invalide");
+    }
+  }
 
+  chargerCodeArt(){
+    this.Maj.codeArticle.idCodeArt = this.Maj.codeArticle.idCodeArt.trim().toUpperCase();
+    if(this.Maj.codeArticle.idCodeArt != "" && this.Maj.codeArticle.idCodeArt.length > 7){
+      this.afficheChargement();
+      let that = this;
+      console.log("detailsCodeArticleInt");
+      let observ = this.immoService.immoTopic("detailsCodeArticleInt", this.Maj.codeArticle.idCodeArt, false).subscribe(obs=>{
+        if(obs.success){
+          that.Maj.codeArticle = obs.msg;
+          let observ1 = that.immoService.immoTopic("detailsArticleInt", that.Maj.codeArticle.refArticle, false).subscribe(obs1=>{
+            if(obs1.success){
+              that.Maj.article = obs1.msg;
+            }
+            that.fermeChargement();
+            observ1.unsubscribe();
+          });
+        }
+        else{
+          that.fermeChargement();
+          that.toast.error(obs.msg);
+        }
+        observ.unsubscribe();
+      });
+    }
+    else{
+      this.toast.error("Le code article est invalide");
+    }
+  }
+
+  enregistrerMaj(){
+    if(this.Maj.codeArticle.refArticle != ""){
+      if(this.Maj.typeMaj == "transfert"){
+        this.effectuerTransfert();
+      }
+      else if(this.Maj.typeMaj == "retour"){
+        this.effectuerRetourEnStock();
+      }
+    }
+  }
+
+  effectuerTransfert(){
+    if(this.Maj.refService > 0 && this.Maj.refIndividu != ""){
+      this.afficheChargement();
+      let argument = {
+        idCodeArt: this.Maj.codeArticle.idCodeArt,
+        refService: this.Maj.refService,
+        refIndividu: this.Maj.refIndividu,
+        typeDet: this.Maj.typeDet
+      };
+      let that = this;
+      let observ0 = this.infoService.infoIndiv(this.Maj.refIndividu).subscribe(obs0=>{
+        console.log(obs0);
+        if(obs0.success){
+          let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+            that.fermeChargement();
+            if(obs.success){
+              that.toast.success("Mise à jour terminé");
+              this.Maj = {
+                codeArticle: {
+                  idCodeArt: "",
+                  refArticle: "",
+                  prix: 0,
+                  reference: "",
+                  imputation: ""
+                },
+                article: {
+                  libelle: ""
+                },
+                refService: 0,
+                refIndividu: "",
+                typeMaj: "transfert",
+                typeDet: "DOTATION"
+              };
+            }
+            else{
+              that.toast.error(obs.msg);
+            }
+            observ.unsubscribe();
+          });
+        }
+        else{
+          that.fermeChargement();
+          that.toast.error(obs0.msg);
+        }
+        observ0.unsubscribe();
+      });
+    }
+    else{
+      this.toast.error("Veuillez spécifier le détenteur");
+    }
+  }
+
+  effectuerRetourEnStock(){
+    this.afficheChargement();
+    let that = this;
+    let observ = this.immoService.immoTopic("", this.Maj.codeArticle.idCodeArt, true).subscribe(obs=>{
+      that.fermeChargement();
+      if(obs.success){
+        that.toast.success("Mise à jour terminé");
+        that.Maj = {
+          codeArticle: {
+            idCodeArt: "",
+            refArticle: "",
+            prix: 0,
+            reference: "",
+            imputation: ""
+          },
+          article: {
+            libelle: ""
+          },
+          refService: 0,
+          refIndividu: "",
+          typeMaj: "transfert",
+          typeDet: "DOTATION"
+        };
+      }
+      else{
+        that.toast.error(obs.msg);
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  /* 
+  date: aaaa-mm-jj 
+  resultat: jj/mm/aaaa
+  */
+  avoirDateSlash(date){
+    if(date == "" || date == null || date == undefined){
+      return "";
+    }
+    else{
+      let strs = date.toString().split("-");
+      let resultat = strs[2]+"/"+strs[1]+"/"+strs[0];
+      return resultat;
+    }
   }
 
 }

@@ -19,8 +19,8 @@
             <div class="col-sm-2">
               <!-- <button (click)="searchDn(periode, idEmpl)" class="btn btny-info btn-block" *ngIf="entity!=='E'&&entity!=='T'">Rechercher</button>
               <button (click)="searchDn(periode, '')" class="btn btn-info btn-block" *ngIf="entity=='E'">Rechercher</button> -->
-              <a href="/dn/{{periode}}/{{matricule}}" class="btn btny-info btn-block" *ngIf="entity!=='E'&&entity!=='T'">Rechercher</a>
-              <a href="/dn/{{periode}}" class="btn btn-info btn-block" *ngIf="entity=='E'">Rechercher</a>
+              <a routerLink="/dn/{{periode}}/{{matricule}}" class="btn btny-info btn-block" *ngIf="entity!=='E'&&entity!=='T'">Rechercher</a>
+              <a routerLink="/dn/{{periode}}" class="btn btn-info btn-block" *ngIf="entity=='E'">Rechercher</a>
             </div>
           </div>
         </div>

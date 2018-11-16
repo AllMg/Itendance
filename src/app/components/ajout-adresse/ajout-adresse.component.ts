@@ -88,7 +88,11 @@ export class AjoutAdresseComponent implements OnInit {
   public inputTyped(source: string, text: string) {
     if (text.length >= 3) {
       this.adresse.listFokontany(text).subscribe(data => {
-        this.initData(data.msg);
+        if (data.success) {
+          this.initData(data.msg);
+        } else {
+          this.toastr.error( data.msg);
+        }
       });
     }
   }

@@ -1,5 +1,5 @@
-<!--<app-banniere></app-banniere>
-<app-info-agents></app-info-agents>-->
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
 
 <div class="container-fluid">
 	<div class="col-sm-12 content_page">
@@ -37,7 +37,7 @@
 						<div class="form-group">
 							<label>Service</label><br>
 							<select [(ngModel)]="DmdMob.filtre.refService" (change)="filtreChange('DmdMob')" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
 							</select>
 						</div>
 					</div>
@@ -101,7 +101,7 @@
 						<div class="form-group">
 							<label>Service</label><br>
 							<select [(ngModel)]="DmdRepMob.filtre.refService" (change)="filtreChange('DmdRepMob')" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
 							</select>
 						</div>
 					</div>
@@ -173,7 +173,7 @@
 						<div class="form-group">
 							<label>Service</label><br>
 							<select [(ngModel)]="DmdBat.filtre.refService" (change)="filtreChange('DmdBat')" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.id}}">{{s.libelle}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
 							</select>
 						</div>
 					</div>
@@ -420,5 +420,5 @@
 	</div>
 </div>
 
-<!--<app-historique-indiv></app-historique-indiv>
-<app-lien-foot></app-lien-foot>-->
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

@@ -20,6 +20,7 @@ router.post('/listtrav',function(req,res){
   const identifiant = req.body.identifiant;
   var topicLogReq = "listtravemplvreq";
   var topicLogRes = "listtravemplvres";
+  console.log(identifiant);
   kafkaConfig.kafkaConnector(topicLogReq,topicLogRes,identifiant,function(err,data){
     if(err){
       res.json({sucess:!err,msg:"Mouvement Travailleur Service : "+data})

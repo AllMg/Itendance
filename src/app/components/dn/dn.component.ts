@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DnService} from '../../services/dn/dn.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import {FileService} from '../../services/file/file.service';
+import {FileModel} from '../../models/file-model';
 
 @Component({
   selector: 'app-dn',
@@ -35,6 +37,7 @@ export class DnComponent implements OnInit {
 	occ = ['CDD','CDI','OCCASIONNEL'];
 	selectedFiles: FileList;
 	currentFileUpload: File  = null;
+	fileModel: FileModel;
 	public show: boolean = false;
 	salM1: number[];
 	salM2: number[];
@@ -48,23 +51,29 @@ export class DnComponent implements OnInit {
 		private dnService: DnService,
 		private router: Router,
 		private toastr: ToastrService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private fileService: FileService
   ) { 
   }	
 
   	ngOnInit() {
-		this.user = JSON.parse(localStorage.getItem('user'));
-		this.entity = this.user.type_entite;
+		this.router.routeReuseStrategy.shouldReuseRoute = function(){
+			return false;
+		}
 		this.route.params.subscribe((params: Params) => {
+			console.log('subscribe');
+			this.show = false;
+			this.user = JSON.parse(localStorage.getItem('user'));
+			this.entity = this.user.type_entite;
 			if(typeof params['periode'] !== 'undefined') this.periode = params['periode'];
 			else this.periode = this.getPeriodeByDate(new Date());
 			if(typeof params['matricule'] !== 'undefined' && this.entity!=='E' && this.entity!=='T') this.idEmpl = params['matricule'];
 			else this.idEmpl = this.user.id_acces;
+			if(this.entity == 'E'){
+				this.searchDn(this.periode, this.idEmpl);
+			}
 		});
 		// console.log(this.user);
-		if(this.entity == 'E'){
-			this.searchDn(this.periode, this.idEmpl);
-		}
 		// this.dnService.getHistoriqueDn(this.idEmpl, 50, 1).subscribe(data=>{console.log(data);});
 	}
 	
@@ -99,6 +108,7 @@ export class DnComponent implements OnInit {
 					this.plafond = Number(data.msg.montantPlafond);
 					this.dateDeclaration = data.msg.dateDeclaration;
 					this.dateValidation = data.msg.dateValidation;
+					this.effectif = this.listeDn.length;
 					this.rc = data.msg.rc;
 					this.idDn = data.msg.idDn;
 					if(this.dateDeclaration === null) this.statut = 'Non déclaré';
@@ -208,7 +218,7 @@ export class DnComponent implements OnInit {
 		if(this.listeDn[i].salM2<this.salM2[i]){
 			this.listeDn[i].salM2=this.salM2[i];
 			this.toastr.error("Le salaire d'un travailleur ne peut pas être réduit.");
-		}
+		} 
 		if(this.listeDn[i].salM2>this.listeDn[i].salM3) this.listeDn[i].salM3=this.listeDn[i].salM2;
 	}
 	checkSalM3(i:number){
@@ -219,7 +229,7 @@ export class DnComponent implements OnInit {
 	}
 
   	saveDn(event){
-		if(typeof this.selectedFiles!=='undefined') this.upload(event);
+		if(typeof this.selectedFiles!=='undefined') this.upload();
 		if(typeof this.selectedFiles==='undefined') this.saveWithoutFile(event);
 	}
 
@@ -326,44 +336,52 @@ export class DnComponent implements OnInit {
     	this.selectedFiles = files;
 	}
 
-	upload(event) {
+	upload() {
 		// 	console.log(this.selectedFiles);
 		this.currentFileUpload = this.selectedFiles.item(0);
-		this.dnService.pushFileToStorage(this.currentFileUpload).subscribe(
-		data => {
-			console.log(data);
-		}, error => {
-		  this.toastr.error(error);
+		this.fileModel.id_files = this.periode;
+		this.fileModel.file = this.currentFileUpload;
+		this.fileModel.serviceName = 'DN';
+		this.fileService.save(this.fileModel).subscribe( fileResponse => {
+			if (!fileResponse.success) {
+			  this.toastr.error(fileResponse.msg, 'Une erreur s\'est produite lors de l\'enregistrement du fichier.');
+			}
 		});
 		this.selectedFiles = null;
+		// this.dnService.pushFileToStorage(this.currentFileUpload).subscribe(
+		// data => {
+		// 	console.log(data);
+		// }, error => {
+		//   this.toastr.error(error);
+		// });
 	}  
 
 	getPeriodeByDate(today: Date) {
 		let periode = "";
 		switch (today.getMonth()) {
-		case 1:  periode = (today.getFullYear())+"01";
+		case 0:  periode = (today.getFullYear()-1)+"04";
         break;
-		case 2:  periode = (today.getFullYear())+"01";
+		case 1:  periode = (today.getFullYear()-1)+"04";
         break;
-		case 3:  periode = (today.getFullYear())+"01";
+		case 2:  periode = (today.getFullYear()-1)+"04";
 		break;
-		case 4:  periode = (today.getFullYear())+"02";
+		case 3:  periode = (today.getFullYear())+"01";
         break;
-		case 5:  periode = (today.getFullYear())+"02";
+		case 4:  periode = (today.getFullYear())+"01";
+        break;
+		case 5:  periode = (today.getFullYear())+"01";
         break;
 		case 6:  periode = (today.getFullYear())+"02";
         break;
-		case 7:  periode = (today.getFullYear())+"03";
+		case 7:  periode = (today.getFullYear())+"02";
         break;
-		case 8:  periode = (today.getFullYear())+"03";
+        case 8:  periode = (today.getFullYear())+"02";
         break;
         case 9:  periode = (today.getFullYear())+"03";
         break;
-        case 10:  periode = (today.getFullYear())+"04";
+        case 10:  periode = (today.getFullYear())+"03";
         break;
-        case 11:  periode = (today.getFullYear())+"04";
-        break;
-        case 0:  periode = (today.getFullYear())+"04";
+        case 11:  periode = (today.getFullYear())+"03";
         break;
 		}
 		return periode;

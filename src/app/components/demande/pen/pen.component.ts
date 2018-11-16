@@ -116,7 +116,7 @@ export class PenComponent implements OnInit {
       if (this.prestation !== '440') {
         this.indivAcc = [{
           idAcc: this.reference,
-          idIndividu: '01014501971790102',
+          idIndividu: this.user.id_acces,
           individuType: '6'
         }];
       } else {
@@ -126,7 +126,7 @@ export class PenComponent implements OnInit {
         'accueilMod': {
           'id_acc': this.reference,
           'id_empl': null,
-          'id_individu': '01014501971790102',
+          'id_individu': this.user.id_acces,
           'id_succursale': null,
           'id_tec_dmd': this.prestation,
           'num_doss': null,

@@ -13,13 +13,12 @@
               <div class="col-sm-6">
               <label class="col-sm-6 col-form-label texte-content">Etat</label>
             </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                   <select (change)="onChangeEtatDmd($event)" [(ngModel)]="typechoose"  class="form-control">
-                    <option *ngFor="let a of statelist; let i = index;" value="{{a.id_type_etat}}" [selected]="a.id_type_etat === 1">{{a.libelle}}</option>
+                    <option *ngFor="let a of statelist; let i = index;" value="{{a.id_type_etat}}">{{a.libelle}}</option>
                   </select>
                 </div>
                 <br>
-                <app-loader [show]="show"></app-loader>
         			 <table class="table table-hover">
                             <thead>
                               <tr>
@@ -47,9 +46,10 @@
                             
                             </tbody>
                     </table>
+                    <app-loader [show]="show"></app-loader>
                     <nav aria-label="Page navigation example">
 			          <ul class="pagination">
-			            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" href="/liste-atmp/prestation/nom_prestation/{{i+1}}/{{size}}">{{i+1}}</a></li>
+			            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-atmp/{{prestation}}/{{nom_prestation}}/{{typechoose}}/{{i+1}}/{{size}}" routerLinkActive="active">{{i+1}}</a></li>
 			          </ul>
 			        </nav>
 				</div>

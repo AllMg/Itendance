@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class InfoAgentsComponent implements OnInit {
   user: any;
+  indiv: any;
   constructor(private directionService: DirectionService,
               private individu: IndividuService,
               private toatr: ToastrService) { }
@@ -22,7 +23,7 @@ export class InfoAgentsComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user'));
     this.individu.infoIndiv(user.id_acces).subscribe((data) => {
         if (data.success) {
-          const indiv = data.msg;
+          this.indiv = data.msg;
           /*this.user = {
             id: indiv.id_individu,
             nom: indiv.nom,
@@ -30,11 +31,11 @@ export class InfoAgentsComponent implements OnInit {
           }*/
           this.directionService.infoDirection(user.id_acces).subscribe((res) => {
             if (res.success) {
-              const agent = res.msg
+              const agent = res.msg;
               this.user = {
-                id: indiv.id_individu,
-                nom: indiv.nom,
-                prenom: indiv.prenoms,
+                id: this.indiv.id_individu,
+                nom: this.indiv.nom,
+                prenom: this.indiv.prenoms,
                 service: agent[0].code_service.libelle_service,
                 direction: agent[0].code_direction.libelle_direction
               };

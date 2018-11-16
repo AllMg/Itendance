@@ -56,7 +56,8 @@
         <div class="card-body content-lien">
           <ul>
             <li *ngFor="let hist of histo">
-              <a (click)="link(hist.periode)"><span class="fa fa-angle-double-right"></span>&nbsp;{{hist.periode}}--{{hist.statut}}</a>
+              <!-- <a (click)="link(hist.periode)"><span class="fa fa-angle-double-right"></span>&nbsp;{{hist.periode}}--{{hist.statut}}</a> -->
+              <a routerLink="/dn/{{hist.periode}}"><span class="fa fa-angle-double-right"></span>&nbsp;{{hist.periode}}--{{hist.statut}}</a>
             </li>
             <li>
               <a [routerLink]="['/historique-dn']"><span class="fa fa-angle-double-right"></span>&nbsp;Voir plus</a>
@@ -71,7 +72,7 @@
         <div class="card-body content-lien">
           <ul>
             <li *ngFor="let histoCie of dataCIE">
-              <a href="/historique-cie-periode/{{histoCie.periode}}">
+              <a routerLink="/historique-cie-periode/{{histoCie.periode}}">
                 <span class="fa fa-angle-double-right"></span>&nbsp;{{ histoCie.periode }} &nbsp; Solde (&nbsp;{{
                 histoCie.solde
                 | number:'1.2-2':'fr' }}&nbsp;)</a>
@@ -127,10 +128,10 @@
               <a (click)="transfertClick()">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Transfert de cotisation</a>
             </li>
-            <li>
+           <!-- <li>
               <a [routerLink]="['/demande-paiement-or']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Paiement OR</a>
-            </li>
+            </li> -->
             <li *ngIf="showTransfertLink">
               <div>
                 <div class="loader" style="margin: auto"></div>
@@ -296,7 +297,7 @@
   </div>
 </div>
 
-<div class="container-fluid histo-indiv" *ngIf="entity!=='T'&&entity!=='E'&&entity!=='C'">
+<div class="container-fluid histo-indiv" *ngIf="entity!=='T'&&entity!=='E'&&entity!=='C'&&entity!=='S'">
   <div class="row">
     <div class="col-xs-12 col-md-3 col-sm-12 div_service">
       <div class="card h-100 content_service">
@@ -371,41 +372,37 @@
               <a [routerLink]="['/liste-demande/40E']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Demande attestation PF</a>
             </li>
+            <li>
+              <a [routerLink]="['/liste-dat/1/10']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Liste des déclarations d'accident de travail</a>
+            </li>
              <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/215/Frais Funeraire/1/10']">
+              <a [routerLink]="['/liste-atmp/215/Frais Funeraire/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Funeraire</a>
             </li>
              <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/228/Rente IPP/1/10']">
+              <a [routerLink]="['/liste-atmp/228/Rente IPP/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Rente IPP</a>
             </li>
             <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/214/Frais deplacement FD/1/10']">
+              <a [routerLink]="['/liste-atmp/214/Frais deplacement FD/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Deplacement FD1</a>
             </li>
             <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/213/Frais Prothese/1/10']">
+              <a [routerLink]="['/liste-atmp/213/Frais Prothese/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Prothese</a>
             </li>
             <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/211/IJ ATMP/1/10']">
+              <a [routerLink]="['/liste-atmp/211/IJ ATMP/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste IJ (ATMP)</a>
             </li>
              <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/212/Frais Medicaux/1/10']">
+              <a [routerLink]="['/liste-atmp/212/Frais Medicaux/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Frais Medicaux</a>
             </li>
             <li *ngIf="entity==='O'">
-              <a [routerLink]="['/liste-atmp/227/Rente Mortelle/1/10']">
+              <a [routerLink]="['/liste-atmp/227/Rente Mortelle/1/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste Rente Mortelle</a>
-            </li>
-            <li >
-              <a [routerLink]="['/sem/liste-fm']">
-                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Medicaux (SEM)</a>
-            </li>
-            <li>
-              <a [routerLink]="['/sem/liste-fp']">
-                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (SEM)</a>
             </li>
             <li >
               <a [routerLink]="['/atmp/liste-fm']">
@@ -448,6 +445,28 @@
              <li>
               <a [routerLink]="['/info-pension-dlpr']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Info pension DLPR</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid histo-indiv" *ngIf="entity==='S'">
+  <div class="row">
+    <div class="col-xs-12 col-md-3 col-sm-12 div_service">
+      <div class="card h-100 content_service">
+        <h4 class="card-header titre_service1">Demandes et déclarations</h4>
+        <div class="card-body content-lien">
+          <ul>
+            <li>
+              <a [routerLink]="['/sem/liste-fm']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Medicaux (SEM)</a>
+            </li>
+            <li>
+              <a [routerLink]="['/sem/liste-fp']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (SEM)</a>
             </li>
           </ul>
         </div>

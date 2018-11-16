@@ -212,14 +212,14 @@ export class AvisEmbaucheFormComponent implements OnInit {
     this.individuService.listHistoriqueTravailleur(this.id).subscribe(
       (data1) => {
         console.log(data1);
-        this.debutDateEmbauche = data1.msg[0].date_debut;
-        this.finDateEmbauche = data1.msg[0].date_fin;
+        this.debutDateEmbauche = data1.msg[0].date_debut_contrat;
+        this.finDateEmbauche = data1.msg[0].date_fin_contrat;
         this.typeContrat = data1.msg[0].type_contrat;
         if (data1.msg[0].type_contrat === 'CDD') {
           this.btnDisable = false;
         }
         this.salaire = data1.msg[0].salaire_fixe;
-        this.matriculeEmpl = data1.msg[0].employeur_matr;
+        this.matriculeEmpl = data1.msg[0].employeur_matricule;
         console.log(this.matriculeEmpl);
         this.employeurService.infoEmployeur(data1.msg[0].id_empl).subscribe(data2 => {
           this.raisonSociale = data2.msg.employeur_nom;
@@ -277,10 +277,10 @@ export class AvisEmbaucheFormComponent implements OnInit {
       }
       const newTrav = {
         id_empl: this.user.id_acces,
-        date_debut: this.debutDateEmbauche,
-        date_fin: this.finDateEmbauche,
+        date_debut_contrat: this.debutDateEmbauche,
+        date_fin_contrat: this.finDateEmbauche,
         reference: '',
-        employeurmatricule: '',
+        employeur_matricule: this.matriculeEmpl,
         type_contrat: this.typeContrat,
         salaire_fixe: this.salaire,
         id_individu: this.id
@@ -288,9 +288,11 @@ export class AvisEmbaucheFormComponent implements OnInit {
       const data = {
         data: newTrav
       };
+      //console.log(data);
 
       this.individuService.listTravailleur(this.user.id_acces).subscribe(
         (dataRes) => {
+          console.log(dataRes);
           this.tabIdIndiv = dataRes.msg;
           for (let i = 0; i < this.tabIdIndiv.length; i++) {
             // console.log(this.tabIdIndiv[i].id_individu);
@@ -363,10 +365,10 @@ export class AvisEmbaucheFormComponent implements OnInit {
     const cc = this.secondFormGroup.value;
     this.stockTrav = {
       id_empl: this.user.id_acces,
-      date_debut: cc.new_date_debut_contrat,
-      date_fin: cc.new_date_fin_contrat,
+      date_debut_contrat: cc.new_date_debut_contrat,
+      date_fin_contrat: cc.new_date_fin_contrat,
       reference: '',
-      employeurmatricule: '',
+      employeur_matricule: this.matriculeEmpl,
       type_contrat: cc.new_type_contrat,
       salaire_fixe: cc.new_salaire
     };

@@ -5,11 +5,12 @@
 <div class="container-fluid">
   <div class="col-sm-12 content_page">
     <div class="row titre_page4">
-      <h4>Liste des demande d'accident de travail (DAT) </h4>
+      <h4>Traitement ATMP </h4>
     </div>
 
     <div class="row">
       <div class="col-sm-12">
+        <h4 class="card-header text-center titre_service1">Liste Demande Frais Prothèse</h4>
         <table class="table table-striped">
           <thead>
           <tr>
@@ -29,13 +30,13 @@
             <td>{{dat.matricule}}</td>
             <td>{{dat.nom_individu }}</td>
             <td>{{dat.etat_libelle}}</td>
-            <td><a href="validation-dat/{{dat.reference}}"> Voir</a></td>
+            <td><a href="atmp/traitement/fp/{{dat.reference}}"> Voir</a></td>
           </tr>
           </tbody>
         </table>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
-            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" href="/liste-dat/{{i+1}}/{{size}}">{{i+1}}</a></li>
+            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-dat/{{i+1}}/{{size}}">{{i+1}}</a></li>
           </ul>
         </nav>
       </div>

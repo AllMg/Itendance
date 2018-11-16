@@ -36,7 +36,8 @@ export class ValidationDatComponent implements OnInit {
     private adresseService: AdresseService,
     private notificationService: NotificationService,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private atmpOldService: AtmpService
   ) { }
 
   ngOnInit() {
@@ -152,6 +153,37 @@ export class ValidationDatComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
   pec() {
+    let dataDemmande: any;
+    dataDemmande = {
+      idIndividu: this.dat.matricule,
+      idEmpl: this.victime.id_empl
+    };
+    for ( const lib of this.libelle) {
+      if (lib.id_type_info === 67) {
+        dataDemmande.heureDat = lib.valeur;
+      }
+      if (lib.id_type_info === 66) {
+        dataDemmande.dateDat = lib.valeur;
+      }
+      if (lib.id_type_info === 66) {
+        dataDemmande.dateDat = lib.valeur;
+      }
+      if (lib.id_type_info === 68) {
+        dataDemmande.lieuDat = lib.valeur;
+      }
+      if (lib.id_type_info === 73) {
+        dataDemmande.circonstanceDat = lib.valeur;
+      }
+      if (lib.id_type_info === 75) {
+        dataDemmande.centreSoinDat = lib.valeur;
+      }
+
+    }
+    this.atmpOldService.demandeAt(dataDemmande).subscribe( result => {
+      if (!result.success) {
+        this.toatr.error( result.msg , 'Erreur lors du sauvegarde');
+      }
+    })
     this.atmpService.updateEtat(this.id_dat, 8).subscribe( result => {
       if (result.success) {
         this.toatr.success('La demande AT n° ' + this.id_dat + ' a été pris en charge');

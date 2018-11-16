@@ -27,7 +27,7 @@ export class HistoriqueIndivComponent implements OnInit {
   entity: string;
   dataCIT: any;
   histoNofit: any;
-  estLu: boolean = false;
+  estLu = false;
   dataCIE: any;
   histo: any[] = [];
   id_acces: any;
@@ -67,18 +67,17 @@ export class HistoriqueIndivComponent implements OnInit {
     this.findPenExist = false;
     this.showTransfertLink = false;
     this.user = JSON.parse(localStorage.getItem('user'));
-
-    this.user = JSON.parse(localStorage.getItem('user'));
-
+    this.entity = this.user.type_entite;
     if (this.entity === 'E') {
+      console.log('histo');
       this.dnService.getHistoriqueDn(this.user.id_acces, 4, 1).subscribe(data => {
         console.log(data);
         if (data.success) {
           let statut = '';
           for (let index = 0; index < data.msg.length; index++) {
-            if (data.msg[index][2] === null) statut = 'Non déclaré';
-            if (data.msg[index][2] !== null) statut = 'Déclaré';
-            if (data.msg[index][3] !== null) statut = 'Validé';
+            if (data.msg[index][2] === null) { statut = 'Non déclaré'; }
+            if (data.msg[index][2] !== null) { statut = 'Déclaré'; }
+            if (data.msg[index][3] !== null) { statut = 'Validé'; }
             this.histo.push({
               periode: data.msg[index][0],
               cotisation: data.msg[index][1],
@@ -87,8 +86,7 @@ export class HistoriqueIndivComponent implements OnInit {
               statut: statut
             });
           }
-        }
-        else {
+        } else {
           this.histo = [];
           this.toastr.error(data.msg);
         }
@@ -125,10 +123,10 @@ export class HistoriqueIndivComponent implements OnInit {
       }
     });
     this.cieService.listeCieByEmpl(this.user.id_acces).subscribe((data) => {
-      let donne = data.msg;
+      const donne = data.msg;
       this.soldeService.listeSoldeByEmpl(this.user.id_acces).subscribe(
         (data) => {
-          let solde = data.msg;
+          const solde = data.msg;
           let object = {
             periode: '',
             solde: ''
@@ -151,8 +149,7 @@ export class HistoriqueIndivComponent implements OnInit {
                 object.periode = donne[i].periode;
                 this.dataCIE.push(object);
                 a++;
-              }
-              else {
+              } else {
                 break;
               }
             }
@@ -194,12 +191,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/ij']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -215,12 +210,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/ij2']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -236,12 +229,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/am1']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -257,12 +248,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/am2']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -278,12 +267,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/ap']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -299,12 +286,10 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('sexe', sexe);
         if (sexe == 'F') {
           this.router.navigate(['/fm']);
-        }
-        else {
+        } else {
           setTimeout(() => this.toastr.error('Vous n' + '\'' + 'êtes pas une femme'));
         }
-      }
-      else {
+      } else {
         setTimeout(() => this.toastr.error('Erreur info individu'));
       }
     });
@@ -315,18 +300,18 @@ export class HistoriqueIndivComponent implements OnInit {
   }
 
   link(periode) {
-    location.reload();
+    // location.reload();
     this.router.navigate(['/dn/' + periode]);
   }
 
   findIsDemandeDLPR(type_prestation) {
     let result = false;
-    let listeDLPRJson = {
+    const listeDLPRJson = {
       '317': ['317', '318', '319', '320'],
       '319': ['319', '320', '317', '318']
     };
-    for (let info of listeDLPRJson[type_prestation]) {
-      let msg = {
+    for (const info of listeDLPRJson[type_prestation]) {
+      const msg = {
         individu: this.user.id_acces,
         type_etat: [7, 6, 5, 4, 3, 2, 1],
         prestation: info
@@ -342,7 +327,7 @@ export class HistoriqueIndivComponent implements OnInit {
   }
 
   onClickDemande(type_prestation) {
-    let that = this;
+    const that = this;
     if (type_prestation === '317' || type_prestation === '318' || type_prestation === '319' || type_prestation === '320') {
       this.familleService.infoFamille(this.user.id_acces).subscribe(data => {
         if (data.success) {
@@ -350,7 +335,7 @@ export class HistoriqueIndivComponent implements OnInit {
           for (const info of this.listFamilleUser) {
             that.matriculeTravailleur = info.matricule;
           }
-          let msgPension = {
+          const msgPension = {
             'idtrav': that.matriculeTravailleur,
             'idBenef': that.user.id_acces
           };
@@ -385,7 +370,7 @@ export class HistoriqueIndivComponent implements OnInit {
   }
 
   verifiDemande(type_prestation) {
-    let msg = {
+    const msg = {
       individu: this.user.id_acces,
       type_etat: [7, 6, 5, 4, 3, 2, 1],
       prestation: type_prestation
@@ -395,70 +380,56 @@ export class HistoriqueIndivComponent implements OnInit {
         console.log('Data msg => ', data.msg);
         if (data.msg === 'vide') {
           if (type_prestation === '317') {
-            if (!this.findIsDemandeDLPR(type_prestation))
+            if (!this.findIsDemandeDLPR(type_prestation)) {
               this.router.navigate(['/ouverture-droit-asvt-pen']);
-            else {
+            } else {
               if (data.msg.demandeMod.etat === 6) {
                 this.toastr.warning('Pièce non conforme', 'Information');
                 this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
-              }
-              else if (data.msg.demandeMod.etat === 5) {
+              } else if (data.msg.demandeMod.etat === 5) {
                 this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
                 this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
               }
             }
-          }
-          else if (type_prestation === '319') {
-            if (!this.findIsDemandeDLPR(type_prestation))
+          } else if (type_prestation === '319') {
+            if (!this.findIsDemandeDLPR(type_prestation)) {
               this.router.navigate(['/demande-reversion-pen']);
-            else {
+            } else {
               if (data.msg.demandeMod.etat === 6) {
                 this.toastr.warning('Pièce non conforme', 'Information');
                 this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
-              }
-              else if (data.msg.demandeMod.etat === 5) {
+              } else if (data.msg.demandeMod.etat === 5) {
                 this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
                 this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
               }
             }
-          }
-          else if (type_prestation === '335') {
+          } else if (type_prestation === '335') {
             this.router.navigate(['/demande-revision-pen']);
-          }
-          else if (type_prestation === '331') {
+          } else if (type_prestation === '331') {
             this.router.navigate(['/demande/331']);
-          }
-          else if (type_prestation === '332') {
+          } else if (type_prestation === '332') {
             this.router.navigate(['/demande/332']);
-          }
-          else if (type_prestation === '441') {
+          } else if (type_prestation === '441') {
             this.router.navigate(['/demande/441']);
-          }
-          else if (type_prestation === '442') {
+          } else if (type_prestation === '442') {
             this.router.navigate(['/demande/442']);
-          }
-          else if (type_prestation === '40E') {
+          } else if (type_prestation === '40E') {
             this.router.navigate(['/demande/40E']);
-          }
-          else if (type_prestation === '311') {
+          } else if (type_prestation === '311') {
             this.router.navigate(['/dlpr']);
           }
-        }
-        else {
+        } else {
           if (type_prestation !== '335') {
             if (data.msg.demandeMod.etat === 1) {
               this.toastr.warning('Vous ne pouvez plus effectuer de demande', 'Information');
-            }
-            else if (data.msg.demandeMod.etat === 6) {
+            } else if (data.msg.demandeMod.etat === 6) {
               this.toastr.warning('Pièce non conforme', 'Information');
               this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
-            }
-            else if (data.msg.demandeMod.etat === 5) {
+            } else if (data.msg.demandeMod.etat === 5) {
               this.toastr.warning('Votre demande a été rejeté a cause de pièce manquante', 'Information');
               this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
             }
-          }
-          else {
+          } else {
             if (data.msg.demandeMod.etat !== 1) {
               this.router.navigate(['/detail-modif/' + data.msg.accueilMod.id_acc]);
             }
@@ -482,24 +453,20 @@ export class HistoriqueIndivComponent implements OnInit {
           if (this.dataTransfert.etat == 'Ok') {
             this.toastr.warning('Vous avez déjà une demande de transfert de cotisation en cours.');
             this.showTransfertLink = false;
-          }
-          else if (this.dataTransfert.etat == 'Pièces a réclamer') {
+          } else if (this.dataTransfert.etat == 'Pièces a réclamer') {
             this.toastr.warning('Vous avez une ou des pièces non conformes.');
             this.router.navigate(['/detail-transfert-cotisation-pieces/' + this.user.id_acces]);
             this.showTransfertLink = false;
-          }
-          else if (this.dataTransfert.etat == 'Traitée') {
+          } else if (this.dataTransfert.etat == 'Traitée') {
             this.toastr.warning('Vous avez déjà fait une demande de tranfert de cotisation.');
             this.showTransfertLink = false;
           }
-        }
-        else {
+        } else {
           this.toastr.success('Lien transfert cotisation disponible.');
           this.router.navigate(['/demande-transfert-cotisation']);
           this.showTransfertLink = false;
         }
-      }
-      else {
+      } else {
         this.toastr.error('Lien transfert cotisation indisponible.');
         this.showTransfertLink = false;
       }

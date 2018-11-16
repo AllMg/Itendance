@@ -5,6 +5,7 @@ import {ToastrService} from 'ngx-toastr';
 import { FileModel } from '../../models/file-model';
 import { ImmoService } from '../../services/immo/immo.service';
 import { FileService } from '../../services/file/file.service';
+import { InfoService } from '../../services/info/info.service';
 
 declare var $: any;
 
@@ -24,7 +25,7 @@ export class ImmoListeComponent implements OnInit {
     sousMenu: ""
   };
 
-  listeService:Array<{libelle: string, id: number}> = [];
+  listeService = [];
 
   ligneMax = 15;
 
@@ -101,14 +102,25 @@ export class ImmoListeComponent implements OnInit {
     private router: Router, 
     private toast: ToastrService,
     private fileService: FileService,
+    private infoService: InfoService,
     private immoService: ImmoService) {
 
-    //let that = this;
-    /*this.immoService.immoTopic("avoirListeService", "").subscribe(obs=>{
+    let that = this;
+    let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
       if(obs.success){
+        obs.msg.sort((a, b)=>{
+          if(a.libelle_service > b.libelle_service){
+            return 1;
+          }
+          else if(a.libelle_service < b.libelle_service){
+            return -1;
+          }
+          return 0;
+        });
         that.listeService = obs.msg;
       }
-    });*/
+      observ.unsubscribe();
+    });
   }
 
   ngOnInit() {

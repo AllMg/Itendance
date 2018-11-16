@@ -45,6 +45,7 @@ export class NotificationService {
     const data = {
       expediteur: content.expediteur,
       destinataire: content.destinataire,
+      referenceNotif: content.referenceNotif,
       titre: content.titre,
       message: content.message,
       typeNotif: content.typeNotif,
@@ -83,8 +84,9 @@ export class NotificationService {
             const adress = adr.msg;
             // adress[0].adresse_e_mail et adress[0].adresse_telephone;
             const sms = {
-              numero: '0340392296',
-              //numero: '0349759678',
+              numero: '0342656574',
+              // numero: '0340392296',
+              // numero: '0349759678',
               // numero: '0341536309',
               message: content.message
             };
@@ -94,8 +96,9 @@ export class NotificationService {
               }
             );
             const emailMsg = {
-              email: 'ginonandry@gmail.com',
-              //email: 'diary.rasolofomanana@gmail.com',
+              email: 'ranaivosonhajatiana@gmail.com',
+              // email: 'ginonandry@gmail.com',
+              // email: 'diary.rasolofomanana@gmail.com',
               // email: 'niavosanda@gmail.com',
               subject: content.titre,
               message: content.message

@@ -31,6 +31,18 @@ export class ImmoService {
       .map(res => res.json());
   }
 
+  getAllRefDrhService(){
+    let msg = {data: ""};
+    return this.http.post(this.host + 'immo/getAllRefDrhService', msg, {headers: this.enTete})
+      .map(res => res.json());
+  }
+
+  getByIdRefDrhService(refService){
+    let msg = {data: refService};
+    return this.http.post(this.host + 'immo/getByIdRefDrhService', msg, {headers: this.enTete})
+      .map(res => res.json());
+  }
+
   listeTypeEntrBatInt(){
     let msg = {data: ""};
     return this.http.post(this.host + 'immo/listeTypeEntrBatInt', msg, {headers: this.enTete})

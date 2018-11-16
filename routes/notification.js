@@ -42,6 +42,7 @@ router.post('/ajoutNotif', function (req, res) {
   const data = {
     expediteur: req.body.expediteur,
     destinataire: req.body.destinataire,
+    referenceNotif: req.body.referenceNotif,
     titre: req.body.titre,
     message: req.body.message,
     typeNotif: req.body.typeNotif,

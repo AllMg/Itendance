@@ -189,4 +189,44 @@ router.post('/listeArticleInt',function(req,res){
   });
 });
 
+router.post('/getAllRefDrhService',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "getAllRefDrhServiceReq";
+  const topicLogRes = "getAllRefDrhServiceRes";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/getByIdRefDrhService',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "getByIdRefDrhServiceReq";
+  const topicLogRes = "getByIdRefDrhServiceRes";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
 module.exports = router;

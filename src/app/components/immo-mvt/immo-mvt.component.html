@@ -94,18 +94,29 @@
 				<h6 style="text-transform: uppercase;">Etablissement d'une fiche de détention</h6>
 				<hr>
 				<div class="row">
-					<div class="col-6">
+					<div class="col-4">
 						<div class="form-group">
 							<label>Service destinataire</label>
-							<select class="form-control custom-select">
+							<select [(ngModel)]="Det.refService" class="form-control custom-select">
 								<option>SERVICE LISTE</option>
 							</select>
 						</div>
 					</div>
-					<div class="col-6">
+					<div class="col-4">
 						<div class="form-group">
 							<label>Agent destinataire (N° Matricule)</label>
-							<input type="text" class="form-control">
+							<input [(ngModel)]="Det.refIndividu" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="form-group">
+							<label>Code article</label>
+							<div class="input-group mb-3">
+								<input [(ngModel)]="Det.idCodeArt" type="text" class="form-control input-upper">
+								<div class="input-group-append">
+									<button (click)="ajouterCodeArt()" class="btn btn-info">Ajouter</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -118,10 +129,24 @@
 							<th>Etat</th>
 							<th>N° TEF</th>
 							<th>Fournisseur</th>
+							<th></th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr *ngFor="let ca of Det.listeCodeArt; let index = index">
+							<td><{{ca.idCodeArt}}</td>
+							<td><{{ca.libelle}}</td>
+							<td><{{ca.reference}}</td>
+							<td><{{ca.etat}}</td>
+							<td><{{ca.tef}}</td>
+							<td><{{ca.fournisseur}}</td>
+							<td>
+								<button (click)="enleverCodeArt(index)" class="btn"><i class="fa fa-minus"></i></button>
+							</td>
+						</tr>
+					</tbody>
 				</table>
-				<button class="btn btn-info">Valider</button>
+				<button (click)="validerDetention()" class="btn" [ngClass]="{'btn-info': Det.listeCodeArt.length > 0 && Det.refService > 0 && Det.refIndividu.length > 7}">Valider la détention</button>
 			</div>
 			<!-- CESSION -->
 			<div *ngIf="Menu.sousMenu == 'cession'" class="col-md-12">
@@ -129,9 +154,12 @@
 				<hr>
 				<div class="form-group">
 					<label>Service</label>
-					<select class="form-control custom-select">
-						<option>SERVICE</option>
-					</select>
+					<div class="input-group mb-3">
+						<select [(ngModel)]="Cess.refService" class="form-control custom-select"></select>
+						<div class="input-group-append">
+							<button (click)="chargerServiceImmo()" class="btn btn-info">Ajouter</button>
+						</div>
+					</div>
 				</div>
 				<p>Liste des immobilisations du service</p>
 				<table class="table table-bordered">
@@ -150,120 +178,10 @@
 
 	<!-- MODAL -->
 	<!-- MODAL CHARGEMENT -->
-	<div #modalChargement class="modal" tabindex="-1" role="dialog">
+	<div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 		<div class="loader">
 		</div>
-	  </div>
-	</div>
-	<!-- MODAL AJOUT DOMAINE/TYPE -->
-	<div #modalAjoutDom class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h6 class="modal-title">{{Dom.titreModal}}</h6>
-	        <button type="button" class="close" (click)="fermeAjoutDom()">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-  			<div class="form-group">
-  				<label>Libellé</label>
-  				<input [(ngModel)]="Dom.valeur" type="text" class="form-control input-upper">
-  			</div>
-	      </div>
-	      <div class="modal-footer">
-	        <button (click)="ajouterDom()" type="button" class="btn btn-primary">Ajouter</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	<!-- MODAL AJOUT SPECIFICITE -->
-	<div #modalAjoutSpe class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h6 class="modal-title">Ajout d'une {{Spe.titre}}</h6>
-	        <button type="button" class="close" (click)="fermeAjoutSpe()">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	      	<div class="row">
-	      		<div class="col-3">
-	      			<div class="form-group">
-	      				<label>Code</label>
-	      				<input [(ngModel)]="Spe.valeurCode" type="text" maxlength="{{Spe.tailleTexte}}" class="form-control input-upper">
-	      			</div>
-	      		</div>
-	      		<div class="col-9">
-	      			<div class="form-group">
-	      				<label>{{Spe.titre}}</label>
-	      				<input [(ngModel)]="Spe.valeurLibelle" type="text" class="form-control input-upper">
-	      			</div>
-	      		</div>
-	      	</div>
-	      </div>
-	      <div class="modal-footer">
-	        <button (click)="ajouterSpe()" type="button" class="btn btn-primary">Ajouter</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	<!-- MODAL MODIF ARTICLE -->
-	<div #modalModifArt class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h6 class="modal-title">Edition d'article</h6>
-	        <button type="button" class="close" (click)="fermeModifArt()">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-  			<div class="form-group">
-  				<label>Designation</label>
-  				<input type="text" class="form-control input-upper">
-  			</div>
-  			<div class="form-group">
-  				<label>Domaine</label>
-  				<select class="form-control custom-select">
-					<option *ngFor="let d of listeDomaine" value="{{d.id_domaine_art}}">{{d.libelle}}</option>
-				</select>
-  			</div>
-  			<div class="form-group">
-  				<label>Type</label>
-  				<select class="form-control custom-select">
-					<option *ngFor="let t of listeType" value="{{t.id_type_art}}">{{t.libelle}}</option>
-				</select>
-  			</div>
-  			<div class="form-group">
-  				<label>Classe</label>
-  				<select class="form-control custom-select">
-					<option *ngFor="let c of listeClasse" value="{{c.id_classe_art}}">{{c.libelle}}</option>
-				</select>
-  			</div>
-  			<div class="form-group">
-  				<label>Nature</label>
-  				<select class="form-control custom-select">
-					<option *ngFor="let n of listeNature" value="{{n.id_nature_art}}">{{n.libelle}}</option>
-				</select>
-  			</div>
-  			<div class="form-group">
-  				<label>Spécificité</label>
-  				<select class="form-control custom-select">
-					<option *ngFor="let s of listeSpecificite" value="{{s.id_spe_art}}">{{s.libelle}}</option>
-				</select>
-  			</div>
-  			<div class="form-group">
-  				<label>Stock</label>
-  				<input type="number" min="0" class="form-control">
-  			</div>
-	      </div>
-	      <div class="modal-footer">
-	        <button (click)="fermeModifArt()" type="button" class="btn btn-primary">Valider le changement</button>
-	      </div>
-	    </div>
 	  </div>
 	</div>
 </div>

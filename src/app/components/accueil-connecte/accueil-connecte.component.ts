@@ -11,7 +11,7 @@ import { Toast, ToastrService } from 'ngx-toastr';
 })
 export class AccueilConnecteComponent implements OnInit {
 
-  estLoad: boolean = false;
+  estLoad = false;
   constructor(
     private geolocationService: GeolocationService,
     private notificationService: NotificationService,
@@ -38,6 +38,7 @@ export class AccueilConnecteComponent implements OnInit {
               expediteur: JSON.parse(localStorage.getItem('user')).id_acces,
               destinataire: JSON.parse(localStorage.getItem('user')).id_acces,
               titre: 'Avis de connexion',
+              referenceNotif: 'Connexion',
               message: msg,
               typeNotif: '',
               dateEnvoi: date1
