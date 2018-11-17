@@ -295,6 +295,15 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label>Etat de l'article</label>
+					<select [(ngModel)]="Maj.codeArticle.etat" class="form-control custom-select">
+						<option value="NEUF">NEUF</option>
+						<option value="BON">BON</option>
+						<option value="PRUDENCE">PRUDENCE</option>
+						<option value="MAUVAIS">MAUVAIS</option>
+					</select>
+				</div>
+				<div class="form-group">
 					<label>Type de mise à jour</label>
 					<select [(ngModel)]="Maj.typeMaj" class="form-control custom-select">
 						<option value="transfert">TRANSFERT</option>
@@ -304,6 +313,7 @@
 				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">
 					<label>Service (nouveau détenteur)</label>
 					<select [(ngModel)]="Maj.refService" class="form-control custom-select">
+						<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
 					</select>
 				</div>
 				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">

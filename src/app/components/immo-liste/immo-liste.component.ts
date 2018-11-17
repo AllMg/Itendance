@@ -180,13 +180,11 @@ export class ImmoListeComponent implements OnInit {
       pagination: this[nomAttr].page,
       filtre: this[nomAttr].filtre
     };
-    console.log("nomAttr: "+nomAttr);
     let observ = this.immoService.immoTopic(this[nomAttr].fonction, argument, true).subscribe(obs=>{
       if(obs.success){
         that[nomAttr].liste = obs.msg;
       }
       that[nomAttr].chargeListe = false;
-      console.log(that[nomAttr].fonction, obs);
       observ.unsubscribe();
     });
   }

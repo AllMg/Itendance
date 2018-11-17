@@ -31,6 +31,8 @@ export class ImmoArtComponent implements OnInit {
   listeNature = [];
   listeSpecificite = [];
 
+  listeService = [];
+
   Stock = {
     liste: [],
     indice: -1,
@@ -97,7 +99,8 @@ export class ImmoArtComponent implements OnInit {
       refArticle: "",
       prix: 0,
       reference: "",
-      imputation: ""
+      imputation: "",
+      etat: ""
     },
     article: {
       libelle: ""
@@ -413,6 +416,18 @@ export class ImmoArtComponent implements OnInit {
     $(this.modalChargement.nativeElement).modal('hide');
   }
 
+  prendListeService(){
+    if(this.listeService.length == 0){
+      let that = this;
+      let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
+        if(obs.success){
+          that.listeService = obs.msg;
+        }
+        observ.unsubscribe();
+      });
+    }
+  }
+
   chargerHistArt(){
     this.Hist.codeArticle.idCodeArt = this.Hist.codeArticle.idCodeArt.trim().toUpperCase();
     if(this.Hist.codeArticle.idCodeArt != "" && this.Hist.codeArticle.idCodeArt.length > 7){
@@ -430,9 +445,8 @@ export class ImmoArtComponent implements OnInit {
             for(let i=0; i<that.Hist.listeDetention.length; i++){
               let indice = i;
               that.immoService.getByIdRefDrhService(that.Hist.listeDetention[i].refService).subscribe(obss=>{
-                console.log("getByIdRefDrhService", obss);
                 if(obss.success){
-                  that.Hist.listeDetention[indice]["libelleService"] = obss.libelle_service;
+                  that.Hist.listeDetention[indice]["libelleService"] = obss.msg.libelle_service;
                 }
               });
             }
@@ -461,11 +475,11 @@ export class ImmoArtComponent implements OnInit {
   }
 
   chargerCodeArt(){
+    this.prendListeService();
     this.Maj.codeArticle.idCodeArt = this.Maj.codeArticle.idCodeArt.trim().toUpperCase();
     if(this.Maj.codeArticle.idCodeArt != "" && this.Maj.codeArticle.idCodeArt.length > 7){
       this.afficheChargement();
       let that = this;
-      console.log("detailsCodeArticleInt");
       let observ = this.immoService.immoTopic("detailsCodeArticleInt", this.Maj.codeArticle.idCodeArt, false).subscribe(obs=>{
         if(obs.success){
           that.Maj.codeArticle = obs.msg;
@@ -507,13 +521,14 @@ export class ImmoArtComponent implements OnInit {
         idCodeArt: this.Maj.codeArticle.idCodeArt,
         refService: this.Maj.refService,
         refIndividu: this.Maj.refIndividu,
-        typeDet: this.Maj.typeDet
+        typeDet: this.Maj.typeDet,
+        etat: this.Maj.codeArticle.etat
       };
       let that = this;
       let observ0 = this.infoService.infoIndiv(this.Maj.refIndividu).subscribe(obs0=>{
         console.log(obs0);
         if(obs0.success){
-          let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+          let observ = this.immoService.immoTopic("transfertDetentionArticleInt", argument, true).subscribe(obs=>{
             that.fermeChargement();
             if(obs.success){
               that.toast.success("Mise à jour terminé");
@@ -523,7 +538,8 @@ export class ImmoArtComponent implements OnInit {
                   refArticle: "",
                   prix: 0,
                   reference: "",
-                  imputation: ""
+                  imputation: "",
+                  etat: ""
                 },
                 article: {
                   libelle: ""
@@ -555,17 +571,31 @@ export class ImmoArtComponent implements OnInit {
   effectuerRetourEnStock(){
     this.afficheChargement();
     let that = this;
-    let observ = this.immoService.immoTopic("", this.Maj.codeArticle.idCodeArt, true).subscribe(obs=>{
-      that.fermeChargement();
+    let argument = {
+      idCodeArt: this.Maj.codeArticle.idCodeArt,
+      etat: this.Maj.codeArticle.etat
+    };
+    let observ = this.immoService.immoTopic("retourStockDetentionArticleInt", argument, true).subscribe(obs=>{
       if(obs.success){
-        that.toast.success("Mise à jour terminé");
+        that.toast.success("Mise à jour du détention terminé");
+        let observ1 = that.immoService.immoTopic("retourStockArtInt", that.Maj.codeArticle.refArticle, false).subscribe(obs1=>{
+          that.fermeChargement();
+          if(obs1.success){
+            that.toast.success("Mise à jour du stock d'article terminé");
+          }
+          else{
+            that.toast.error("Une erreur s'est produite pendant la mise du stock d'article, vous devez le faire manuellement");
+          }
+          observ1.unsubscribe();
+        });
         that.Maj = {
           codeArticle: {
             idCodeArt: "",
             refArticle: "",
             prix: 0,
             reference: "",
-            imputation: ""
+            imputation: "",
+            etat: ""
           },
           article: {
             libelle: ""
@@ -577,6 +607,7 @@ export class ImmoArtComponent implements OnInit {
         };
       }
       else{
+        that.fermeChargement();
         that.toast.error(obs.msg);
       }
       observ.unsubscribe();

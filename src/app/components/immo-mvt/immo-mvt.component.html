@@ -157,7 +157,7 @@
 					<div class="input-group mb-3">
 						<select [(ngModel)]="Cess.refService" class="form-control custom-select"></select>
 						<div class="input-group-append">
-							<button (click)="chargerServiceImmo()" class="btn btn-info">Ajouter</button>
+							<button (click)="chargerServiceImmo()" class="btn btn-info">Charger</button>
 						</div>
 					</div>
 				</div>
@@ -169,8 +169,20 @@
 							<th>Désignation</th>
 							<th>Référence</th>
 							<th>Etat</th>
+							<th>Hors-service</th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr *ngFor="let ca of Cess.listeCodeArt">
+							<td>{{ca.idCodeArt}}</td>
+							<td>{{ca.libelle}}</td>
+							<td>{{ca.reference}}</td>
+							<td>{{ca.etat}}</td>
+							<td>
+								<input type="checkbox" value="{{ca.horsService}}" class="form-check-input">
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>

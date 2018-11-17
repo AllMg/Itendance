@@ -28,6 +28,11 @@ export class ImmoMvtComponent implements OnInit {
 		listeCodeArt: []
 	};
 
+	Cess = {
+		refService: "",
+		listeCodeArt: []
+	};
+
 	constructor(
     private router: Router, 
     private toast: ToastrService,
@@ -108,6 +113,39 @@ export class ImmoMvtComponent implements OnInit {
 					that.toast.success("Enregistrement terminé");
 				}
 				else{
+					that.toast.error(obs.msg);
+				}
+				observ.unsubscribe();
+			});
+		}
+	}
+
+	chargerServiceImmo(){
+		if(this.Cess.refService != ""){
+			this.afficheChargement();
+			let that = this;
+			let observ = this.immoService.immoTopic("listeCodeArtServiceInt", this.Cess.refService, false).subscribe(obs=>{
+				if(obs.success){
+					that.Cess.listeCodeArt = obs.msg;
+					let idArticles = [];
+					for(let i=0; i<that.Cess.listeCodeArt.length; i++){
+						that.Cess.listeCodeArt[i].libelle = "";
+						that.Cess.listeCodeArt[i].horsService = false;
+						that.Cess.listeCodeArt[i].nouvEtat = that.Cess.listeCodeArt[i].etat;
+						idArticles.push(that.Cess.listeCodeArt[i].refArticle);
+					}
+					let observ1 = that.immoService.immoTopic("listeArticleParIdInt", idArticles, true).subscribe(obs1=>{
+						if(obs1.success){
+							for(let i=0; i<obs.msg.length; i++){
+								that.Cess.listeCodeArt[i].libelle = obs.msg[i];
+							}
+						}
+						that.fermeChargement();
+						observ1.unsubscribe();
+					});
+				}
+				else{
+					that.fermeChargement();
 					that.toast.error(obs.msg);
 				}
 				observ.unsubscribe();
