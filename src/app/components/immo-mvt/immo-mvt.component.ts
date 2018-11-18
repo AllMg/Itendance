@@ -4,7 +4,6 @@ import {ToastrService} from 'ngx-toastr';
 import { ImmoService } from '../../services/immo/immo.service';
 import { InfoService } from '../../services/info/info.service';
 
-
 declare var $: any;
 
 @Component({
@@ -21,6 +20,8 @@ export class ImmoMvtComponent implements OnInit {
 		sousMenu: ""
 	};
 
+	listeService = [];
+
 	Det = {
 		refService: 0,
 		refIndividu: "",
@@ -30,7 +31,7 @@ export class ImmoMvtComponent implements OnInit {
 
 	Cess = {
 		refService: "",
-		listeCodeArt: []
+		listeDetService: []
 	};
 
 	constructor(
@@ -51,6 +52,17 @@ export class ImmoMvtComponent implements OnInit {
 
 	clickSousMenu(nom){
 		this.Menu.sousMenu = nom;
+		if(nom == "art_entree"){
+			if(this.listeService.length == 0){
+				let that = this;
+				let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
+					if(obs.success){
+						that.listeService = obs.msg;
+					}
+					observ.unsubscribe();
+				});
+			}
+		}
 	}
 
 	ajouterCodeArt(){
@@ -98,24 +110,33 @@ export class ImmoMvtComponent implements OnInit {
 	validerDetention(){
 		if(this.Det.listeCodeArt.length > 0 && this.Det.refService > 0 && this.Det.refIndividu.length > 7){
 			this.afficheChargement();
-			let argument = {
-				refService: this.Det.refService,
-				refIndividu: this.Det.refIndividu,
-				listeCodeArt: []
-			};
-			for(let i=0; i<this.Det.listeCodeArt.length; i++) {
-				argument.listeCodeArt.push(this.Det.listeCodeArt[i].idCodeArt);
-			}
 			let that = this;
-			let observ = this.immoService.immoTopic("detentionArtInt", argument, true).subscribe(obs=>{
-				that.fermeChargement();
-				if(obs.success){
-					that.toast.success("Enregistrement terminé");
+			let observ0 = this.infoService.infoIndiv(this.Det.refIndividu).subscribe(obs0=>{
+				if(obs0.success){
+					let argument = {
+						refService: that.Det.refService,
+						refIndividu: that.Det.refIndividu,
+						listeCodeArt: []
+					};
+					for(let i=0; i<that.Det.listeCodeArt.length; i++) {
+						argument.listeCodeArt.push(that.Det.listeCodeArt[i].idCodeArt);
+					}
+					let observ = that.immoService.immoTopic("detentionArtInt", argument, true).subscribe(obs=>{
+						that.fermeChargement();
+						if(obs.success){
+							that.toast.success("Enregistrement terminé");
+						}
+						else{
+							that.toast.error(obs.msg);
+						}
+						observ.unsubscribe();
+					});
 				}
 				else{
-					that.toast.error(obs.msg);
+					that.fermeChargement();
+					that.toast.error(obs0.msg);
 				}
-				observ.unsubscribe();
+				observ0.unsubscribe();
 			});
 		}
 	}
@@ -123,24 +144,40 @@ export class ImmoMvtComponent implements OnInit {
 	chargerServiceImmo(){
 		if(this.Cess.refService != ""){
 			this.afficheChargement();
+			this.Cess.listeDetService = [];
 			let that = this;
-			let observ = this.immoService.immoTopic("listeCodeArtServiceInt", this.Cess.refService, false).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("listeDetServiceInt", this.Cess.refService, false).subscribe(obs=>{
 				if(obs.success){
-					that.Cess.listeCodeArt = obs.msg;
-					let idArticles = [];
-					for(let i=0; i<that.Cess.listeCodeArt.length; i++){
-						that.Cess.listeCodeArt[i].libelle = "";
-						that.Cess.listeCodeArt[i].horsService = false;
-						that.Cess.listeCodeArt[i].nouvEtat = that.Cess.listeCodeArt[i].etat;
-						idArticles.push(that.Cess.listeCodeArt[i].refArticle);
+					let listeDetService = obs.msg;
+					let idCodeArt = [];
+					for(let i=0; i<listeDetService.length; i++){
+						idCodeArt.push(listeDetService[i].idCodeArt);
 					}
-					let observ1 = that.immoService.immoTopic("listeArticleParIdInt", idArticles, true).subscribe(obs1=>{
-						if(obs1.success){
-							for(let i=0; i<obs.msg.length; i++){
-								that.Cess.listeCodeArt[i].libelle = obs.msg[i];
-							}
-						}
+					let observ1 = that.immoService.immoTopic("listeCodeArtParCodeInt", idCodeArt, true).subscribe(obs1=>{
 						that.fermeChargement();
+						if(obs1.success){
+							let listeCodeArt = obs1.msg;
+							let listeIdArt = [];
+							for(let i=0; i<listeCodeArt.length; i++){
+								listeDetService[i].codeArticle = listeCodeArt[i];
+								listeDetService[i].libelleArticle = "";
+								listeDetService[i].horsService = false;
+								listeIdArt.push(listeCodeArt[i]);
+							}
+							that.Cess.listeDetService = listeDetService;
+							let observ2 = that.immoService.immoTopic("listeArticleParIdInt", listeIdArt, true).subscribe(obs2=>{
+								if(obs2.success){
+									let libArt = obs2.msg;
+									for(let i=0; i<libArt.length; i++){
+										that.Cess.listeDetService[i].libelleArticle = libArt[i];
+									}
+								}
+								observ2.unsubscribe();
+							});
+						}
+						else{
+							that.toast.error(obs1.msg);
+						}
 						observ1.unsubscribe();
 					});
 				}
@@ -150,6 +187,51 @@ export class ImmoMvtComponent implements OnInit {
 				}
 				observ.unsubscribe();
 			});
+		}
+	}
+
+	peutFaireCession(){
+		for(let i=0; i<this.Cess.listeDetService.length; i++){
+			if(this.Cess.listeDetService[i].horsService == true){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	validerCession(){
+		if(this.peutFaireCession()){
+			this.afficheChargement();
+			let argument = [];
+			for(let i=0; i<this.Cess.listeDetService.length; i++){
+				if(this.Cess.listeDetService[i].horsService){
+					let arg = {
+						idDetArt: this.Cess.listeDetService[i].idDetArt,
+						refService: this.Cess.refService,
+						detenteur: this.Cess.listeDetService[i].refIndividu,
+						anneeAcquisition: this.Cess.listeDetService[i].codeArticle.datePremierAcqui,
+						etatArt: this.Cess.listeDetService[i].codeArticle.etat,
+						valeur: this.Cess.listeDetService[i].codeArticle.prix
+					}
+					argument.push(arg);
+				}
+			}
+			let that = this;
+			let observ = this.immoService.immoTopic("enregistreCession", argument, true).subscribe(obs=>{
+				that.fermeChargement();
+				if(obs.success){
+					that.Cess.listeDetService = [];
+					that.Cess.refService = "0";
+					that.toast.success("Opération terminé");
+				}
+				else{
+					that.toast.error(obs.msg);
+				}
+				observ.unsubscribe();
+			});
+		}
+		else{
+			this.toast.error("Il n'y a rien à condamner");
 		}
 	}
 

@@ -98,7 +98,7 @@
 						<div class="form-group">
 							<label>Service destinataire</label>
 							<select [(ngModel)]="Det.refService" class="form-control custom-select">
-								<option>SERVICE LISTE</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
 							</select>
 						</div>
 					</div>
@@ -152,12 +152,16 @@
 			<div *ngIf="Menu.sousMenu == 'cession'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Etablissement des articles hors services ou non utiles</h6>
 				<hr>
-				<div class="form-group">
-					<label>Service</label>
-					<div class="input-group mb-3">
-						<select [(ngModel)]="Cess.refService" class="form-control custom-select"></select>
-						<div class="input-group-append">
-							<button (click)="chargerServiceImmo()" class="btn btn-info">Charger</button>
+				<div class="row">
+					<div class="col-md-6 form-group">
+						<label>Service</label>
+						<div class="input-group mb-3">
+							<select [(ngModel)]="Cess.refService" class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+							</select>
+							<div class="input-group-append">
+								<button (click)="chargerServiceImmo()" class="btn btn-info">Charger</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -169,21 +173,22 @@
 							<th>Désignation</th>
 							<th>Référence</th>
 							<th>Etat</th>
-							<th>Hors-service</th>
+							<th style="width: 130px;">Hors-service</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngFor="let ca of Cess.listeCodeArt">
-							<td>{{ca.idCodeArt}}</td>
-							<td>{{ca.libelle}}</td>
-							<td>{{ca.reference}}</td>
-							<td>{{ca.etat}}</td>
+						<tr *ngFor="let da of Cess.listeDetService; let index = index">
+							<td>{{da.idCodeArt}}</td>
+							<td>{{da.libelleArticle}}</td>
+							<td>{{da.codeArticle.reference}}</td>
+							<td>{{ca.codeArticle.etat}}</td>
 							<td>
-								<input type="checkbox" value="{{ca.horsService}}" class="form-check-input">
+								<input [(ngModel)]="Cess.listeDetService[index].horsService" name="horsService" type="checkbox" value="{{ca.horsService}}" class="form-check-input">
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<button (click)="validerCession()" class="btn" [ngClass]="{'btn-info': Cess.listeDetService.length > 0}">Valider</button>
 			</div>
 		</div>
 	</div>

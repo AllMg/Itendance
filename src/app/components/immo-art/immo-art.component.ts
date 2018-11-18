@@ -526,29 +526,33 @@ export class ImmoArtComponent implements OnInit {
       };
       let that = this;
       let observ0 = this.infoService.infoIndiv(this.Maj.refIndividu).subscribe(obs0=>{
-        console.log(obs0);
         if(obs0.success){
           let observ = this.immoService.immoTopic("transfertDetentionArticleInt", argument, true).subscribe(obs=>{
             that.fermeChargement();
             if(obs.success){
-              that.toast.success("Mise à jour terminé");
-              this.Maj = {
-                codeArticle: {
-                  idCodeArt: "",
-                  refArticle: "",
-                  prix: 0,
-                  reference: "",
-                  imputation: "",
-                  etat: ""
-                },
-                article: {
-                  libelle: ""
-                },
-                refService: 0,
-                refIndividu: "",
-                typeMaj: "transfert",
-                typeDet: "DOTATION"
-              };
+              if(obs.msg.success){
+                that.toast.success("Mise à jour terminé");
+                this.Maj = {
+                  codeArticle: {
+                    idCodeArt: "",
+                    refArticle: "",
+                    prix: 0,
+                    reference: "",
+                    imputation: "",
+                    etat: ""
+                  },
+                  article: {
+                    libelle: ""
+                  },
+                  refService: 0,
+                  refIndividu: "",
+                  typeMaj: "transfert",
+                  typeDet: "DOTATION"
+                };
+              }
+              else{
+                that.toast.error(obs.msg.msg);
+              }
             }
             else{
               that.toast.error(obs.msg);

@@ -18,11 +18,11 @@
 		</div>
 
 	    <div class="conteneur-de-menu2">
-			<ul class="menu1"><!--
-				<li (click)="clickSousMenu('detention')" [ngClass]="{'menu1-active': Menu.sousMenu == 'detention'}"><span>DETENTION</span></li>
-				<li (click)="clickSousMenu('cession')" [ngClass]="{'menu1-active': Menu.sousMenu == 'cession'}"><span>CESSION ET MISE AU REBUT</span></li>-->
+			<ul class="menu1">
 				<li (click)="clickSousMenu('inventaire')" [ngClass]="{'menu1-active': Menu.sousMenu == 'inventaire'}"><span>PV D'INVENTAIRE</span></li>
+				<li (click)="clickSousMenu('liste_pv')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste_pv'}"><span>LISTE PV D'INVENTAIRE</span></li>
 				<li (click)="clickSousMenu('etat')" [ngClass]="{'menu1-active': Menu.sousMenu == 'etat'}"><span>ETAT D'INVENTAIRE</span></li>
+				<li (click)="clickSousMenu('cond')" [ngClass]="{'menu1-active': Menu.sousMenu == 'cond'}"><span>CONDAMNATION</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -33,11 +33,18 @@
 			<div *ngIf="Menu.sousMenu == 'inventaire'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Inventaire des immobilisations</h6>
 				<hr>
-				<div class="form-group">
-					<label>Service</label>
-					<select class="form-control custom-select">
-						<option>SERVICE</option>
-					</select>
+				<div class="row">
+					<div class="col-md-6 form-group">
+						<label>Service</label>
+						<div class="input-group mb-3">
+								<select [(ngModel)]="Pv.refService" class="form-control custom-select">
+									<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+								</select>
+								<div class="input-group-append">
+									<button (click)="chargerListeImmoService()" class="btn btn-info">Charger</button>
+								</div>
+							</div>
+					</div>
 				</div>
 				<p>Liste des immobilisations du service</p>
 				<table class="table table-bordered">
@@ -47,22 +54,263 @@
 							<th>Désignation</th>
 							<th>Référence</th>
 							<th>Etat</th>
+							<th>Détenteur</th>
+							<th>Présence</th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr *ngFor="let las of Pv.listeASauver; let index = index">
+							<td>{{las.idCodeArt}}</td>
+							<td>{{las.libelleArt}}</td>
+							<td>{{las.codeArticle.reference}}</td>
+							<td>
+								<select [(ngModel)]="Pv.listeASauver[index].codeArticle.etat" name="etat{{index}}" class="form-control custom-select">
+									<option value="NEUF">NEUF</option>
+									<option value="BON">BON</option>
+									<option value="PRUDENCE">PRUDENCE</option>
+									<option value="MAUVAIS">MAUVAIS</option>
+								</select>
+							</td>
+							<td>{{las.refIndividu}}</td>
+							<td>
+								<input [(ngModel)]="Pv.listeASauver[index].presence" type="checkbox" class="form-check-input" name="check{{index}}">
+							</td>
+						</tr>
+					</tbody>
 				</table>
+				<p style="font-size: 12px; opacity: 0.85">Les articles non présent auront automatiquement une date de fin de détention lors de l'enregistrement mais seront dans la base de PV d'inventaire</p>
+				<button (click)="enregistrerPV()" class="btn" [ngClass]="{'btn-info': Pv.listeASauver.length > 0}">Enregistrer</button>
+			</div>
+			<!-- LISTE PV D'INVENTAIRE-->
+			<div *ngIf="Menu.sousMenu == 'liste_pv'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des PV d'inventaire des immobilisations</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Service</label>
+							<select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Date de génération <span style="font-size: 12px; opacity: 0.85;">(Le jour n'est pas pris en compte)</span></label>
+							<input [(ngModel)]="Liste.filtre.date" (ngModelChange)="filtrePVChange()" type="date" class="form-control">
+						</div>
+					</div>
+				</div>
+				<hr>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Code service</th>
+							<th>Libéllé service</th>
+							<th>Date d'inventaire</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let pv of Liste.liste; let index = index">
+							<td>{{pv.refService}}</td>
+							<td>{{pv.libelleService}}</td>
+							<td>{{avoirDateSlash(pv.dateInv)}}</td>
+							<td>
+								<button (click)="ouvreDetailPV(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div *ngIf="Liste.charge" class="loader"></div>
+				<div *ngIf="Liste.liste.length == 0 && Liste.charge == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="Liste.liste.length > 0 && Liste.charge == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Liste.page > 1" (click)="pagePrecedent()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Liste.page}}</span></li>
+				    <li *ngIf="Liste.liste.length == Liste.ligneMax" (click)="pageSuivant()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
+			</div>
+			<!-- DETAIL PV D'INVENTAIRE-->
+			<div *ngIf="Menu.sousMenu == 'detail_pv'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Détail PV d'inventaire</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Service</label>
+							<input type="text" class="form-control" readonly="true">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Date d'inventaire</label>
+							<input type="text" class="form-control" readonly="true">
+						</div>
+					</div>
+				</div>
+				<hr>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Code</th>
+							<th>Désignation</th>
+							<th>Etat</th>
+							<th>Détenteur</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="4">Liste des immobilisations présent pendant l'établissement de l'inventaire</td>
+						</tr>
+						<tr *ngFor="let ia of Detail.listePresent">
+							<td>{{ia.idCodeArt}}</td>
+							<td>{{ia.libelleArt}}</td>
+							<td>{{ia.detenteur}}</td>
+							<td>{{ia.etat}}</td>
+						</tr>
+						<tr>
+							<td colspan="4">Liste des immobilisations non présent pendant l'établissement de l'inventaire</td>
+						</tr>
+						<tr *ngFor="let ia of Detail.listeNonPresent">
+							<td>{{ia.idCodeArt}}</td>
+							<td>{{ia.libelleArt}}</td>
+							<td>{{ia.detenteur}}</td>
+							<td>{{ia.etat}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div *ngIf="Detail.charge" class="loader"></div>
+				<div *ngIf="!Detail.charge" class="modal-footer">
+					<button (click)="retourListe()" class="btn">Retour à la liste</button>
+				</div>
 			</div>
 			<!-- ETAT D'INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'etat'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Etablissement d'etat d'inventaire des immobilisations</h6>
+				<p style="font-size: 13px; opacity: 0.85;">L'état d'inventaire est établit depuis les derniers PV d'inventaire de l'exercice</p>
 				<hr>
-				<div class="form-group">
-					<!-- generena ny etat d'inventaire dia refa misy modification dia ny pv d'inventaire ny miova -->
-					<label>Année d'exercice</label>
-					<input type="number" class="form-control">
+				<div class="row">
+					<div class="col-md-4 form-group">
+						<label>Année d'exercice</label>
+						<div class="input-group mb-3">
+								<input [(ngModel)]="Etat.annee" type="number" class="form-control">
+								<div class="input-group-append">
+									<button (click)="etablirEtatInventaire()" class="btn btn-info">Etablir</button>
+								</div>
+							</div>
+					</div>
 				</div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Code</th>
+							<th>Désignation</th>
+							<th>Service</th>
+							<th>Agent</th>
+							<th>Montant</th>
+							<th>Imputation</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let e of Etat.liste">
+							<td>{{e.idCodeArt}}</td>
+							<td>{{e.libelleArt}}</td>
+							<td>{{e.service}}</td>
+							<td>{{e.detenteur}}</td>
+							<td>{{e.prix}}</td>
+							<td>{{e.codeArticle.imputation}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<button *ngIf="!Etat.finAtteint && Etat.liste.length > 0" (click)="afficherPlusEtat()" class="btn btn-info">Afficher plus</button>
+			</div>
+			<!-- CONDAMNATION ET VENTE -->
+			<div *ngIf="Menu.sousMenu == 'cond'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des immobilisations condamnanés</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Service</label>
+							<select [(ngModel)]="Cond.filtre.refService" class="form-control custom-select">
+								<option value=""></option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelleService}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Agent</label>
+							<input [(ngModel)]="Cond.filtre.detenteur" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Code article</label>
+							<input [(ngModel)]="Cond.filtre.idCodeArt" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Date condamnation</label>
+							<input [(ngModel)]="Cond.filtre.dateCond" type="date" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>A vendre</label>
+							<select [(ngModel)]="Cond.filtre.aVendre" class="form-control custom-select">
+								<option value=""></option>
+								<option value="1">OUI</option>
+								<option value="0">NON</option>
+							</select>
+						</div>
+					</div>
+					<div *ngIf="Cond.filtre.aVendre == '1'" class="col-md-4">
+						<div class="form-group">
+							<label>Est vendu</label>
+							<select [(ngModel)]="Cond.filtre.estVendu" class="form-control custom-select">
+								<option value=""></option>
+								<option value="1">OUI</option>
+								<option value="0">NON</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Code</th>
+							<th>Désignation</th>
+							<th>Etat</th>
+							<th>Imputation</th>
+							<th>Service</th>
+							<th>Agent</th>
+							<th></th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 
+	</div>
+
+	<!-- MODAL -->
+	<!-- MODAL CHARGEMENT -->
+	<div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="loader">
+		</div>
+	  </div>
 	</div>
 </div>
 
