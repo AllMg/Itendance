@@ -38,7 +38,7 @@
 						<label>Service</label>
 						<div class="input-group mb-3">
 								<select [(ngModel)]="Pv.refService" class="form-control custom-select">
-									<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+									<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
 								</select>
 								<div class="input-group-append">
 									<button (click)="chargerListeImmoService()" class="btn btn-info">Charger</button>
@@ -90,7 +90,7 @@
 						<div class="form-group">
 							<label>Service</label>
 							<select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -240,7 +240,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Service</label>
-							<select [(ngModel)]="Cond.filtre.refService" class="form-control custom-select">
+							<select [(ngModel)]="Cond.filtre.refService" (change)="filtreCondChange()" class="form-control custom-select">
 								<option value=""></option>
 								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelleService}}</option>
 							</select>
@@ -249,25 +249,25 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Agent</label>
-							<input [(ngModel)]="Cond.filtre.detenteur" type="text" class="form-control">
+							<input [(ngModel)]="Cond.filtre.detenteur" (ngModelChange)="filtreCondChange()" type="text" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Code article</label>
-							<input [(ngModel)]="Cond.filtre.idCodeArt" type="text" class="form-control">
+							<input [(ngModel)]="Cond.filtre.idCodeArt" (ngModelChange)="filtreCondChange()" type="text" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Date condamnation</label>
-							<input [(ngModel)]="Cond.filtre.dateCond" type="date" class="form-control">
+							<input [(ngModel)]="Cond.filtre.dateCond" (ngModelChange)="filtreCondChange()" type="date" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>A vendre</label>
-							<select [(ngModel)]="Cond.filtre.aVendre" class="form-control custom-select">
+							<select [(ngModel)]="Cond.filtre.aVendre" (change)="filtreCondChange()" class="form-control custom-select">
 								<option value=""></option>
 								<option value="1">OUI</option>
 								<option value="0">NON</option>
@@ -277,7 +277,7 @@
 					<div *ngIf="Cond.filtre.aVendre == '1'" class="col-md-4">
 						<div class="form-group">
 							<label>Est vendu</label>
-							<select [(ngModel)]="Cond.filtre.estVendu" class="form-control custom-select">
+							<select [(ngModel)]="Cond.filtre.estVendu" (change)="filtreCondChange()" class="form-control custom-select">
 								<option value=""></option>
 								<option value="1">OUI</option>
 								<option value="0">NON</option>
@@ -298,7 +298,35 @@
 							<th></th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr *ngFor="let c of Cond.liste; let index = index">
+							<td>{{c.idCodeArt}}</td>
+							<td>{{c.libelleArt}}</td>
+							<td>{{c.etatArt}}</td>
+							<td>{{c.codeArticle.imputation}}</td>
+							<td>{{c.refService}}</td>
+							<td>{{c.detenteur}}</td>
+							<td>
+								<button (click)="ouvreModifCond(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
+							</td>
+						</tr>
+					</tbody>
 				</table>
+				<div *ngIf="Cond.charge" class="loader"></div>
+				<div *ngIf="Cond.liste.length == 0 && Cond.charge == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="Cond.liste.length > 0 && Cond.charge == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Cond.page > 1" (click)="pagePrecedentCond()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Liste.page}}</span></li>
+				    <li *ngIf="Cond.liste.length == Cond.ligneMax" (click)="pageSuivantCond()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
 			</div>
 		</div>
 
@@ -310,6 +338,76 @@
 	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 		<div class="loader">
 		</div>
+	  </div>
+	</div>
+	<!-- MODAL MODIF CONDAMNATION -->
+	<div #modalModifCond class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="Cond.modif != null" class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Détail de condamnation de l'article</h6>
+	        <button type="button" class="close" (click)="fermeModifCond()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	  			<div class="form-group">
+	  				<label>Code</label>
+	  				<input value="{{Cond.liste[Cond.indice].idCodeArt}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Désignation</label>
+	  				<input value="{{Cond.liste[Cond.indice].libelleArt}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Imputation</label>
+	  				<input value="{{Cond.liste[Cond.indice].codeArticle.imputation}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Date condamnation</label>
+	  				<input value="{{avoirDateSlash(Cond.liste[Cond.indice].dateCondamnation)}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Etat</label>
+	  				<select [(ngModel)]="Cond.modif.etat" class="form-control custom-select">
+	  					<option value="NEUF">NEUF</option>
+	  					<option value="BON">BON</option>
+	  					<option value="PRUDENCE">PRUDENCE</option>
+	  					<option value="MAUVAIS">MAUVAIS</option>
+	  				</select>
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Service</label>
+	  				<input value="{{Cond.liste[Cond.indice].refService}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>Agent</label>
+	  				<input value="{{Cond.liste[Cond.indice].detenteur}}" type="text" class="form-control input-upper" readonly="true">
+	  			</div>
+	  			<div class="form-group">
+	  				<label>A vendre</label>
+	  				<select [(ngModel)]="Cond.modif.aVendre" class="form-control custom-select">
+	  					<option value="1">OUI</option>
+	  					<option value="0">NON</option>
+	  				</select>
+	  			</div>
+	  			<div *ngIf="Cond.liste[Cond.indice].aVendre == 1" class="form-group">
+	  				<label>Est vendu</label>
+	  				<select [(ngModel)]="Cond.modif.estVendu" class="form-control custom-select">
+	  					<option value="1">OUI</option>
+	  					<option value="0">NON</option>
+	  				</select>
+	  			</div>
+	  			<div *ngIf="Cond.liste[Cond.indice].estVendu == 1" class="form-group">
+	  				<label>Vendu le</label>
+	  				<input [(ngModel)]="Cond.modif.venduLe" type="date" class="form-control input-upper" readonly="true">
+	  			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button *ngIf="!Cond.chargeModif" (click)="modifierCond()" type="button" class="btn btn-primary">Modifier</button>
+	        <div *ngIf="Cond.chargeModif" class="loader"></div>
+	      </div>
+	    </div>
 	  </div>
 	</div>
 </div>

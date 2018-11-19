@@ -43,7 +43,15 @@ export class ImmoMvtComponent implements OnInit {
 	}
 
 	ngOnInit() {
-
+		console.log("ngOnInit ImmoMvtComponent");
+		let that = this;
+		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
+			console.log("getAllRefDrhService",obs);
+			if(obs.success){
+				that.listeService = obs.msg;
+			}
+			observ.unsubscribe();
+		});
 	}
 
 	clickInMenu1(lien:string){
@@ -52,55 +60,47 @@ export class ImmoMvtComponent implements OnInit {
 
 	clickSousMenu(nom){
 		this.Menu.sousMenu = nom;
-		if(nom == "art_entree"){
-			if(this.listeService.length == 0){
-				let that = this;
-				let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
-					if(obs.success){
-						that.listeService = obs.msg;
-					}
-					observ.unsubscribe();
-				});
-			}
-		}
 	}
 
 	ajouterCodeArt(){
-		for(let i=0; i<this.Det.listeCodeArt.length; i++){
-			if(this.Det.idCodeArt == this.Det.listeCodeArt[i].idCodeArt){
-				this.toast.error("Cette code article est déjà dans la liste");
-				return;
+		this.Det.idCodeArt = this.Det.idCodeArt.trim().toUpperCase();
+		if(this.Det.idCodeArt != ""){
+			for(let i=0; i<this.Det.listeCodeArt.length; i++){
+				if(this.Det.idCodeArt == this.Det.listeCodeArt[i].idCodeArt){
+					this.toast.error("Cette code article est déjà dans la liste");
+					return;
+				}
 			}
-		}
-		this.afficheChargement();
-		let codeArt = {};
-		let that = this;
-		let observ = this.immoService.immoTopic("prendCodeArtInt", this.Det.idCodeArt, false).subscribe(obs=>{
-			if(obs.success){
-				codeArt["idCodeArt"] = obs.msg.idCodeArt;
-				codeArt["reference"] = obs.msg.reference;
-				codeArt["etat"] = obs.msg.etat;
-				codeArt["tef"] = obs.msg.tef;
-				codeArt["fournisseur"] = obs.msg.fournisseur;
-				let observ1 = that.immoService.immoTopic("prendLibEtTefInt", obs.msg.refArticle, false).subscribe(obs1=>{
-					if(obs1.success){
-						codeArt["libelle"] = obs.msg.libelle;
-						codeArt["tef"] = obs.msg.tef;
-						that.Det.listeCodeArt.push(codeArt);
-					}
-					else{
+			this.afficheChargement();
+			let codeArt = {};
+			let that = this;
+			let observ = this.immoService.immoTopic("detailsCodeArticleInt", this.Det.idCodeArt, false).subscribe(obs=>{
+				if(obs.success){
+					codeArt["idCodeArt"] = obs.msg.idCodeArt;
+					codeArt["reference"] = obs.msg.reference;
+					codeArt["etat"] = obs.msg.etat;
+					codeArt["tef"] = obs.msg.tef;
+					codeArt["fournisseur"] = obs.msg.fournisseur;
+					codeArt["typeDet"] = "DOTATION";
+					let observ1 = that.immoService.immoTopic("detailsArticleInt", obs.msg.refArticle, false).subscribe(obs1=>{
 						that.fermeChargement();
-						that.toast.error(obs1.msg);
-					}
-					observ1.unsubscribe();
-				});
-			}
-			else{
-				that.fermeChargement();
-				that.toast.error(obs.msg);
-			}
-			observ.unsubscribe();
-		});
+						if(obs1.success){
+							codeArt["libelle"] = obs1.msg.libelle;
+							that.Det.listeCodeArt.push(codeArt);
+						}
+						else{
+							that.toast.error(obs1.msg);
+						}
+						observ1.unsubscribe();
+					});
+				}
+				else{
+					that.fermeChargement();
+					that.toast.error(obs.msg);
+				}
+				observ.unsubscribe();
+			});
+		}
 	}
 
 	enleverCodeArt(index){
@@ -119,12 +119,19 @@ export class ImmoMvtComponent implements OnInit {
 						listeCodeArt: []
 					};
 					for(let i=0; i<that.Det.listeCodeArt.length; i++) {
-						argument.listeCodeArt.push(that.Det.listeCodeArt[i].idCodeArt);
+						argument.listeCodeArt.push({
+							idCodeArt: that.Det.listeCodeArt[i].idCodeArt,
+							typeDet: that.Det.listeCodeArt[i].typeDet
+						});
 					}
-					let observ = that.immoService.immoTopic("detentionArtInt", argument, true).subscribe(obs=>{
+					let observ = that.immoService.immoTopic("ajoutDetentionArticleInt", argument, true).subscribe(obs=>{
 						that.fermeChargement();
 						if(obs.success){
 							that.toast.success("Enregistrement terminé");
+							that.Det.idCodeArt = "";
+							that.Det.listeCodeArt = [];
+							that.Det.refIndividu = "";
+							that.Det.refService = -1;
 						}
 						else{
 							that.toast.error(obs.msg);
@@ -146,7 +153,7 @@ export class ImmoMvtComponent implements OnInit {
 			this.afficheChargement();
 			this.Cess.listeDetService = [];
 			let that = this;
-			let observ = this.immoService.immoTopic("listeDetServiceInt", this.Cess.refService, false).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("listeDetentionArticleServiceInt", this.Cess.refService, false).subscribe(obs=>{
 				if(obs.success){
 					let listeDetService = obs.msg;
 					let idCodeArt = [];
@@ -217,7 +224,7 @@ export class ImmoMvtComponent implements OnInit {
 				}
 			}
 			let that = this;
-			let observ = this.immoService.immoTopic("enregistreCession", argument, true).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("ajoutCondamnationInt", argument, true).subscribe(obs=>{
 				that.fermeChargement();
 				if(obs.success){
 					that.Cess.listeDetService = [];

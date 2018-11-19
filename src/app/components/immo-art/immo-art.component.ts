@@ -171,8 +171,8 @@ export class ImmoArtComponent implements OnInit {
       filtre: this.Stock.filtre,
       pagination: this.Stock.page
     };
-    //let observ = this.immoService.immoTopic("listeArticleInt", argument, true).subscribe(obs=>{
-    let observ = this.immoService.listeArticleInt(argument).subscribe(obs=>{
+    let observ = this.immoService.immoTopic("listeArticleInt", argument, true).subscribe(obs=>{
+    //let observ = this.immoService.listeArticleInt(argument).subscribe(obs=>{
       if(obs.success){
         that.Stock.liste = obs.msg;
       }
@@ -446,7 +446,7 @@ export class ImmoArtComponent implements OnInit {
               let indice = i;
               that.immoService.getByIdRefDrhService(that.Hist.listeDetention[i].refService).subscribe(obss=>{
                 if(obss.success){
-                  that.Hist.listeDetention[indice]["libelleService"] = obss.msg.libelle_service;
+                  that.Hist.listeDetention[indice]["libelleService"] = obss.msg.libelle;
                 }
               });
             }

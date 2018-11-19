@@ -86,8 +86,8 @@ export class ImmoDmdComponent implements OnInit {
         that.DmdEntrBat.listeSite = obs.msg;
       }
     });*/
-    //let obs1 = this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
-    let obs1 = this.immoService.listeTypeEntrBatInt().subscribe(obs=>{
+    let obs1 = this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
+    //let obs1 = this.immoService.listeTypeEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeType = obs.msg;
@@ -95,8 +95,8 @@ export class ImmoDmdComponent implements OnInit {
       console.log("listeTypeEntrBatInt", obs);
       obs1.unsubscribe();
     });
-    //let obs2 = this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
-    let obs2 = this.immoService.listeCaractEntrBatInt().subscribe(obs=>{
+    let obs2 = this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
+    //let obs2 = this.immoService.listeCaractEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeCaract = obs.msg;
@@ -104,8 +104,8 @@ export class ImmoDmdComponent implements OnInit {
       console.log("listeCaractEntrBatInt", obs);
       obs2.unsubscribe();
     });
-    //let obs3 = this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
-    let obs3 = this.immoService.listeEnumEntrBatInt().subscribe(obs=>{
+    let obs3 = this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
+    //let obs3 = this.immoService.listeEnumEntrBatInt().subscribe(obs=>{
       if(obs.success){
         that.trieParLibelle(obs.msg);
         that.DmdEntrBat.listeEnum = obs.msg;

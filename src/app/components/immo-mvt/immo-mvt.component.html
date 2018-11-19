@@ -98,7 +98,7 @@
 						<div class="form-group">
 							<label>Service destinataire</label>
 							<select [(ngModel)]="Det.refService" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
 							</select>
 						</div>
 					</div>
@@ -129,17 +129,24 @@
 							<th>Etat</th>
 							<th>N° TEF</th>
 							<th>Fournisseur</th>
+							<th>Détention</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr *ngFor="let ca of Det.listeCodeArt; let index = index">
-							<td><{{ca.idCodeArt}}</td>
-							<td><{{ca.libelle}}</td>
-							<td><{{ca.reference}}</td>
-							<td><{{ca.etat}}</td>
-							<td><{{ca.tef}}</td>
-							<td><{{ca.fournisseur}}</td>
+							<td>{{ca.idCodeArt}}</td>
+							<td>{{ca.libelle}}</td>
+							<td>{{ca.reference}}</td>
+							<td>{{ca.etat}}</td>
+							<td>{{ca.tef}}</td>
+							<td>{{ca.fournisseur}}</td>
+							<td>
+								<select [(ngModel)]="Det.listeCodeArt[index].typeDet" name="typeDet{{index}}" class="form-control custom-select">
+									<option value="DOTATION">DOTATION</option>
+									<option value="PRET">PRET</option>
+								</select>
+							</td>
 							<td>
 								<button (click)="enleverCodeArt(index)" class="btn"><i class="fa fa-minus"></i></button>
 							</td>
@@ -157,7 +164,7 @@
 						<label>Service</label>
 						<div class="input-group mb-3">
 							<select [(ngModel)]="Cess.refService" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
 							</select>
 							<div class="input-group-append">
 								<button (click)="chargerServiceImmo()" class="btn btn-info">Charger</button>

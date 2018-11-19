@@ -313,7 +313,7 @@
 				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">
 					<label>Service (nouveau détenteur)</label>
 					<select [(ngModel)]="Maj.refService" class="form-control custom-select">
-						<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle_service}}</option>
+						<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
 					</select>
 				</div>
 				<div *ngIf="Maj.typeMaj == 'transfert'" class="form-group">

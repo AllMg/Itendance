@@ -13,6 +13,7 @@ declare var $: any;
 export class ImmoInventaireComponent implements OnInit {
 
 	@ViewChild('modalChargement') modalChargement;
+	@ViewChild('modalModifCond') modalModifCond;
 
 	Menu = {
 	    menu: "inventaire",
@@ -55,6 +56,12 @@ export class ImmoInventaireComponent implements OnInit {
 	};
 
 	Cond = {
+		estVue: false,
+		charge: false,
+		liste: [],
+		page: 1,
+		ligneMax: 25,
+		indice: 1,
 		filtre: {
 			refService: "",
 			detenteur: "",
@@ -62,7 +69,9 @@ export class ImmoInventaireComponent implements OnInit {
 			dateCond: null,
 			aVendre: "",
 			estVendu: ""
-		}
+		},
+		modif: null,
+		chargeModif: false
 	};
 
 	constructor(
@@ -90,6 +99,12 @@ export class ImmoInventaireComponent implements OnInit {
 			if(!this.Liste.estVue){
 				this.Liste.estVue = true;
 				this.listePV();
+			}
+		}
+		else if(nom == "cond"){
+			if(!this.Cond.estVue){
+				this.Cond.estVue = true;
+				this.listeCond();
 			}
 		}
 	}
@@ -173,7 +188,7 @@ export class ImmoInventaireComponent implements OnInit {
 					let indice = i;
 					let observ1 = that.immoService.getByIdRefDrhService(liste[i].refService).subscribe(obs1=>{
 						if(obs1.success){
-							liste[indice].libelleService = obs1.msg.libelle_service;
+							liste[indice].libelleService = obs1.msg.libelle;
 						}
 						observ1.unsubscribe();
 					});
@@ -186,6 +201,7 @@ export class ImmoInventaireComponent implements OnInit {
 	}
 
 	filtrePVChange(){
+		this.Liste.page = 1;
 		this.listePV();
 	}
 
@@ -215,7 +231,7 @@ export class ImmoInventaireComponent implements OnInit {
   	let that = this;
   	let observ = this.immoService.getByIdRefDrhService(this.Liste.liste[index].refService).subscribe(obs=>{
   		if(obs.success){
-  			that.Detail.service += obs.msg.libelle_service;
+  			that.Detail.service += obs.msg.libelle;
   		}
   		observ.unsubscribe();
   	});
@@ -312,6 +328,90 @@ export class ImmoInventaireComponent implements OnInit {
   	this.Etat.page++;
   	this.prendListeEtat();
   }
+
+  listeCond(){
+  	this.Cond.charge = true;
+  	let that = this;
+  	let observ = this.immoService.immoTopic("listeCondamneInt", this.Cond.filtre, true).subscribe(obs=>{
+  		if(obs.success){
+  			let liste = obs.msg;
+  			let idArticles = [];
+  			for(let i=0; i<liste.length; i++){
+  				liste[i].libelleArt = "";
+  				idArticles.push(liste[i].codeArticle.refArticle);
+  			}
+  			let observ2 = this.immoService.immoTopic("listeArticleParIdInt", idArticles, false).subscribe(obs2=>{
+  				if(obs2.success){
+  					for(let i=0; i<liste.length; i++){
+  						liste[i].libelleArt = obs2.msg[i];
+  					}
+  				}
+  				observ2.unsubscribe();
+  			});
+  			that.Cond.liste = liste;
+  		}
+  		else{
+  			that.toast.error(obs.msg);
+  		}
+  		that.Cond.charge = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+	filtreCondChange(){
+		this.Cond.page = 1;
+		this.listeCond();
+	}
+
+  pagePrecedentCond(){
+    if(!this.Cond.charge){
+      if(this.Cond.page > 1){
+        this.Cond.page--;
+        this.listeCond();
+      }
+    }
+  }
+
+  pageSuivantCond(){
+    if(!this.Cond.charge){
+      if(this.Cond.liste.length == this.Cond.ligneMax){
+        this.Cond.page++;
+        this.listeCond();
+      }
+    }
+  }
+
+	ouvreModifCond(index){
+		$(this.modalModifCond.nativeElement).modal("show");
+		this.Cond.indice = index;
+		this.Cond.modif = {
+			idCond: this.Cond.liste[index].idCond,
+			etat: this.Cond.liste[index].etatArt,
+			aVendre: this.Cond.liste[index].aVendre,
+			estVendu: this.Cond.liste[index].estVendu,
+			venduLe: this.Cond.liste[index].venduLe
+		};
+	}
+
+	modifierCond(){
+		this.Cond.chargeModif = true;
+		let that = this;
+		let observ = this.immoService.immoTopic("", this.Cond.modif, true).subscribe(obs=>{
+			if(obs.success){
+				that.toast.success("Modification terminé");
+			}
+			else{
+				that.toast.error(obs.msg);
+			}
+			that.Cond.chargeModif = false;
+			observ.unsubscribe();
+		});
+	}
+
+	fermeModifCond(){
+		$(this.modalModifCond.nativeElement).modal("hide");
+		this.Cond.modif = null;
+	}
 
 	afficheChargement(){
 		$(this.modalChargement.nativeElement).modal("show");

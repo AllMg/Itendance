@@ -109,10 +109,10 @@ export class ImmoListeComponent implements OnInit {
     let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
       if(obs.success){
         obs.msg.sort((a, b)=>{
-          if(a.libelle_service > b.libelle_service){
+          if(a.libelle > b.libelle){
             return 1;
           }
-          else if(a.libelle_service < b.libelle_service){
+          else if(a.libelle < b.libelle){
             return -1;
           }
           return 0;
@@ -126,8 +126,8 @@ export class ImmoListeComponent implements OnInit {
   ngOnInit() {
     console.log("INIT IMMO LISTE");
     let that = this;
-    //let observ = this.immoService.immoTopic("listeEtatDmdMobInt", 1, false).subscribe(obs=>{
-    let observ = this.immoService.listeEtatDmdMobInt().subscribe(obs=>{
+    let observ = this.immoService.immoTopic("listeEtatDmdMobInt", 1, false).subscribe(obs=>{
+    //let observ = this.immoService.listeEtatDmdMobInt().subscribe(obs=>{
       if(obs.success){
         that.DmdMob.listeEtat = obs.msg.listeEtatMob;
         that.DmdRepMob.listeEtat = obs.msg.listeEtatRepMob;
@@ -136,8 +136,8 @@ export class ImmoListeComponent implements OnInit {
       observ.unsubscribe();
     });
 
-    //let observ1 = this.immoService.immoTopic("listeUtilesDmdBatInt","",false).subscribe(obs=>{
-    let observ1 = this.immoService.listeUtilesDmdBatInt().subscribe(obs=>{
+    let observ1 = this.immoService.immoTopic("listeUtilesDmdBatInt","",false).subscribe(obs=>{
+    //let observ1 = this.immoService.listeUtilesDmdBatInt().subscribe(obs=>{
       if(obs.success){
         that.DmdBat.listeEtat = obs.msg.etatBat;
         that.DmdBat.listeType = obs.msg.typeBat;
