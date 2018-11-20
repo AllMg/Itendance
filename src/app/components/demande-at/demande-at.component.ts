@@ -154,7 +154,6 @@ export class DemandeAtComponent implements OnInit {
     }
   }
   onFileChange($event, indice: number) {
-    console.log($event);
     this.readThis($event.target, indice);
   }
   readThis(inputValue: any, indice: number): void {

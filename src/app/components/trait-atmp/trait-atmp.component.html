@@ -2,59 +2,62 @@
 <app-menu-centre></app-menu-centre>
 <app-info-personnes></app-info-personnes>
 
-<div class="container-fluid" >
+<div class="container-fluid">
   <h1 class="text-center">Traitement ATMP</h1>
   <div class="row">
     <div class="col-sm-12">
-    	<h4 class="card-header text-center titre_service1">Liste Demande {{nom_prestation}}</h4>
-        <div class="card-body">
-        	<div class="row">
-        		<div class="col-sm-12">
-              <div class="col-sm-6">
+      <h4 class="card-header text-center titre_service1">Liste Demande {{nom_prestation}}</h4>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-6">
               <label class="col-sm-6 col-form-label texte-content">Etat</label>
             </div>
-                <div class="col-sm-2">
-                  <select (change)="onChangeEtatDmd($event)" [(ngModel)]="typechoose"  class="form-control">
-                    <option *ngFor="let a of statelist; let i = index;" value="{{a.id_type_etat}}">{{a.libelle}}</option>
-                  </select>
-                </div>
-                <br>
-        			 <table class="table table-hover">
-                            <thead>
-                              <tr>
-                                <th>Reference</th>
-                                <th>Date Reception</th>
-                                <th>Matr Beneficiaire</th>
-                                <th>Nom Beneficiaire</th>
-                                <th>Etat</th>
-                                <th></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let dmd of listdem ; " >
-                                 <td>{{dmd.reference}}</td>
-					             <td>{{dmd.date_reception}}</td>
-					              <!-- <td></td>
-					                  <td></td> -->
-					             <td>{{dmd.matricule}}</td>
-					             <td>{{dmd.nom_individu}}</td>
-					             <td>{{dmd.etat_libelle}}</td>
-					             <td>
-					             <button (click)="onClickDmd(dmd.reference)" class="btn btn1 btn-block">Voir détails</button>
-					             </td>
-                              </tr>
-                            
-                            </tbody>
-                    </table>
-                    <app-loader [show]="show"></app-loader>
-                    <nav aria-label="Page navigation example">
-			          <ul class="pagination">
-			            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-atmp/{{prestation}}/{{nom_prestation}}/{{typechoose}}/{{i+1}}/{{size}}" routerLinkActive="active">{{i+1}}</a></li>
-			          </ul>
-			        </nav>
-				</div>
-        	</div>
+            <div class="col-sm-2">
+              <select (change)="onChangeEtatDmd()" [(ngModel)]="typechoose" class="form-control">
+                <option *ngFor="let a of statelist; let i = index;" value="{{a.id_type_etat}}">{{a.libelle}}</option>
+              </select>
+            </div>
+            <br>
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Date Reception</th>
+                <th>Matr Beneficiaire</th>
+                <th>Nom Beneficiaire</th>
+                <th>Etat</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let dmd of listdem ; ">
+                <td>{{dmd.reference}}</td>
+                <td>{{dmd.date_reception}}</td>
+                <!-- <td></td>
+                              <td></td> -->
+                <td>{{dmd.matricule}}</td>
+                <td>{{dmd.nom_individu}}</td>
+                <td>{{dmd.etat_libelle}}</td>
+                <td>
+                  <button (click)="onClickDmd(dmd.reference)" class="btn btn1 btn-block">Voir détails</button>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+            <app-loader [show]="show"></app-loader>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link"
+                                                                                      routerLink="/liste-atmp/{{prestation}}/{{nom_prestation}}/{{typechoose}}/{{i+1}}/{{size}}"
+                                                                                      routerLinkActive="active">{{i+1}}</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
+      </div>
     </div>
   </div>
 </div>

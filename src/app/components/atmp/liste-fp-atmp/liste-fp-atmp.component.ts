@@ -41,6 +41,7 @@ export class ListeFpAtmpComponent implements OnInit {
       this.atmpService.getDemandes(12, this.page, 213, this.size).subscribe(data => {
         console.log('finish 2');
         if (data.success) {
+          console.log(data);
           this.dats = data.msg;
         } else {
           setTimeout(() => this.toastr.error(data.msg));

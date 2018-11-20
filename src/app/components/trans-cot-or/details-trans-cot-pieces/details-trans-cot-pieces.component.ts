@@ -19,6 +19,9 @@ export class DetailsTransCotPiecesComponent implements OnInit {
     pieceValue: FileModel[];
     show: boolean;
     show1: boolean;
+    showLib: boolean;
+    showRef: boolean;
+    showPie: boolean;
 
     constructor(
         private route: ActivatedRoute,

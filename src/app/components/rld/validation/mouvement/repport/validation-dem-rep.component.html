@@ -1,0 +1,127 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Enquête de repport de faute
+      </h4>
+    </div>
+    <br>
+    <div class="row sous_titre">
+      <h4>Agent</h4>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-4">
+        <p> Nom : <strong> RAZAFY </strong></p>
+        <p> Prénom : <strong> Jean Rabe </strong></p>
+        <p> Date d'embauche : <strong> 10-12-2015 </strong></p>
+      </div>
+      <div class="col-sm-4">
+        <p> Service : <strong>Informatique</strong></p>
+        <p> Post : <strong>Déveleppeur</strong></p>
+      </div>
+
+      <div class="col-sm-4">
+        <p> Matricule : <strong>78015600022150588952</strong></p>
+      </div>
+    </div>
+    <br>
+
+    <div class="row sous_titre">
+      <h4>Service</h4>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <p> Service : <strong> ATMP </strong></p>
+
+      </div>
+      <div class="col-sm-6">
+        <p> Département : <strong>Informatique</strong></p>
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row sous_titre">
+      <h4>Information</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-2"> <a href="#"> Preuve</a></div>
+
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-2"> Raison</div>
+          <div class="col-sm-10">
+            <textarea disabled="true"  rows="10">{{raison}}</textarea>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-sm-2"> Choix :  </div>
+              <div class="col-sm-10">
+                <select [(ngModel)]="selectModel" class="form-control" (ngModelChange)="onChange($event)">
+                  <option value="M22"> Mise à pied </option>
+                  <option value="M08"> Licencement </option>
+                  <option value="1"> Avertissement </option>
+                  <option value="0"> Innocent </option>
+                </select>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row" *ngIf="selectModel==='M22'">
+              <div class="col-sm-4"> Date début  </div>
+              <div class="col-sm-8">
+                <input type="date" [(ngModel)]="dateDebut" class="form-control"/>
+              </div>
+              <div class="col-sm-4"> Date fin  </div>
+              <div class="col-sm-8">
+                <input type="date" [(ngModel)]="dateFin" class="form-control"/>
+              </div>
+            </div>
+            <div class="row" *ngIf="selectModel==='M08'">
+              <div class="col-sm-4"> Date du licencement :  </div>
+              <div class="col-sm-8">
+                <input type="date" [(ngModel)]="dateDebut" class="form-control"/>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+    <br>
+
+
+
+    <br>
+
+    <div class="row">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6 inline">
+        <button class="btn btn-success btn-action">Enregistrer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

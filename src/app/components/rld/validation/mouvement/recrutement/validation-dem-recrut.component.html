@@ -1,0 +1,110 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation de demande de recrutement
+      </h4>
+    </div>
+    <br>
+    <div class="row sous_titre">
+      <h4>Agent</h4>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-4">
+        <p> Nom : <strong> RAZAFY </strong></p>
+        <p> Prénom : <strong> Jean Rabe </strong></p>
+        <p> Date d'embauche : <strong> 10-12-2015 </strong></p>
+      </div>
+      <div class="col-sm-4">
+        <p> Service : <strong>Informatique</strong></p>
+        <p> Post : <strong>Déveleppeur</strong></p>
+      </div>
+
+      <div class="col-sm-4">
+        <p> Matricule : <strong>78015600022150588952</strong></p>
+      </div>
+    </div>
+    <br>
+
+    <div class="row sous_titre">
+      <h4>Service</h4>
+
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <p> Service : <strong> ATMP </strong></p>
+
+      </div>
+      <div class="col-sm-6">
+        <p> Département : <strong>Informatique</strong></p>
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row sous_titre">
+      <h4>Information</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-2"> Raison</div>
+          <div class="col-sm-10">
+            <textarea disabled="true"  rows="10"> {{raison}}</textarea>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row sous_titre">
+      <h4>Poste</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <table class="table table-striped table-bordered">
+          <thead>
+          <tr>
+            <th>Poste</th>
+            <th>Nombre de personne</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let poste of postes">
+              <td>{{poste.libelle}}</td>
+              <td> {{poste.nombre}} </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6 inline">
+        <ng-container *ngIf="!show">
+          <button class="btn btn-danger btn-action" (click)="rejeter()"> Rejeté</button>
+          <button class="btn btn-success btn-action"  (click)="valide()">Enregistrer</button>
+        </ng-container>
+        <ng-container *ngIf="show">
+            <div class="loader"></div>
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

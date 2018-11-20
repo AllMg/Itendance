@@ -38,21 +38,21 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let dat of dats">
+          <tr *ngFor="let demande of dats">
             <td>
-              {{dat.date_reception}}
+              {{demande.date_reception}}
             </td>
-            <td> {{dat.reference}} </td>
-            <td>{{dat.matricule}}</td>
-            <td>{{dat.nom_individu }}</td>
-            <td>{{dat.etat_libelle}}</td>
-            <td><a routerLink="/validation-dat/{{dat.reference}}"> Voir</a></td>
+            <td> {{demande.reference}} </td>
+            <td>{{demande.matricule}}</td>
+            <td>{{demande.nom_individu }}</td>
+            <td>{{demande.etat_libelle}}</td>
+            <td><a routerLink="/validation-demande/{{demande.reference}}"> Voir</a></td>
           </tr>
           </tbody>
         </table>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
-            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-dat/{{i+1}}/{{size}}">{{i+1}}</a></li>
+            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-demande/{{i+1}}/{{size}}">{{i+1}}</a></li>
           </ul>
         </nav>
       </div>

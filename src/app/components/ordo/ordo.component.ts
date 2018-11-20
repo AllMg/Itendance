@@ -7,15 +7,15 @@ declare let $: any;
 })
 export class OrdoComponent implements OnInit {
   @Output() valchange = new EventEmitter();
-  private fieldArray: Array<any> = [];
-  private newAttribute: any = {};
+  fieldArray: Array<any> = [];
+  newAttribute: any = {};
 
   constructor() { }
 
   ngOnInit() {
   }
   addrows() {
-    $(".test").find("tr:last").clone().appendTo($("table"));
+    $('.test').find('tr:last').clone().appendTo($('table'));
   }
   delrows(event) {
     console.log(event.target);
@@ -25,7 +25,7 @@ export class OrdoComponent implements OnInit {
     this.newAttribute.id_ref_ord_det = null;
     this.newAttribute.id_ref_rfa_ord = null;
     this.newAttribute.valide = false;
-    this.fieldArray.push(this.newAttribute)
+    this.fieldArray.push(this.newAttribute);
     this.newAttribute = {};
     this.valchange.emit(this.fieldArray);
     console.log(this.fieldArray);

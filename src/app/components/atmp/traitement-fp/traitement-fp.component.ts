@@ -59,6 +59,7 @@ export class TraitementFpComponent implements OnInit {
           } else {
             this.demandeAtmpService.medicamentsAcc(this.id_acc).subscribe(medicamentsResult => {
               if (medicamentsResult.success) {
+                console.log(medicamentsResult);
                 this.medicaments = medicamentsResult.msg;
                 for (let i = 0 ; i < this.medicaments.fille.length; i++ ) {
                   this.demandeAtmpService.findProtheseById(this.medicaments.fille[i].designation).subscribe( prothese => {

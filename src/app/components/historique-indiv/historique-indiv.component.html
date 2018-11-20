@@ -373,7 +373,7 @@
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste des demandes Demande attestation PF</a>
             </li>
             <li>
-              <a [routerLink]="['/liste-dat/1/10']">
+              <a [routerLink]="['/liste-demande/1/10']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Liste des déclarations d'accident de travail</a>
             </li>
              <li *ngIf="entity==='O'">
@@ -411,6 +411,10 @@
             <li>
               <a [routerLink]="['/atmp/liste-fp']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (AT)</a>
+            </li>
+            <li>
+              <a [routerLink]="['/recrutement/demande']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande de recrutement (SEM)</a>
             </li>
           </ul>
         </div>
@@ -467,6 +471,10 @@
             <li>
               <a [routerLink]="['/sem/liste-fp']">
                 <span class="fa fa-angle-double-right"></span>&nbsp;Frais Prothese (SEM)</a>
+            </li>
+            <li>
+              <a [routerLink]="['/recrutement/demande']">
+                <span class="fa fa-angle-double-right"></span>&nbsp;Demande de recrutement (SEM)</a>
             </li>
           </ul>
         </div>

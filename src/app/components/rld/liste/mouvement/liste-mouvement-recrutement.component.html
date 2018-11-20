@@ -1,0 +1,66 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Liste des demandes de {{title}} </h4>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-2">
+            <label>Etat demande :</label>
+          </div>
+          <div class="col-sm-3">
+            <select class="form-control" (change)="redirect()" [(ngModel)]="id_etat">
+              <option value="0">Tout</option>
+              <option *ngFor="let etat of etat" [ngValue]="etat.idetat"> {{etat.libelle }} </option>
+            </select>
+
+          </div>
+          <div class="col-sm-7">
+
+          </div>
+
+        </div>
+
+        <br>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Date de réception</th>
+            <th>Matricule</th>
+            <th>Service </th>
+            <th>Etat de la demande</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr *ngFor="let demande of demandes">
+            <td>
+              {{demande.datedemande | date: 'dd/MM/yyyy'}}
+            </td>
+            <td>{{demande.matricule}}</td>
+            <td>{{demande.idservice}}</td>
+            <td>{{demande.etat}}</td>
+            <td><a routerLink="/mouvement/{{type_value}}/{{demande.refdemande}}"> Voir</a></td>
+          </tr>
+          </tbody>
+        </table>
+        <div *ngIf="show" class="loader"></div>
+        <nav aria-label="Page navigation example">
+          <!-- <ul class="pagination">
+            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-demande/{{i+1}}/{{size}}">{{i+1}}</a></li>
+          </ul> -->
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

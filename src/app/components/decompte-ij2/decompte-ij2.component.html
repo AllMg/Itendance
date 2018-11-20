@@ -29,7 +29,7 @@
         <div class="col-sm-12">
           <h5 class="titre1"><strong>1 - PERIODE PRENATALE</strong> </h5>
           <p>Date d'accouchement : {{decompte.dpa | date : 'dd/MM/yyyy'}}</p>
-          <p>Arrêt de travail : {{decompte.dat | date : 'dd/MM/yyyy'}}</p>
+          <p>Arrêt de travail : {{decompte.demande | date : 'dd/MM/yyyy'}}</p>
           <p>Montant du salaire (Ar) : {{decompte.salaire}}</p>
           <p>Indeminté journalière (Ar) : {{decompte.demisalaire}}</p>
           <p>Du {{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}} Au {{decompte.dpa | date : 'dd/MM/yyyy'}} Soit {{decompte.nbjourpre}}

@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-7">
+    <h3>Calendrier </h3>
+  </div>
+
+</div>
+
+<div class="row">
+  <div *ngIf="calendarOptions">
+
+    <div *ngIf="calendarOptions">
+      <ng-fullcalendar #ucCalendar [options]="calendarOptions" [(eventsModel)]="events" (eventClick)="eventClick($event.detail)" (dayClick)="clickday($event)"></ng-fullcalendar>
+    </div>
+  </div>
+</div>
+

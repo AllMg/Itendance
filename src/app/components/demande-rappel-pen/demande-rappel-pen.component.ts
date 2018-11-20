@@ -23,7 +23,7 @@ export class DemandeRappelPenComponent implements OnInit {
   salaireDernierMois: number;
   listEmployeur: any[];
   employeur: string;
-  _demande: boolean = true;
+  _demande = true;
 
   ijForm: FormGroup;
   @Input() inputs: InputBase<any>[] = [];
@@ -35,7 +35,7 @@ export class DemandeRappelPenComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private routes: Router
-  ) { 
+  ) {
     this.ijForm = this.fb.group({
       '49': ['', Validators.required],
       'employeur': ['', Validators.required],
@@ -48,5 +48,7 @@ export class DemandeRappelPenComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'));
     this._demande = true;
   }
-  
+  onSaveCLick() {
+  }
+
 }

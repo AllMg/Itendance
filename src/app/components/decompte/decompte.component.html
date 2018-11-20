@@ -29,7 +29,7 @@
         <div class="col-sm-12 tout">
           <h5 class="titre1">1- PERIODE PRENATALE</h5>
           <p>Date probable d'accouchement : {{decompte.dpa | date : 'dd/MM/yyyy'}}</p>
-          <p>Arrêt de travail : {{decompte.dat | date : 'dd/MM/yyyy'}}</p>
+          <p>Arrêt de travail : {{decompte.demande | date : 'dd/MM/yyyy'}}</p>
           <p>Montant du salaire (Ar) : {{decompte.salaire}}</p>
           <p>Indeminté journalière (Ar) : {{decompte.demisalaire}}</p>
           <p>Du {{decompte.date_debut_prenatale | date : 'dd/MM/yyyy'}} Au {{decompte.dpa | date : 'dd/MM/yyyy'}} Soit {{decompte.nbjourpre}} jours X {{decompte.demisalaire}} = {{decompte.prenatale}} Ar.</p>
@@ -54,7 +54,7 @@
                 carnet de maternité nofenoin'ny
                 sage femme ianao.
               </li>
-            </ol> 
+            </ol>
             <h6 class="titre1">REMARQUE</h6>
             <ol>
               <li>
@@ -77,7 +77,7 @@
           <p>&nbsp;</p>
           <p>
             a repris son travail le : ________________ après
-              son congé de maternité. 
+              son congé de maternité.
               En foi de quoi, je délivre ce certificat
               pour servir et valoir ce que de droit.
           </p>

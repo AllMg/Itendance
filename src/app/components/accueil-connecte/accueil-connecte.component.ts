@@ -20,43 +20,8 @@ export class AccueilConnecteComponent implements OnInit {
   ) { }
   ngOnInit() {
     if (!this.estLoad) {
-      this.onNotif();
+     /* this.onNotif();*/
     }
-  }
-
-  onNotif() {
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.geolocationService.getPlace(position.coords.latitude, position.coords.longitude).subscribe(
-          (res) => {
-            const date = this.datePipe.transform(new Date(Date.now()), 'dd/MM/yyyy');
-            const date1 = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
-            const time = this.datePipe.transform(new Date(Date.now()), 'h:mm:ss');
-            const msg = 'Votre compte CNaPS a été connecté à ' + res.results[2].formatted_address + ' le ' + date + ' à ' + time;
-            const content = {
-              expediteur: JSON.parse(localStorage.getItem('user')).id_acces,
-              destinataire: JSON.parse(localStorage.getItem('user')).id_acces,
-              titre: 'Avis de connexion',
-              referenceNotif: 'Connexion',
-              message: msg,
-              typeNotif: '',
-              dateEnvoi: date1
-            }
-            this.notificationService.sendNotif(JSON.parse(localStorage.getItem('user')).id_acces, content).then(
-              () => {
-                this.estLoad = true;
-                this.toastr.success('Notification envoyé');
-              },
-              (err) => {
-                this.toastr.error('Notification non envoyé');
-              }
-            );
-          }
-        );
-      }
-    );
-
   }
 
 }

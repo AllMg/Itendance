@@ -1,0 +1,130 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page4">
+      <h4>Liste des demandes de création de formation </h4>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Nom :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="text" placeholder="Nom" class="form-control"/>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Type :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <select class="form-control">
+                      <option>Interne</option>
+                      <option>Externe</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Nature de la formation :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <select class="form-control">
+                      <option>Professionel</option>
+                      <option>Diplomate</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+              <br>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Lieu :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="text" placeholder="Nom" class="form-control"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Debut :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="date" class="form-control"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <label>Fin :</label>
+                  </div>
+                  <div class="col-sm-7">
+                    <input type="date" class="form-control"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <br>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Date de réception</th>
+            <th>Référence de la demande</th>
+            <th>Matricule du demandeur</th>
+            <th>Nom</th>
+            <th>Etat de la demande</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let demande of liste">
+            <td>
+              {{demande.date_reception}}
+            </td>
+            <td> {{demande.reference}} </td>
+            <td>{{demande.matricule}}</td>
+            <td>{{demande.nom_individu }}</td>
+            <td>{{demande.etat_libelle}}</td>
+            <td><a routerLink="/validation-demande/{{demande.reference}}"> Voir</a></td>
+          </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-demande/{{i+1}}/{{size}}">{{i+1}}</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

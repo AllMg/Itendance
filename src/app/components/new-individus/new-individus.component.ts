@@ -26,6 +26,7 @@ export class NewIndividusComponent implements OnInit {
   nom_mere: string;
   nom_pere: string;
   prenoms: string;
+  matriculeR: any;
   constructor(
     private adresseService: AdresseService,
     private infoService: InfoService,

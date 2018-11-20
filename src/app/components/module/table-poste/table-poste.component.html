@@ -1,0 +1,42 @@
+
+<div class="row">
+  <div class="col-md-7">
+    <h3>Poste</h3>
+  </div>
+
+</div>
+<table class="table table-striped table-bordered">
+  <thead>
+  <tr>
+    <th>Poste</th>
+    <th>Nombre de personne</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let field of fieldArray; let i = index">
+    <td>
+      <input  [(ngModel)]="field.libelle" class="form-control" type="text" name="{{field.poste}}" (change)="changeField()" />
+    </td>
+    <td>
+      <input [(ngModel)]="field.nombre" type="number"  class="form-control" name="{{field.qte}}" (change)="changeField()"/>
+    </td>
+
+
+    <td>
+      <button class="btn btn-default"  type="button" (click)="deleteFieldValue(i)"><i class="fa fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <input class="form-control" type="text" id="newAttributePoste" [(ngModel)]="newAttribute.post" placeholder="poste" name="newAttribute.poste" />
+    </td>
+    <td>
+      <input class="form-control" type="number" id="newAttributeQte" placeholder="nombre de personne" [(ngModel)]="newAttribute.qte" name="newAttribute.qte" />
+    </td>
+    <td>
+      <button class="btn btn-default" type="button" (click)="addFieldValue()"> <i class="fa fa-plus"></i> Ajouter </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

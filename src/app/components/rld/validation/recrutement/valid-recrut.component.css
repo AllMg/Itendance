@@ -1,0 +1,17 @@
+
+.btn-action{
+  width: 90%;
+}
+.verticalLine {
+  border-left: thick solid #039EC2;
+}
+.ng-star-inserted{
+  margin-left: 0;
+  margin-right: 0;
+}
+textarea{
+  width: 100%;
+}
+.table-row{
+  cursor:pointer;
+}

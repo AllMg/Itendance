@@ -1,0 +1,193 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Emprunt d'ouvrage</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+          <form >
+            <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label texte-content">Identifiant du demande : </label>
+                      <div class="col-sm-8">
+                       <input class="form-control" type="text" placeholder="Entrer l'identifiant du demandeur"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label texte-content">Date de début du prêt: </label>
+                      <div class="col-sm-8">
+                        <mat-form-field class="full-width">
+                          <input matInput type="date" class="form-control" formControlName="date" required/>
+                        </mat-form-field>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group row">
+                      <label class="col-sm-4 col-form-label texte-content">Date d'échéance du prêt: </label>
+                      <div class="col-sm-8">
+                        <mat-form-field class="full-width">
+                          <input matInput type="date" class="form-control" formControlName="date" required/>
+                        </mat-form-field>
+
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+
+            <hr>
+            <div class="row">
+              <div class="col-sm-10"></div>
+              <div class="col-sm-2">
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <button type="submit" class="btn btn-info btn-block">Enregistrer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+          </form>
+      </div>
+      <div class="col-sm-12">
+
+        <div class="row">
+          <div class="col-sm-6" style="padding-right: 30px;">
+            <div class="row">
+              <div class="titre_page" style="width: 100%">
+                <h4>Liste des ouvrages à emprunter</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Identifiant</th>
+                    <th>Titre</th>
+                    <th>Auteur </th>
+                    <th>Editeur</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>
+                      ISBM
+                    </td>
+                    <td>
+                      La pratique professionnelle de la communication
+                    </td>
+                    <td>
+                      Glori Adward
+                    </td>
+                    <td>
+                      L'Hamtaan
+                    </td>
+                    <td align="center">
+                      <i class="fa fa-trash " style="font-size:24px;color:red"></i>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+
+            </div>
+
+          </div>
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Identifiant</label>
+                  <input type="text" class="form-control" placeholder="recherche identifiant">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Titre</label>
+                  <input type="text" class="form-control" placeholder="recherche par titre">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Auteur</label>
+                  <input type="text" class="form-control" placeholder="recherche par auteur">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Editeur</label>
+                  <input type="text" class="form-control" placeholder="recherche par editeur">
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <button style="width: 100%" type="submit" class="btn btn-info btn-block">Rechercher</button>
+              </div>
+
+
+
+
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Identifiant</th>
+                    <th>Titre</th>
+                    <th>Auteur </th>
+                    <th>Editeur</th>
+                    <th>Disponible En stock</th>
+                    <th>Nombre emprunté</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>
+                      ISBM
+                    </td>
+                    <td>
+                      La pratique professionnelle de la communication
+                    </td>
+                    <td>
+                      Glori Adward
+                    </td>
+                    <td>
+                      L'Hamtaan
+                    </td>
+                    <td>
+                     10
+                    </td>
+                    <td>
+                     4
+                    </td>
+                  </tr>
+                </table>
+                <nav aria-label="Page navigation example">
+                  <!--<ul class="pagination">
+                    <li *ngFor="let age of pageCount; let i = index" class="page-item"><a class="page-link" routerLink="/liste-demande/{{i+1}}/{{size}}">{{i+1}}</a></li>
+                  </ul>-->
+                </nav>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

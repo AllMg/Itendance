@@ -35,7 +35,7 @@ export class ImmoInventaireComponent implements OnInit {
 		ligneMax: 25,
 		filtre: {
 			refService: "",
-			date: null
+			annnee: null
 		}
 	};
 
@@ -77,16 +77,26 @@ export class ImmoInventaireComponent implements OnInit {
 	constructor(
 		private router: Router, 
 		private toast: ToastrService,
-		private immoService: ImmoService) { }
-
-	ngOnInit() {
+		private immoService: ImmoService) {
 		let that = this;
 		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
 			if(obs.success){
+				obs.msg.sort((a, b)=>{
+          if(a.libelle > b.libelle){
+            return 1;
+          }
+          else if(a.libelle < b.libelle){
+            return -1;
+          }
+          return 0;
+        });
 				that.listeService = obs.msg;
 			}
 			observ.unsubscribe();
 		});
+	}
+
+	ngOnInit() {
 	}
 
 	clickInMenu1(lien:string){

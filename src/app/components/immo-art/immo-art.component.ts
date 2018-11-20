@@ -116,10 +116,6 @@ export class ImmoArtComponent implements OnInit {
     private toast: ToastrService,
     private immoService: ImmoService,
     private infoService: InfoService) {
-  }
-
-  ngOnInit() {
-    console.log("INIT IMMO ARTICLE");
     let that = this;
     this.immoService.immoTopic("listeUtilesArtInt", "", false).subscribe(obs=>{
       if(obs.success){
@@ -130,6 +126,10 @@ export class ImmoArtComponent implements OnInit {
         that.listeSpecificite = obs.msg.specArt;
       }
     });
+  }
+
+  ngOnInit() {
+    console.log("INIT IMMO ARTICLE");
   }
 
   ngOnDestroy(){
@@ -421,6 +421,15 @@ export class ImmoArtComponent implements OnInit {
       let that = this;
       let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
         if(obs.success){
+          obs.msg.sort((a, b)=>{
+            if(a.libelle > b.libelle){
+              return 1;
+            }
+            else if(a.libelle < b.libelle){
+              return -1;
+            }
+            return 0;
+          });
           that.listeService = obs.msg;
         }
         observ.unsubscribe();

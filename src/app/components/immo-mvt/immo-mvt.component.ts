@@ -39,19 +39,26 @@ export class ImmoMvtComponent implements OnInit {
     private toast: ToastrService,
     private immoService: ImmoService,
     private infoService: InfoService) {
-
-	}
-
-	ngOnInit() {
-		console.log("ngOnInit ImmoMvtComponent");
 		let that = this;
 		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
-			console.log("getAllRefDrhService",obs);
 			if(obs.success){
+				obs.msg.sort((a, b)=>{
+          if(a.libelle > b.libelle){
+            return 1;
+          }
+          else if(a.libelle < b.libelle){
+            return -1;
+          }
+          return 0;
+        });
 				that.listeService = obs.msg;
 			}
 			observ.unsubscribe();
 		});
+	}
+
+	ngOnInit() {
+		console.log("ngOnInit ImmoMvtComponent");
 	}
 
 	clickInMenu1(lien:string){

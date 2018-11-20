@@ -1,0 +1,22 @@
+<div class="col-sm-12">
+  <div class="row">
+    <ng-container *ngFor="let field of filesName; let i = index">
+      <div class="col-sm-12">
+        <div class="form-group row">
+          <label class="col-sm-6 col-form-label texte-content">{{field.name}}</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="field.multiple">
+              <input multiple type="file" (change)="onFileChange($event, i)"  class="form-control" accept="{{field.type}}" required>
+            </ng-container>
+            <ng-container *ngIf="!field.multiple">
+              <input type="file" (change)="onFileChange($event, i)" class="form-control" accept="{{field.type}}" required>
+            </ng-container>
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+
+</div>

@@ -1,0 +1,40 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>Validation Demande de création de formation
+      </h4>
+    </div>
+    <div class="row titre_gris" >
+      <h4>Information de la formation</h4>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <p> Lieu : <strong><ng-container *ngIf="victime">{{victime.nom}} </ng-container></strong></p>
+        <p> Nom : <strong><ng-container *ngIf="victime"> {{victime.prenoms}}</ng-container></strong></p>
+        <p> Début : <strong><ng-container *ngIf="victime"> {{victime.date_naissance}}</ng-container></strong> </p>
+        <p> Fin : <strong><ng-container *ngIf="employeurAdresse"> {{employeurAdresse.numero}} {{employeurAdresse.libelle}}</ng-container></strong> </p>
+        <p> Description : <strong><ng-container *ngIf="victime"> {{victime.cin}}</ng-container></strong> </p>
+
+      </div>
+      <div class="col-sm-6">
+        <p> Frais : <strong></strong> </p>
+        <p> Interne :  <strong></strong></p>
+        <p> Type de formation :  <strong></strong></p>
+
+      </div>
+    </div>
+
+
+    <br>
+    <ng-container>
+      <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6 inline"><button (click) ="rejeter()" class="btn btn-danger btn-action"> Rejeter</button><button class="btn btn-success btn-action" (click)="pec()">Valider</button></div>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

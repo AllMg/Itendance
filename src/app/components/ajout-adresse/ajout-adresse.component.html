@@ -68,7 +68,7 @@
                 </select>
               </ng-container>
               <ng-container *ngIf="entity!=='T'">
-                <select class="form-control" id="typeAdresse" [(ngModel)]="type_adresse" name="type_adresse">
+                <select class="form-control" [(ngModel)]="type_adresse" name="type_adresse">
                   <option *ngFor="let type of dataType" value="{{type.id_type}}">{{type.libelle}}</option>
                 </select>
               </ng-container>

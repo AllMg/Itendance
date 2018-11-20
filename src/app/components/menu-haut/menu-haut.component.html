@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top content_menu_haut">
   <div class="container-fluid">
     <img src="../../assets/img/logo2.png" class="img-responsive logo_menu_haut">
-    <a class="navbar-brand cnaps_menu_haut" href="index.html">Caisse Nationale de Prévoyance Sociale</a>
+    <a class="navbar-brand cnaps_menu_haut" routerLink="index.html">Caisse Nationale de Prévoyance Sociale</a>
     <button class="navbar-toggler navbar-toggler-right toogle_menu" type="button" data-toggle="collapse" data-target="#navbarResponsive"
       aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -9,25 +9,25 @@
     <div class="collapse navbar-collapse div_menu_haut" id="navbarResponsive">
       <ul class="navbar-nav ml-auto menu_haut">
         <li class="nav-item">
-          <a class="nav-link menu_haut_a js-scrollTo" href="index.html">
+          <a class="nav-link menu_haut_a js-scrollTo" routerLink="index.html">
             <span class="fa fa-home"></span>&nbsp;Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link menu_haut_a js-scrollTo" href="#service">
+          <a class="nav-link menu_haut_a js-scrollTo" routerLink="#service">
             <span class="fa fa-server"></span>&nbsp;Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link menu_haut_a js-scrollTo" href="#actualite">
+          <a class="nav-link menu_haut_a js-scrollTo" routerLink="#actualite">
             <span class="fa fa-newspaper"></span>&nbsp;Actualités</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link menu_haut_a js-scrollTo" href="#contact">
+          <a class="nav-link menu_haut_a js-scrollTo" routerLink="#contact">
             <span class="fa fa-address-card"></span>&nbsp;Contact</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto menu_haut">
         <li *ngIf="authService.loggedOut()" class="nav-item">
-          <a class="nav-link btn btn-info connexion" href="#" data-toggle="modal" data-target="#exampleModal" id="connect">
+          <a class="nav-link btn btn-info connexion" routerLink="#" data-toggle="modal" data-target="#exampleModal" id="connect">
             <span class="fa fa-sign-in-alt connexion_span"></span>
             <b>Se connecter</b>
           </a>

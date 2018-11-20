@@ -106,7 +106,7 @@ export class DemandeFpComponent implements OnInit {
   saveDemande() {
     this.demandeService.exist(this.reference).subscribe( exist => {
       if (exist.success) {
-        if (!exist.success.msg.exist) {
+        if (!exist.msg.exist) {
           const infoRec = [];
           const piecesRec = [];
           const tecPcsInfoRecue = [];

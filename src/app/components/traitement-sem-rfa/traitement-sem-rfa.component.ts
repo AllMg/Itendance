@@ -8,7 +8,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./traitement-sem-rfa.component.css']
 })
 export class TraitementSemRfaComponent implements OnInit {
-
+  idDmdIJ: any;
+  individu: any;
+  adresseIndividu: any;
+  show = false;
   reference: any;
   constructor(
     private route: ActivatedRoute
@@ -19,5 +22,8 @@ export class TraitementSemRfaComponent implements OnInit {
       this.reference = params['id'];
     });
   }
+  onModifTecInfReq() {}
+  onAcceptCLick() {}
+
 
 }

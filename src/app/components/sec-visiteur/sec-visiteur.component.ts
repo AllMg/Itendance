@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import { ImmoService } from '../../services/immo/immo.service';
+
+declare var $: any;
 
 @Component({
   selector: 'app-securite',
@@ -8,23 +12,238 @@ import {Router} from '@angular/router';
 })
 export class SecVisiteurComponent implements OnInit {
 
+	@ViewChild('modalConfirmeSortie') modalConfirmeSortie;
+	@ViewChild('modalInfoVisiteur') modalInfoVisiteur;
+
 	Menu = {
 	    menu: "visiteur",
 	    sousMenu: ""
 	};
 
-	constructor(private router: Router) { }
+	listeService = [];
+
+	Entree = {
+		champ: {
+			nom: "",
+			prenom: "",
+			cin: "",
+			numeroVehicule: "",
+			refService: "",
+			agent: "",
+			motif: ""
+		},
+		charge: false
+	};
+
+	Sortie = {
+		liste: [],
+		indice: -1,
+		charge: false
+	};
+
+	Liste = {
+		estVue: false,
+		liste: [],
+		indice: -1,
+		page: 1,
+		ligneMax: 25,
+		filtre: {
+			refService: "",
+			nomPrenom: "",
+			date: null
+		},
+		charge: false
+	};
+
+	constructor(
+		private router: Router, 
+		private toast: ToastrService,
+		private immoService: ImmoService) { 
+		let that = this;
+		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
+			if(obs.success){
+				obs.msg.sort((a, b)=>{
+          if(a.libelle > b.libelle){
+            return 1;
+          }
+          else if(a.libelle < b.libelle){
+            return -1;
+          }
+          return 0;
+        });
+				that.listeService = obs.msg;
+			}
+			observ.unsubscribe();
+		});
+	}
 
 	ngOnInit() {
-		
 	}
 
 	clickInMenu1(lien){
 		this.router.navigate(['/'+lien]);
 	}
 
-	clickSousMenu(lien){
-		this.Menu.sousMenu = lien;
+	clickSousMenu(nom){
+		this.Menu.sousMenu = nom;
+		if(nom == "sortie"){
+			this.Sortie.charge = true;
+			let that = this;
+			let observ = this.immoService.immoTopic("", "", false).subscribe(obs=>{
+				if(obs.success){
+					that.Sortie.liste = obs.msg;
+					for(let i=0; i<that.Sortie.liste.length; i++){
+						that.Sortie.liste[i].charge = false;
+					}
+				}
+				else{
+					that.toast.error(obs.msg);
+				}
+				that.Sortie.charge = false;
+				observ.unsubscribe();
+			});
+		}
+		else if(nom == "liste"){
+			if(this.Liste.estVue == false){
+				this.Liste.estVue = true;
+				this.listeVisiteur();
+			}
+		}
 	}
+
+	champEntreeBon(){
+		this.Entree.champ.nom = this.Entree.champ.nom.trim();
+		this.Entree.champ.prenom = this.Entree.champ.prenom.trim();
+		this.Entree.champ.cin = this.Entree.champ.cin.trim();
+		if(this.Entree.champ.nom == "" || this.Entree.champ.prenom == ""){
+			return {bon: false, msg: "Nom ou prénom invalide"};
+		}
+		if(this.Entree.champ.cin.length != 12){
+			return {bon: false, msg: "Numéro CIN invalide"};
+		}
+		for(let i=0; i<12; i++){
+			if(parseInt(this.Entree.champ.cin.charAt(i)) == NaN){
+				return {bon: false, msg: "Numéro CIN invalide"};
+			}
+		}
+		return {bon: true, msg: ""};
+	}
+
+	enregistrerEntree(){
+		let champBon = this.champEntreeBon();
+		if(champBon.bon){
+			this.Entree.charge = true;
+			let that = this;
+			let observ = this.immoService.immoTopic("", this.Entree.champ, true).subscribe(obs=>{
+				if(obs.success){
+					that.toast.success("Enregistrement terminé");
+					this.Entree.champ.nom = "";
+					this.Entree.champ.prenom = "";
+					this.Entree.champ.cin = "";
+					this.Entree.champ.numeroVehicule = "";
+					this.Entree.champ.refService = "";
+					this.Entree.champ.agent = "";
+					this.Entree.champ.motif = "";
+				}
+				else{
+					that.toast.error(obs.msg);
+				}
+				that.Entree.charge = false;
+				observ.unsubscribe();
+			});
+		}
+		else{
+			this.toast.error(champBon.msg);
+		}
+	}
+
+  ouvreConfirmeSortie(index){
+    $(this.modalConfirmeSortie.nativeElement).modal('show');
+    this.Sortie.indice = index;
+  }
+
+  confirmerSortie(){
+  	this.fermeConfirmeSortie();
+  	this.Sortie.liste[this.Sortie.indice].charge = true;
+  	let that = this;
+  	let observ = this.immoService.immoTopic("", this.Sortie.liste[this.Sortie.indice].idVis, false).subscribe(obs=>{
+  		if(obs.success){
+  			that.toast.success("Heure de sortie du visiteur enregistré");
+  			that.Sortie.liste[that.Sortie.indice].heureSortie = obs.msg;
+  		}
+  		else{
+  			that.toast.error(obs.msg);
+  		}
+  		that.Sortie.liste[that.Sortie.indice].charge = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+  fermeConfirmeSortie(){
+    $(this.modalConfirmeSortie.nativeElement).modal('hide');
+  }
+
+  listeVisiteur(){
+  	this.Liste.charge = true;
+  	let that = this;
+		let argument = {
+			filtre: this.Liste.filtre,
+			page: this.Liste.page
+		};
+		let observ = this.immoService.immoTopic("listeVisiteurInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				that.Liste.liste = obs.msg;
+			}
+			that.Liste.charge = false;
+			observ.unsubscribe();
+		});
+  }
+
+  filtreChange(){
+  	this.Liste.page = 1;
+  	this.listeVisiteur();
+  }
+
+  pageSuivant(){
+    if(!this.Liste.charge){
+      if(this.Liste.liste.length == this.Liste.ligneMax){
+        this.Liste.page++;
+        this.listeVisiteur();
+      }
+    }
+  }
+
+  pagePrecedent(){
+    if(!this.Liste.charge){
+      if(this.Liste.page > 1){
+        this.Liste.page--;
+        this.listeVisiteur();
+      }
+    }
+  }
+
+  afficheInfoVisiteur(index){
+  	$(this.modalInfoVisiteur.nativeElement).modal('show');
+  	this.Liste.indice = index;
+  }
+
+  fermeInfoVisiteur(){
+    $(this.modalInfoVisiteur.nativeElement).modal('hide');
+  }
+
+  /* 
+  date: aaaa-mm-jj 
+  resultat: jj/mm/aaaa
+  */
+  avoirDateSlash(date){
+    if(date == "" || date == null || date == undefined){
+      return "";
+    }
+    else{
+      let strs = date.toString().split("-");
+      let resultat = strs[2]+"/"+strs[1]+"/"+strs[0];
+      return resultat;
+    }
+  }
 
 }

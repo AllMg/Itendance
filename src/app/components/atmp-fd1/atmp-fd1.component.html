@@ -194,19 +194,19 @@
     
     <hr>
    <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">   
+    <div class="col-md-6"></div>
+    <div class="col-md-3">   
      <div class="container-fluid connex_boutton">
           <app-loader [show]="show"></app-loader>
-          <button  *ngIf="!show" [disabled]="disabled" type="submit" class="btn btn-danger" (click)="PcsNon()">
+          <button  *ngIf="!show" [disabled]="disabled" type="submit" class="btn btn-danger btn-block" (click)="PcsNon()">
             Piece Jointe non Conforme
           </button>
         </div>
       </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
     	  <app-loader [show]="show"></app-loader>
       <div  class="container-fluid connex_boutton">
-          <button *ngIf="!show" [disabled]="disabled" type="submit" class="btn btn-success" (click)="ValidateIJ()">
+          <button *ngIf="!show" [disabled]="disabled" type="submit" class="btn btn-success btn-block" (click)="ValidateIJ()">
             Valider
           </button>
         </div>

@@ -57,13 +57,13 @@
           </h6>
           <div class="form-group col-sm-6">
             <ul>
-              <span *ngFor="let famil of listEnfant; let i = index">          
+              <span *ngFor="let famil of listEnfant; let i = index">
                 <li style="list-style-type:none;" *ngIf="21>famil.age"><input type="checkbox" [value]="famil" style="size:5px;" (change)="oncheckEnfant($event,famil,i)"> {{ famil.nom }}</li>
               </span>
             </ul>
           </div>
         </div>
-        
+
         <div class="col-sm-12 border-haut">
           <h6>
             <strong class="color-text">Pièces requises</strong>
@@ -130,7 +130,7 @@
     </form>
   </div>
 </div>
-<div id="id01" [style.display]="showMessage?none:block" class="w3-modal">
+<div id="id01" [style.display]="showMessage? 'none': 'block'" class="w3-modal">
   <div class="w3-modal-content w3-animate-zoom w3-card-4">
     <header class="w3-container w3-teal">
       <h1>Avertissement</h1>

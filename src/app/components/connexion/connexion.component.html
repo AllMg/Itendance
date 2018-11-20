@@ -1,10 +1,9 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form (submit)="onLoginCLick()">
       <div class="modal-content">
         <div class="modal-header connexion_image">
           <img src="../../assets/img/logo2.png" class="img-responsive">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -20,12 +19,12 @@
                    placeholder="Mot de passe">
           </div>
           <div class="form-check">
-            <input type="checkbox" [(ngModel)]="agent" name="agent">&nbsp;Agent CNaPS
+            <input type="checkbox" [(ngModel)]="agent" name="agent" id="agent">&nbsp;<label style="margin-bottom: 0px;" for="agent">Agent CNaPS</label>
           </div>
         </div>
         <div class="modal-footer">
           <div *ngIf="!show" class="container-fluid connex_boutton">
-            <button type="submit" class="btn btn-info">
+            <button (click)="onLoginCLick()" type="button" class="btn btn-info">
               Valider
             </button>
           </div>
@@ -35,7 +34,7 @@
           &nbsp;
         </div>
         <div class="modal-footer">
-          <input type="checkbox" name="souvernir" checked>&nbsp;Se souvenir de moi
+          <input type="checkbox" name="souvernir" id="souvenir" checked>&nbsp;<label style="margin-bottom: 0px;" for="souvenir">Se souvenir de moi</label>
         </div>
         <div class="modal-footer">
           <a (click)="onClickDimm()" class="lien-dimm"><span class="fa fa-arrow-right"></span>&nbsp;Faire une demande d'immatriculation&nbsp;<span class="fa fa-arrow-left"></span></a>
@@ -44,6 +43,5 @@
           <div class="notification_login" [ngClass]="{'alert-success': isAuth==true, 'alert-danger': isAuth == false}">{{message}}</div>
         </div>
       </div>
-    </form>
   </div>
 </div>

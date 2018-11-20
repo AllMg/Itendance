@@ -1,0 +1,132 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <form >
+    <div class="col-sm-12 content_page">
+      <div class="row titre_page">
+        <h4>Demande de création de formation</h4>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group row">
+            <label class="col-sm-6 col-form-label texte-content">Matricule Demandeur :</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-4">
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">Type de formation : </label>
+              <div class="col-sm-6">
+                <select class="form-control">
+                  <option> Interne</option>
+                  <option> Externe</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content"> Type de la nature de la formation : </label>
+              <div class="col-sm-6">
+                <select class="form-control">
+                  <option> Professionnel</option>
+                  <option> Dîplomate</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content"> Lieu de formation : </label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-sm-4">
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">Nom de formation</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">Début</label>
+              <div class="col-sm-6">
+                <input type="date" [(ngModel)]="debut" name="debut" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">Fin</label>
+              <div class="col-sm-6">
+                <input type="date" [(ngModel)]="fin" name="fin" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label texte-content">Nombre de personne maximum autorisé</label>
+              <div class="col-sm-6">
+                <input type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label texte-content">Description</label>
+              <div class="col-sm-8">
+                <textarea type="text" rows="8" class="form-control"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <app-emploie-temp (result)="initData($event)" [debut]="debut" [fin]="fin"></app-emploie-temp>
+
+        </div>
+        <div class="col-sm-6">
+         <app-calendrier [data]="data" [date]="debut"></app-calendrier>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-info btn-block">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

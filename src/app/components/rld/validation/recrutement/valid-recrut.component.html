@@ -1,0 +1,439 @@
+<app-banniere></app-banniere>
+<app-menu-centre></app-menu-centre>
+<app-info-personnes></app-info-personnes>
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row">
+      <div class="col-sm-12">
+        <mat-tab-group>
+          <mat-tab label="Non traité">
+            <br>
+            <div class="row">
+              <div class="col-sm-6 ">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Nom de l'indvidu</th>
+                    <th>Référence de la demande</th>
+                    <th>Post postulé</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngFor="let item of attente">
+                    <tr class='table-row' (click)="clickRow(item)">
+                      <td>{{item.nom}}</td>
+                      <td>{{item.idpostule}}</td>
+                      <td>{{item.libelle}}</td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-sm-6 verticalLine" *ngIf="postule">
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Information </h4>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <br>
+                    <p> Prénom et Nom : <strong> {{postule.nom}}</strong></p>
+                    <p> Email : <strong>{{postule.email}}</strong></p>
+                    <p> Teléphone : <strong>{{postule.telephone}}</strong></p>
+                    <p> Poste : <strong>{{postule.libelle}}</strong></p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Pièce Jointe </h4>
+                  </div>
+                  <div class="col-sm-12">
+                    <ng-container *ngFor="let piece of postule.pieces">
+                      <div class="row">
+
+                        <div class="col-lg-12">
+
+                          <ng-container *ngIf="piece.type==='image'">
+                            <img width="100" src="{{piece.file}}">
+                          </ng-container>
+                          <br>
+                          <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>Télécharger
+                            {{piece.name}}</a>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <button class="btn btn-danger btn-action" (click)="rejeter()"> Rejeté</button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button (click)="preselectOnClick()" class="btn btn-success btn-action">Préselectionner</button>
+                      </div>
+                    </div>
+
+                  </div>
+                  <br>
+
+                </div>
+
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Préselectionnés">
+            <br>
+            <div class="row">
+              <div class="col-sm-6 ">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Nom de l'indvidu</th>
+                    <th>Référence de la demande</th>
+                    <th>Post postulé</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of preselectionne">
+                      <tr class='table-row' (click)="clickRow(item)">
+                        <td>{{item.nom}}</td>
+                        <td>{{item.idpostule}}</td>
+                        <td>{{item.libelle}}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-sm-6 verticalLine" *ngIf="postule">
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Information </h4>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <br>
+                    <p> Prénom et Nom : <strong> {{postule.nom}}</strong></p>
+                    <p> Email : <strong>{{postule.email}}</strong></p>
+                    <p> Teléphone : <strong>{{postule.telephone}}</strong></p>
+                    <p> Poste : <strong>{{postule.libelle}}</strong></p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ng-container *ngFor="let piece of postule.pieces">
+                      <div class="row">
+
+                        <div class="col-lg-12">
+
+                          <ng-container *ngIf="piece.type==='image'">
+                            <img width="100" src="{{piece.file}}">
+                          </ng-container>
+                          <br>
+                          <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>Télécharger
+                            {{piece.name}}</a>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Entretien </h4>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group row">
+                      <label class="col-sm-2 col-form-label texte-content">Date : </label>
+                      <div class="col-sm-10">
+                        <input [(ngModel)]="dateEntretient" type="date" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 col-form-label texte-content">Heure : </label>
+                      <div class="col-sm-10">
+                        <input [(ngModel)]="heureDebut" type="time" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <button class="btn btn-danger btn-action" (click)="rejeter()"> Rejeté</button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button class="btn btn-success btn-action" (click)="valideEntretient()">Enregistrer</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <br>
+
+
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Entretients en cours">
+            <br>
+            <div class="row">
+              <div class="col-sm-6 ">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Nom de l'indvidu</th>
+                    <th>Référence de la demande</th>
+                    <th>Post postulé</th>
+                    <th>Date et Heure d'entretient</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngFor="let item of entretien">
+                    <tr class='table-row' (click)="clickRow(item)">
+                      <td>{{item.nom}}</td>
+                      <td>{{item.idpostule}}</td>
+                      <td>{{item.libelle}}</td>
+                      <td>{{item.dateentretien}} {{item.heuredebut}}</td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-sm-6 verticalLine" *ngIf="postule">
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Information </h4>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <br>
+                    <p> Prénom et Nom : <strong> {{postule.nom}}</strong></p>
+                    <p> Email : <strong>{{postule.email}}</strong></p>
+                    <p> Teléphone : <strong>{{postule.telephone}}</strong></p>
+                    <p> Poste : <strong>{{postule.libelle}}</strong></p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ng-container *ngFor="let piece of postule.pieces">
+                      <div class="row">
+
+                        <div class="col-lg-12">
+
+                          <ng-container *ngIf="piece.type==='image'">
+                            <img width="100" src="{{piece.file}}">
+                          </ng-container>
+                          <br>
+                          <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>Télécharger
+                            {{piece.name}}</a>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Observation </h4>
+                  </div>
+                  <div class="col-sm-12">
+                    <textarea rows="5" [(ngModel)]="postule.observation"></textarea>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <button class="btn btn-danger btn-action"> Refuser</button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button class="btn btn-success btn-action" (click)="entretienTermineOnClick()">Entretient terminé</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <br>
+
+
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Entretient en attente de décision ">
+            <br>
+            <div class="row">
+              <div class="col-sm-6 ">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Nom de l'indvidu</th>
+                    <th>Référence de la demande</th>
+                    <th>Post postulé</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <ng-container *ngFor="let item of decision">
+                    <tr class='table-row' (click)="clickRow(item)">
+                      <td>{{item.nom}}</td>
+                      <td>{{item.idpostule}}</td>
+                      <td>{{item.libelle}}</td>
+                    </tr>
+                  </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-sm-6 verticalLine" *ngIf="postule">
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Information </h4>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <p> Prénom et Nom : <strong> {{postule.nom}}</strong></p>
+                    <p> Email : <strong>{{postule.email}}</strong></p>
+                    <p> Teléphone : <strong>{{postule.telephone}}</strong></p>
+                    <p> Poste : <strong>{{postule.libelle}}</strong></p>
+                  </div>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ng-container *ngFor="let piece of postule.pieces">
+                      <div class="row">
+
+                        <div class="col-lg-12">
+
+                          <ng-container *ngIf="piece.type==='image'">
+                            <img width="100" src="{{piece.file}}">
+                          </ng-container>
+                          <br>
+                          <a [href]="sanitize(piece.file)" download='{{piece.name}}.{{piece.ext}}'>Télécharger
+                            {{piece.name}}</a>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 sous_titre">
+                    <h4> Observation </h4>
+                  </div>
+                  <div class="col-sm-12">
+                    <textarea disabled rows="5">{{postule.observation}}</textarea>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <button class="btn btn-danger btn-action"> Annuler</button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button class="btn btn-success btn-action" data-toggle="modal" data-target="#formulaire">Embaucher</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <br>
+
+
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div class="col-sm-12">
+        <div id="calendar" class="collapse">
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<div class="modal fade" id="formulaire" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Information Supplémentaire</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <input placeholder="CIN" type="text" class="form-control">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <select [(ngModel)]="id_sexe" name="id_sexe" class="form-control" *ngIf="dataSexe">
+              <option *ngFor="let sexe of dataSexe" value="{{JSON.stringify(sexe)}}">{{sexe.libelle}}</option>
+            </select>
+          </div>
+        </div>
+          <br>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label texte-content">Naissance : </label>
+          <div class="col-sm-8">
+            <input placeholder="Date de Naissance" type="date" class="form-control">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label texte-content">Début : </label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <ngx-select required placeholder="Firaisana" [items]="itemsFiraisana" (typed)="inputTypedFiraisana('ngx-select', $event)">
+            </ngx-select>
+          </div>
+
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <ngx-select required placeholder="Service" [items]="itemsServices" (typed)="inputTypedService('ngx-select', $event)">
+            </ngx-select>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

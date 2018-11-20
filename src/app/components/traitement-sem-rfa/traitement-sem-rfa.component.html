@@ -70,7 +70,7 @@
       </div>
     </div>
     <hr>
-    <form (ngSubmit)="onModifTecInfReq()" class="form-horizontal" [formGroup]="ijForm">
+    <form (ngSubmit)="onModifTecInfReq()" class="form-horizontal" >
       <div class="">
         <div class="col-sm-12">
           <h6>
@@ -162,7 +162,7 @@
       </div>
     </div>
     <hr>
-    <form (ngSubmit)="onAcceptCLick()" [formGroup]="validForm">
+    <form (ngSubmit)="onAcceptCLick()" >
       <div class="">
         <div class="col-sm-12">
           <h6>
@@ -183,7 +183,7 @@
         </div>
         <div class="col-sm-2">
           <div *ngIf="!show">
-            <button [disabled]="!validForm.valid" type="submit" class="btn btn-success btn-block">Valider</button>
+            <button  type="submit" class="btn btn-success btn-block">Valider</button>
             <br>
           </div>
           <div *ngIf="show">

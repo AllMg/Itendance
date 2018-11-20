@@ -229,8 +229,8 @@ export class DemandeFdComponent implements OnInit {
         temp.serviceName = 'Demande Frais de déplacement / ATMP';
         temp.idType = this.piece[indice].id_piece;
         temp.name = this.piece[indice].libelle;
-        this.pieceValue[indice].push(temp);
       };
+      this.pieceValue[indice].push(temp);
     }
     console.log(this.pieceValue);
   }
@@ -243,9 +243,6 @@ export class DemandeFdComponent implements OnInit {
       }
     }
     return result;
-
-  }
-  testExist (){
 
   }
 }
