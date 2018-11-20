@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { ImmoService } from '../../services/immo/immo.service';
+import { InfoService } from '../../services/info/info.service';
 
 declare var $: any;
 
@@ -23,13 +24,15 @@ export class SecVisiteurComponent implements OnInit {
 	listeService = [];
 
 	Entree = {
+		estAgent: false,
 		champ: {
 			nom: "",
 			prenom: "",
 			cin: "",
 			numeroVehicule: "",
 			refService: "",
-			agent: "",
+			refIndividuRecherche: "",
+			refIndividuCnaps: "",
 			motif: ""
 		},
 		charge: false
@@ -58,7 +61,8 @@ export class SecVisiteurComponent implements OnInit {
 	constructor(
 		private router: Router, 
 		private toast: ToastrService,
-		private immoService: ImmoService) { 
+		private immoService: ImmoService,
+		private infoService: InfoService) { 
 		let that = this;
 		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
 			if(obs.success){
@@ -126,30 +130,104 @@ export class SecVisiteurComponent implements OnInit {
 				return {bon: false, msg: "Numéro CIN invalide"};
 			}
 		}
+		if(this.Entree.estAgent){
+			this.Entree.champ.refIndividuCnaps = this.Entree.champ.refIndividuCnaps.trim();
+			if(this.Entree.champ.refIndividuCnaps == ""){
+				return {bon: false, msg: "Numéro matricule invalide"};
+			}
+		}
 		return {bon: true, msg: ""};
 	}
 
 	enregistrerEntree(){
+		if(this.Entree.estAgent){
+			this.enregistrerEntreeAgent();
+		}
+		else{
+			this.enregistrerEntreeVisiteur();
+		}
+	}
+
+	enregistrerEntreeVisiteur(){
 		let champBon = this.champEntreeBon();
 		if(champBon.bon){
 			this.Entree.charge = true;
+			let argument = {
+				nom: this.Entree.champ.nom,
+				prenom: this.Entree.champ.prenom,
+				cin: this.Entree.champ.cin,
+				numeroVehicule: this.Entree.champ.numeroVehicule,
+				motif: this.Entree.champ.motif,
+				refIndividuCnaps: null,
+				refIndividuRecherche: this.Entree.champ.refIndividuRecherche,
+				refService: this.Entree.champ.refService
+			};
 			let that = this;
-			let observ = this.immoService.immoTopic("", this.Entree.champ, true).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
 				if(obs.success){
 					that.toast.success("Enregistrement terminé");
-					this.Entree.champ.nom = "";
-					this.Entree.champ.prenom = "";
-					this.Entree.champ.cin = "";
-					this.Entree.champ.numeroVehicule = "";
-					this.Entree.champ.refService = "";
-					this.Entree.champ.agent = "";
-					this.Entree.champ.motif = "";
+					that.Entree.champ.nom = "";
+					that.Entree.champ.prenom = "";
+					that.Entree.champ.cin = "";
+					that.Entree.champ.numeroVehicule = "";
+					that.Entree.champ.refService = "";
+					that.Entree.champ.refIndividuRecherche = "";
+					that.Entree.champ.refIndividuCnaps = "";
+					that.Entree.champ.motif = "";
 				}
 				else{
 					that.toast.error(obs.msg);
 				}
 				that.Entree.charge = false;
 				observ.unsubscribe();
+			});
+		}
+		else{
+			this.toast.error(champBon.msg);
+		}
+	}
+
+	enregistrerEntreeAgent(){
+		let champBon = this.champEntreeBon();
+		if(champBon.bon){
+			this.Entree.charge = true;
+			let argument = {
+				nom: this.Entree.champ.nom,
+				prenom: this.Entree.champ.prenom,
+				cin: this.Entree.champ.cin,
+				numeroVehicule: this.Entree.champ.numeroVehicule,
+				motif: this.Entree.champ.motif,
+				refIndividuCnaps: this.Entree.champ.refIndividuCnaps,
+				refIndividuRecherche: null,
+				refService: null
+			};
+			let that = this;
+			let observ0 = this.infoService.infoIndiv(argument.refIndividuCnaps).subscribe(obs0=>{
+				if(obs0.success){
+					let observ = that.immoService.immoTopic("", argument, true).subscribe(obs=>{
+						if(obs.success){
+							that.toast.success("Enregistrement terminé");
+							that.Entree.champ.nom = "";
+							that.Entree.champ.prenom = "";
+							that.Entree.champ.cin = "";
+							that.Entree.champ.numeroVehicule = "";
+							that.Entree.champ.refService = "";
+							that.Entree.champ.refIndividuRecherche = "";
+							that.Entree.champ.refIndividuCnaps = "";
+							that.Entree.champ.motif = "";
+						}
+						else{
+							that.toast.error(obs.msg);
+						}
+						that.Entree.charge = false;
+						observ.unsubscribe();
+					});
+				}
+				else{
+					that.toast.error(obs0.msg);
+					that.Entree.charge = false;
+				}
+				observ0.unsubscribe();
 			});
 		}
 		else{

@@ -55,7 +55,19 @@
 							<input [(ngModel)]="Entree.champ.numeroVehicule" type="text" class="form-control" placeholder="Numéro">
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-12">
+						<div class="form-group form-check">
+							<input [(ngModel)]="Entree.estAgent" type="checkbox" class="form-check-input" id="exampleCheck1">
+    					<label class="form-check-label" for="exampleCheck1">Est un agent de la CNaPS</label>
+						</div>
+					</div>
+					<div *ngIf="!Entree.estAgent" class="col-md-6">
+						<div class="form-group">
+							<label>Matricule</label>
+							<input [(ngModel)]="Entree.champ.refIndividuCnaps" type="text" class="form-control">
+						</div>
+					</div>
+					<div *ngIf="!Entree.estAgent" class="col-md-6">
 						<div class="form-group">
 							<label>Service destination</label>
 							<select [(ngModel)]="Entree.champ.refService" class="form-control custom-select">
@@ -64,10 +76,10 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div *ngIf="!Entree.estAgent" class="col-md-6">
 						<div class="form-group">
 							<label>Agent recherché</label>
-							<input [(ngModel)]="Entree.champ.agent" type="text" class="form-control">
+							<input [(ngModel)]="Entree.champ.refIndividuRecherche" type="text" class="form-control">
 						</div>
 					</div>
 				</div>
@@ -175,7 +187,7 @@
 				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
 				    </li>
 				    <li class="page-item disabled"><span class="page-link">Page {{Liste.page}}</span></li>
-				    <li *ngIf="Liste.liste.length == ligneMax" (click)="pageSuivant()" class="page-item">
+				    <li *ngIf="Liste.liste.length == Liste.ligneMax" (click)="pageSuivant()" class="page-item">
 				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
 				    </li>
 				  </ul>
@@ -218,6 +230,26 @@
 	        </button>
 	      </div>
 	      <div class="modal-body">
+	      	<div class="row">
+	      		<div class="col-md-4">
+		  				<div class="form-group">
+		  					<label>Date</label>
+		  					<input value="{{avoirDateSlash(Liste.liste[Liste.indice].date)}}" type="text" class="form-control" readonly="true">
+		  				</div>
+		  			</div>
+		  			<div class="col-md-4">
+		  				<div class="form-group">
+		  					<label>Heure d'entrée</label>
+		  					<input value="{{Liste.liste[Liste.indice].heureEntree}}" type="text" class="form-control" readonly="true">
+		  				</div>
+		  			</div>
+		  			<div class="col-md-4">
+		  				<div class="form-group">
+		  					<label>Heure de sortie</label>
+		  					<input value="{{Liste.liste[Liste.indice].heureSortie}}" type="text" class="form-control" readonly="true">
+		  				</div>
+		  			</div>
+	      	</div>
   				<div class="form-group">
   					<label>Nom</label>
   					<input value="{{Liste.liste[Liste.indice].nom}}" type="text" class="form-control" readonly="true">
@@ -234,25 +266,17 @@
   					<label>Véhicule (Numéro)</label>
   					<input value="{{Liste.liste[Liste.indice].numeroVehicule}}" type="text" class="form-control" readonly="true">
   				</div>
-  				<div class="form-group">
+  				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps != null" class="form-group">
+  					<label>Matricule agent</label>
+  					<input value="{{Liste.liste[Liste.indice].refIndividuCnaps}}" type="text" class="form-control" readonly="true">
+  				</div>
+  				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps == null" class="form-group">
   					<label>Service destination</label>
   					<input value="{{Liste.liste[Liste.indice].refService}}" type="text" class="form-control" readonly="true">
   				</div>
-  				<div class="form-group">
+  				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps == null" class="form-group">
   					<label>Agent destination</label>
-  					<input value="{{Liste.liste[Liste.indice].agent}}" type="text" class="form-control" readonly="true">
-  				</div>
-  				<div class="form-group">
-  					<label>Date</label>
-  					<input value="{{avoirDateSlash(Liste.liste[Liste.indice].date)}}" type="text" class="form-control" readonly="true">
-  				</div>
-  				<div class="form-group">
-  					<label>Heure d'entrée</label>
-  					<input value="{{Liste.liste[Liste.indice].heureEntree}}" type="text" class="form-control" readonly="true">
-  				</div>
-  				<div class="form-group">
-  					<label>Heure de sortie</label>
-  					<input value="{{Liste.liste[Liste.indice].heureSortie}}" type="text" class="form-control" readonly="true">
+  					<input value="{{Liste.liste[Liste.indice].refIndividuRecherche}}" type="text" class="form-control" readonly="true">
   				</div>
   				<div class="form-group">
   					<label>Motif</label>
