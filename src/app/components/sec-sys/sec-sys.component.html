@@ -1,0 +1,149 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>SECUTITES</h4>
+		</div>
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li (click)="clickInMenu1('sec-visiteur')"><span>VISITEURS</span></li>
+				<li (click)="clickInMenu1('sec-acces')"><span>ACCES WEEKEND / JOURS FERIES</span></li>
+				<li (click)="clickInMenu1('sec-agent')"><span>AGENT DE SECURITE</span></li>
+				<li class="menu1-active"><span>SYSTEME DE SECURITE</span></li>
+			</ul>
+		</div>
+
+	    <div class="conteneur-de-menu2">
+			<ul class="menu1">
+				<li (click)="clickSousMenu('saisie')" [ngClass]="{'menu1-active': Menu.sousMenu == 'saisie'}"><span>SAISIE DEMANDE REPARATION</span></li>
+				<li (click)="clickSousMenu('liste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste'}"><span>LISTE DEMANDE REPARATION</span></li>
+				<li (click)="clickSousMenu('ronde')" [ngClass]="{'menu1-active': Menu.sousMenu == 'ronde'}"><span>RAPPORT RONDE</span></li>
+			</ul>
+		</div>
+		<!-- FIN MENU -->
+
+		<div class="row" style="padding: 10px;">
+			<!-- SAISIE DEMANDE REPARATION MATERIEL -->
+			<div *ngIf="Menu.sousMenu == 'saisie'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Formulaire de saisie de réparation de matériel abimé</h6>
+				<hr>
+				<div class="form-group">
+					<label>Référence</label>
+					<input [(ngModel)]="Saisie.champ.reference" type="text" class="form-control" readonly="true">
+				</div>
+				<div class="form-group">
+					<label>Localisation</label>
+					<select [(ngModel)]="Saisie.champ.refService" class="form-control custom-select">
+						<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Observation</label>
+					<textarea [(ngModel)]="Saisie.champ.refMotif" rows="7" class="form-control"></textarea>
+				</div>
+				<div class="form-group">
+					<label>Pieces justificatives (facultative)</label>
+					<label for="pj-dmd-rep" class="form-control" style="cursor: pointer;">{{Saisie.pieceNom}}</label>
+						<input (change)="pieceChange($event)" name="pieceFichier" id="pj-dmd-rep" type="file" accept="image/*" multiple style="display: none;" />
+				</div>
+				<button *ngIf="!Saisie.charge" (click)="clickEnregDmdRep()" class="btn btn-info">Valider</button>
+				<div *ngIf="Saisie.charge" class="loader"></div>
+			</div>
+			<!-- LISTE DEMANDE REPARATION MATERIEL -->
+			<div *ngIf="Menu.sousMenu == 'liste'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des demandes de réparation de matériel abimé</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Date</label>
+							<input [(ngModel)]="Liste.filtre.dateDmd" (ngModelChange)="filtreChange()" type="date" class="form-control" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Localisation</label>
+							<select [(ngModel)]="Liste.filtre.refService" (change)="filtreChange()" class="form-control custom-select">
+								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div *ngFor="let dmd of Liste.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
+						<div class="liste-dmd-item">
+							<p><span class="dmd-l-date">{{avoirDate(dmd.dateDmd)}}</span></p>
+							<p><u>Référence</u> : <span class="dmd-l-ref">{{dmd.reference}}</span></p>
+							<p><u>Statut</u> : <label>{{avoirEtatDmd(dmd.idEtat)}}</label></p>
+							<div class="dmd-l-obs"><u>Motif</u> : {{dmd.motif}}</div>
+							<div class="dmd-l-btn">
+								<button (click)="ouvreDetailRep(index)" class="btn btn-info">Voir</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="Liste.charge" class="loader"></div>
+				<div *ngIf="Liste.liste.length == 0 && Liste.charge == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="Liste.liste.length > 0 && Liste.charge == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Liste.page > 1" (click)="pagePrecedent()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Liste.page}}</span></li>
+				    <li *ngIf="Liste.liste.length == Liste.ligneMax" (click)="pageSuivant()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
+			</div>
+			<!-- LISTE RAPPORT DE RONDE -->
+			<div *ngIf="Menu.sousMenu == 'ronde'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">LISTE des rapports de ronde</h6>
+				<hr>
+			</div>
+		</div>
+	</div>
+
+	<!-- MODAL -->
+	<!-- MODAL DETAIL DEMANDE REPARATION -->
+	<div #modalDetailRep class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="Liste.indice > -1" class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Référence: {{Liste.liste[Liste.indice].reference}}</h6>
+	        <button *ngIf="Liste.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailRep()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<span class="dmd-modal-date">{{avoirDate(Liste.liste[Liste.indice].dateDmd)}}</span>
+	      	<div class="form-group">
+				<label>Localisation</label>
+				<input type="text" value="{{Liste.liste[Liste.indice].refService}}" class="form-control" readonly="true">
+			</div>
+			<div class="form-group">
+				<label>Statut</label>
+				<select [(ngModel)]="Liste.nouveauEtat" [value]="Liste.nouveauEtat" (change)="etatDmdChange()" class="form-control custom-select">
+					<option *ngFor="let etat of listeEtatDmd" value="{{etat.idEtat}}">{{etat.libelle}}</option>
+				</select>
+			</div>
+			<p>{{Liste.liste[Liste.indice].refMotif}}</p>
+	        <img *ngFor="let piece of Liste.pieces" class="pj-dans-modal" src="{{piece.file}}">
+	      </div>
+	      <div class="modal-footer">
+	        <button *ngIf="Liste.chargeStatutChange == false" (click)="validerEtatDmdRep()" type="button" class="btn" [ngClass]="{'btn-primary': Liste.etatAchange}">Valider le changement</button>
+	        <div *ngIf="Liste.chargeStatutChange" class="loader"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

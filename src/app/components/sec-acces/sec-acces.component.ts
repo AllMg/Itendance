@@ -15,7 +15,7 @@ export class SecAccesComponent implements OnInit {
 	@ViewChild('modalDetailDmd') modalDetailDmd;
 
 	Menu = {
-	    menu: "visiteur",
+	    menu: "acces",
 	    sousMenu: ""
 	};
 

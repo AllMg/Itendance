@@ -1,0 +1,78 @@
+.conteneur-de-menu{
+    width: 100%;
+}
+
+.conteneur-de-menu2{
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.menu1 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-color: rgb(208, 224, 233);
+}
+
+.menu1 li {
+    float: left;
+}
+
+.menu1 li span {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.menu1 li span:hover {
+    color: white;
+    cursor: pointer;
+    background-color: rgb(23, 153, 180);
+}
+
+.menu1-active span{
+    color: white;
+    background-color: rgb(23, 153, 180);
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid rgb(92, 92, 226); /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+.liste-dmd-item{
+    width: 100%;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.dmd-l-date{
+    opacity: 0.8;
+    font-size: 12px;
+}
+.dmd-l-ref{
+    font-weight: bold;
+}
+.dmd-l-obs{
+    height: 50px;
+    overflow: hidden;
+}
+.dmd-l-btn{
+    text-align: right;
+}
+
+.pj-dans-modal{
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
