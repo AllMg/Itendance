@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="col-sm-12 content_page">
 		<div class="row titre_page">
-	      <h4>SECUTITES</h4>
+	      <h4>SECURITES</h4>
 		</div>
 		<!-- MENU -->
 		<div class="conteneur-de-menu">
@@ -20,7 +20,8 @@
 			<ul class="menu1">
 				<li (click)="clickSousMenu('saisie')" [ngClass]="{'menu1-active': Menu.sousMenu == 'saisie'}"><span>SAISIE DEMANDE REPARATION</span></li>
 				<li (click)="clickSousMenu('liste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste'}"><span>LISTE DEMANDE REPARATION</span></li>
-				<li (click)="clickSousMenu('ronde')" [ngClass]="{'menu1-active': Menu.sousMenu == 'ronde'}"><span>RAPPORT RONDE</span></li>
+				<li (click)="clickSousMenu('sronde')" [ngClass]="{'menu1-active': Menu.sousMenu == 'sronde'}"><span>SAISIE RAPPORT RONDE</span></li>
+				<li (click)="clickSousMenu('lronde')" [ngClass]="{'menu1-active': Menu.sousMenu == 'lronde'}"><span>LISTE RAPPORT RONDE</span></li>
 			</ul>
 		</div>
 		<!-- FIN MENU -->
@@ -47,7 +48,7 @@
 				<div class="form-group">
 					<label>Pieces justificatives (facultative)</label>
 					<label for="pj-dmd-rep" class="form-control" style="cursor: pointer;">{{Saisie.pieceNom}}</label>
-						<input (change)="pieceChange($event)" name="pieceFichier" id="pj-dmd-rep" type="file" accept="image/*" multiple style="display: none;" />
+						<input (change)="pieceChange($event, 'Saisie')" name="pieceFichier" id="pj-dmd-rep" type="file" accept="image/*" multiple style="display: none;" />
 				</div>
 				<button *ngIf="!Saisie.charge" (click)="clickEnregDmdRep()" class="btn btn-info">Valider</button>
 				<div *ngIf="Saisie.charge" class="loader"></div>
@@ -102,10 +103,67 @@
 				  </ul>
 				</nav>
 			</div>
-			<!-- LISTE RAPPORT DE RONDE -->
-			<div *ngIf="Menu.sousMenu == 'ronde'" class="col-md-12">
-				<h6 style="text-transform: uppercase;">LISTE des rapports de ronde</h6>
+			<!-- SAISIE RAPPORT DE RONDE -->
+			<div *ngIf="Menu.sousMenu == 'sronde'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Saisie de rapport de ronde</h6>
 				<hr>
+				<div class="form-group">
+					<label>Rapport</label>
+					<textarea [(ngModel)]="Sronde.champ.rapport" rows="7" class="form-control"></textarea>
+				</div>
+				<div class="form-group">
+					<label>Pieces justificatives (facultative)</label>
+					<label for="pj-rap-ron" class="form-control" style="cursor: pointer;">{{Sronde.pieceNom}}</label>
+						<input (change)="pieceChange($event, 'Sronde')" name="pieceFichier" id="pj-rap-ron" type="file" accept="image/*" multiple style="display: none;" />
+				</div>
+				<button *ngIf="!Sronde.charge" (click)="clickEnregRapport()" class="btn btn-info">Valider</button>
+				<div *ngIf="Sronde.charge" class="loader"></div>
+			</div>
+			<!-- LISTE DEMANDE REPARATION MATERIEL -->
+			<div *ngIf="Menu.sousMenu == 'lronde'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Liste des rapports de ronde</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Date</label>
+							<input [(ngModel)]="Lronde.filtre.dateRonde" (ngModelChange)="filtreRapChange()" type="date" class="form-control" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Rédacteur</label>
+							<input [(ngModel)]="Lronde.filtre.redacteur" (ngModelChange)="filtreRapChange()" type="text" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div *ngFor="let rap of Lronde.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
+						<div class="liste-dmd-item">
+							<p><span class="dmd-l-date">{{avoirDate(rap.dateRonde)}}</span></p>
+							<div class="dmd-l-obs"><u>Rapport</u> : {{rap.rapport}}</div>
+							<div class="dmd-l-btn">
+								<button (click)="ouvreDetailRap(index)" class="btn btn-info">Voir</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="Lronde.charge" class="loader"></div>
+				<div *ngIf="Lronde.liste.length == 0 && Lronde.charge == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="Lronde.liste.length > 0 && Lronde.charge == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Lronde.page > 1" (click)="pageRapPrecedent()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Lronde.page}}</span></li>
+				    <li *ngIf="Lronde.liste.length == Lronde.ligneMax" (click)="pageRapSuivant()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
 			</div>
 		</div>
 	</div>
@@ -139,6 +197,40 @@
 	      <div class="modal-footer">
 	        <button *ngIf="Liste.chargeStatutChange == false" (click)="validerEtatDmdRep()" type="button" class="btn" [ngClass]="{'btn-primary': Liste.etatAchange}">Valider le changement</button>
 	        <div *ngIf="Liste.chargeStatutChange" class="loader"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- MODAL DETAIL RAPPORT RONDE -->
+	<div #modalDetailRap class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div *ngIf="Lronde.indice > -1" class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Détail du rapport</h6>
+	        <button type="button" class="close" (click)="fermeDetailRap()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="form-group">
+					<label>Rédacteur</label>
+					<input type="text" value="{{Lronde.liste[Lronde.indice].redacteur}}" class="form-control" readonly="true">
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label>Date</label>
+						<input value="{{avoirDate(Lronde.liste[Lronde.indice].dateRonde)}}" type="text" class="form-control" readonly="true">
+					</div>
+					<div class="form-group col-md-6">
+						<label></label>
+						<input value="{{Lronde.liste[Lronde.indice].heureRonde}}" type="text" class="form-control" readonly="true">
+					</div>
+				</div>
+			<p>{{Lronde.liste[Lronde.indice].rapport}}</p>
+	        <img *ngFor="let piece of Lronde.pieces" class="pj-dans-modal" src="{{piece.file}}">
+	      </div>
+	      <div class="modal-footer">
+	        <button (click)="fermeDetailRap()" class="btn btn-info">Fermer</button>
 	      </div>
 	    </div>
 	  </div>

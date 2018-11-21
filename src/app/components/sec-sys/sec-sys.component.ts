@@ -15,6 +15,7 @@ declare var $: any;
 export class SecSysComponent implements OnInit {
 
 	@ViewChild('modalDetailRep') modalDetailRep;
+	@ViewChild('modalDetailRap') modalDetailRap;
 
 	Menu = {
 	    menu: "systeme",
@@ -50,6 +51,29 @@ export class SecSysComponent implements OnInit {
     etatAchange: false,
     nouveauEtat: 0,
     chargeStatutChange: false
+	};
+
+	Sronde = {
+		champ:{
+			rapport: ""
+		},
+		charge: false,
+    pieceNom: "Parcourir mon ordinateur",
+    pieceFichier: []
+	};
+
+	Lronde = {
+		estVue: false,
+		liste: [],
+    pieces: [],
+		indice: -1,
+		ligneMax: 15,
+		page: 1,
+		charge: false,
+		filtre: {
+			dateRonde: null,
+			redacteur: ""
+		}
 	};
 	
 	constructor(
@@ -96,17 +120,23 @@ export class SecSysComponent implements OnInit {
 	      this.liste();
 	    }
 	  }
+		else if(nom == "lronde"){
+			if(this.Lronde.estVue == false){
+	      this.Lronde.estVue = true;
+	      this.listeRonde();
+	    }
+	  }
 	}
 
-  pieceChange(event){
+  pieceChange(event, nomAttr){
     let file = event.target.files;
-    this.Saisie.pieceFichier = [];
-    this.Saisie.pieceNom = "";
+    this[nomAttr].pieceFichier = [];
+    this[nomAttr].pieceNom = "";
     for(let i=0; i<file.length; i++){
       if(file[i].size < 5000000){
         if(file[i].type.search("image") != -1){
-          this.Saisie.pieceFichier.push(file[i]);
-          this.Saisie.pieceNom += "/ " + file[i].name + " ";
+          this[nomAttr].pieceFichier.push(file[i]);
+          this[nomAttr].pieceNom += "/ " + file[i].name + " ";
         }
         else{
           this.toast.error("Le fichier doit être une image");
@@ -266,6 +296,99 @@ export class SecSysComponent implements OnInit {
   fermeDetailRep(){
   	$(this.modalDetailRep.nativeElement).modal('hide');
     this.Liste.pieces = [];
+  }
+
+  clickEnregRapport(){
+  	this.Sronde.champ.rapport = this.Sronde.champ.rapport.trim();
+    if(this.Sronde.champ.rapport != ""){
+      this.Sronde.charge = true;
+      let that = this;
+      let argument = {
+      	idAgentSec: 112,
+      	rapport: this.Sronde.champ.rapport
+      };
+      let observ = this.immoService.immoTopic("ajoutRapportSecInt", argument, true).subscribe(obs=>{
+        if(obs.success){
+          that.toast.success("L'enregistrement du rapport est terminé");
+          that.Sronde.champ.rapport = "";
+          that.Sronde.pieceNom = "Parcourir mon ordinateur";
+          let reference = "sec-ronde-"+obs.msg.idRonde;
+          that.enregistreFichiers(that.Sronde.pieceFichier, reference);
+          that.Sronde.pieceFichier = [];
+        }
+        else{
+          that.toast.error(obs.msg);
+        }
+        that.Sronde.charge = false;
+        observ.unsubscribe();
+      });
+    }
+    else{
+      this.toast.error("Le rapport est vide");
+    }
+  }
+
+  filtreRapChange(){
+    this.Lronde.page = 1;
+    this.listeRonde();
+  }
+
+  listeRonde(){
+    this.Lronde.charge = true;
+    let that = this;
+    let argument = {
+      pagination: this.Lronde.page,
+      filtre: this.Lronde.filtre
+    };
+    let observ = this.immoService.immoTopic("listeRapportSecInt", argument, true).subscribe(obs=>{
+      if(obs.success){
+        that.Lronde.liste = obs.msg;
+      }
+      that.Lronde.charge = false;
+      observ.unsubscribe();
+    });
+  }
+
+  pageRapSuivant(){
+    if(!this.Lronde.charge){
+      if(this.Lronde.liste.length == this.Lronde.ligneMax){
+        this.Lronde.page++;
+        this.listeRonde();
+      }
+    }
+  }
+
+  pageRapPrecedent(){
+    if(!this.Lronde.charge){
+      if(this.Lronde.page > 1){
+        this.Lronde.page--;
+        this.listeRonde();
+      }
+    }
+  }
+
+  ouvreDetailRap(indice){
+    $(this.modalDetailRep.nativeElement).modal('show');
+    this.Liste.indice = indice;
+    this.Liste.etatAchange = false;
+    this.Liste.nouveauEtat = this.Liste.liste[indice].idEtat;
+    let that = this;
+    let fileQuery = new FileModel();
+    fileQuery.id_files = this.Liste.liste[this.Liste.indice].reference;
+    let observ = this.fileService.readQuery(fileQuery).subscribe(data => {
+      if (data.success) {
+        that.Liste.pieces = data.msg;
+      }
+      else{
+        that.toast.error(data.msg);
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  fermeDetailRap(){
+  	$(this.modalDetailRep.nativeElement).modal('hide');
+  	this.Lronde.pieces = [];
   }
 
   /* date: aaaa-mm-jj */

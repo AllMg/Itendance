@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="col-sm-12 content_page">
 		<div class="row titre_page">
-	      <h4>SECUTITES</h4>
+	      <h4>SECURITES</h4>
 		</div>
 		<!-- MENU -->
 		<div class="conteneur-de-menu">
@@ -30,17 +30,150 @@
 			<div *ngIf="Menu.sousMenu == 'liste'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des agents</h6>
 				<hr>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Nom/Prénom</label>
+							<input [(ngModel)]="Liste.filtre.nomPrenom" (ngModelChange)="filtreChange()" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Matricule</label>
+							<input [(ngModel)]="Liste.filtre.matricule" (ngModelChange)="filtreChange()" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Agence/Société</label>
+							<input [(ngModel)]="Liste.filtre.nomSociete" (ngModelChange)="filtreChange()" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Statut</label>
+							<select [(ngModel)]="Liste.filtre.statut" (ngModelChange)="filtreChange()" class="form-control custom-select">
+								<option></option>
+								<option value="1">ACTIVE</option>
+								<option value="0">NON ACTIVE</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<button (click)="saisieNouvAgent()" class="btn btn-info" style="margin-bottom: 5px;">Saisie d'un nouveau agent</button>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>Nom/Prénom</th>
+							<th>Nom</th>
+							<th>Prénom</th>
 							<th>Matricule</th>
 							<th>Téléphone</th>
 							<th>Agence/Société</th>
 							<th>Statut</th>
+							<th></th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr *ngFor="let a of Liste.liste; let index = index">
+							<td>{{a.nom}}</td>
+							<td>{{a.prenom}}</td>
+							<td>{{a.matricule}}</td>
+							<td>{{a.telephone}}</td>
+							<td>{{a.nomSociete}}</td>
+							<td>{{a.statut}}</td>
+							<td>
+								<button (click)="clickInfoAgent(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
+							</td>
+						</tr>
+					</tbody>
 				</table>
+				<div *ngIf="Liste.charge" class="loader"></div>
+				<div *ngIf="Liste.liste.length == 0 && Liste.charge == false" style="text-align: center;">
+					<span>Pas de résultat</span>
+				</div>
+				<nav *ngIf="Liste.liste.length > 0 && Liste.charge == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Liste.page > 1" (click)="pagePrecedent()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Liste.page}}</span></li>
+				    <li *ngIf="Liste.liste.length == Liste.ligneMax" (click)="pageSuivant()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
+			</div>
+			<!-- SAISIE/MODIF AGENT -->
+			<div *ngIf="Menu.sousMenu == 'saisie'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">{{Saisie.titre}}</h6>
+				<hr>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Nom</label>
+							<input [(ngModel)]="Saisie.champ.nom" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Prénom</label>
+							<input [(ngModel)]="Saisie.champ.prenom" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>CIN</label>
+							<input [(ngModel)]="Saisie.champ.cin" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Matricule</label>
+							<input [(ngModel)]="Saisie.champ.matricule" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Téléphone</label>
+							<input [(ngModel)]="Saisie.champ.telephone" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Adresse</label>
+							<input [(ngModel)]="Saisie.champ.Adresse" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Agence/Société d'origine</label>
+							<input [(ngModel)]="Saisie.champ.nomSociete" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Photo</label>
+							<label for="pj-photo-sec" class="form-control" style="cursor: pointer;">Choisir une photo</label>
+							<input (change)="pieceChange($event)" name="piecePhoto" id="pj-photo-sec" type="file" accept="image/*" style="display: none;" />
+							<img *ngIf="Saisie.photo != null" src="{{Saisie.photo}}" class="photo">
+						</div>
+					</div>
+					<div *ngIf="Saisie.type == 'Modif'" class="col-md-12">
+						<div class="form-group">
+							<label>Statut</label>
+							<select [(ngModel)]="Saisie.champ.statut" class="form-control custom-select">
+								<option value="1">ACTIVE</option>
+								<option value="0">NON ACTIVE</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<button *ngIf="!Saisie.charge" (click)="retourALaListe()" class="btn">Retour à la liste</button>
+						<button *ngIf="!Saisie.charge" (click)="validerSaisie()" class="btn btn-info" style="margin-left: 50px;">Valider</button>
+						<div *ngIf="Saisie.charge" class="loader"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
