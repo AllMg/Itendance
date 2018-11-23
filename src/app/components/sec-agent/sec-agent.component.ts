@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
+import { CalendarComponent } from 'ng-fullcalendar';
+import { Options, EventObject } from 'fullcalendar';
 import { FileModel } from '../../models/file-model';
 import { ImmoService } from '../../services/immo/immo.service';
 import { FileService } from '../../services/file/file.service';
+import {CalendarDataModel} from '../../models/CalendarDataModel';
+
+declare var $: any;
 
 @Component({
   selector: 'app-sec-agent',
@@ -11,6 +17,11 @@ import { FileService } from '../../services/file/file.service';
   styleUrls: ['./sec-agent.component.css']
 })
 export class SecAgentComponent implements OnInit {
+
+	@ViewChild('modalAjoutSite') modalAjoutSite;
+	@ViewChild('modalAjoutModifRot') modalAjoutModifRot;
+	@ViewChild("fullcalendar") fullcalendar: CalendarComponent;
+	calendarOptions: Options;
 
 	Menu = {
 	    menu: "visiteur",
@@ -49,14 +60,77 @@ export class SecAgentComponent implements OnInit {
 		photo: null,
 		charge: false
 	};
+
+	Rot = {
+		listeMois: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+		listeRotation: [],
+		mois: 0,
+		annee: 0,
+		titreModal: "Insertion",
+		chargeModal: false,
+		ngxSite: [],
+		typeChamp: "s",
+		champ: {
+			dateDebut: null,
+			heureDebut: null,
+			dateFin: null,
+			heureFin: null,
+			idLoc: "",
+			matricules: ""
+		}
+	};
+
+	Site = {
+		chargeModal: false,
+		provinces: [],
+		regions: [],
+		champ: {
+			idProv: "",
+			idReg: "",
+			libelleCommune: "",
+			libelleLoc: ""
+		},
+		fComControl: new FormControl(),
+		comOptions: []
+	};
 	
 	constructor(
 		private router: Router,
 		private toast: ToastrService,
     private fileService: FileService,
-		private immoService: ImmoService) { }
+		private immoService: ImmoService) { 
+		let that = this;
+    this.Site.fComControl.valueChanges.subscribe(term => {
+      term = term.toString().trim();
+      if (term.length >= 3) {
+        let observ = that.immoService.immoTopic("rechercheCommuneInt", term, false).subscribe(obs=>{
+          if(obs.success){
+            that.Site.comOptions = obs.msg;
+          }
+          observ.unsubscribe();
+        });
+      }
+      else{
+        that.Site.comOptions = [];
+      }
+    });
+	}
 
 	ngOnInit() {
+		this.calendarOptions = {
+      locale: 'fr',
+      timeFormat: 'H:mm',
+      editable: true,
+      eventLimit: false,
+      header: {
+        left: '',
+        center: '',
+        right: ''
+      }
+    };
+    let dateDuJour = new Date(Date.now());
+  	this.Rot.mois = dateDuJour.getMonth()+1;
+  	this.Rot.annee = dateDuJour.getFullYear();
 	}
 
 	clickInMenu1(lien){
@@ -299,6 +373,171 @@ export class SecAgentComponent implements OnInit {
   		that.Saisie.charge = false;
   		observ.unsubscribe();
   	});
+  }
+
+  dateFiltreChange(){
+    this.fullcalendar.fullCalendar('removeEvents');
+  	this.Rot.listeRotation = [];
+  	if(this.Rot.mois < 10){
+	  	this.fullcalendar.fullCalendar('gotoDate', this.Rot.annee+"-0"+this.Rot.mois+"-15");
+	  }
+  	else{
+  		this.fullcalendar.fullCalendar('gotoDate', this.Rot.annee+"-"+this.Rot.mois+"-15");
+  	}
+  }
+
+  clickJour(event){
+  	let date = new Date(event._i);
+  	let annee = date.getFullYear();
+  	let mois = (date.getMonth() + 1).toString();
+  	let jour:string = date.getDate().toString();
+  	if(mois.length < 2){
+  		mois = "0"+mois;
+  	}
+  	if(jour.length < 2){
+  		jour = "0"+jour;
+  	}
+  	this.Rot.champ.dateDebut = annee+"-"+mois+"-"+jour;
+  	this.Rot.champ.heureDebut = "00:00";
+  	this.Rot.champ.heureFin = "00:00";
+    $(this.modalAjoutModifRot.nativeElement).modal("show");
+  }
+
+  ngxTexteSiteChange(texte: string){
+  	texte = texte.trim();
+  	if(texte != ""){
+  		this.Rot.ngxSite = [];
+  		let that = this;
+  		let observ = this.immoService.immoTopic("rechercheLocalisationInt", texte, false).subscribe(obs=>{
+  			if(obs.success){
+  				for(let i=0; i<obs.msg.length; i++){
+  					that.Rot.ngxSite.push({id: obs.msg[i].idLoc, text: obs.msg[i].libelle});
+  				}
+  			}
+  			observ.unsubscribe();
+  		});
+  	}
+  }
+
+  validerRotation(){
+  	this.Rot.chargeModal = true;
+  	let topic = "ajoutRotationInt";
+  	if(this.Rot.typeChamp == "c"){
+  		topic = "ajoutCongeInt";
+  	}
+  	let that = this;
+  	let observ = this.immoService.immoTopic(topic, this.Rot.champ, true).subscribe(obs=>{
+			if(obs.success){
+				let nouv = obs.msg;
+				that.Rot.listeRotation.push(nouv);
+				that.fullcalendar.fullCalendar('renderEvent', {
+					id: nouv.idRotation,
+					start: nouv.dateDebut,
+					end: nouv.dateFin,
+					title: nouv.idRotation,
+					backgroundColor: "#0099FF",
+					textColor: "white",
+					rotation: nouv
+				});
+				that.fermeModalRot();
+				that.toast.error("Enregistré");
+			}
+			else{
+				that.toast.error(obs.msg);
+			}
+			that.Rot.chargeModal = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+  fermeModalRot(){
+  	$(this.modalAjoutModifRot.nativeElement).modal("hide");
+  	this.Rot.champ.dateDebut = null;
+  	this.Rot.champ.heureDebut = null;
+  	this.Rot.champ.dateFin = null;
+  	this.Rot.champ.heureFin = null;
+  	this.Rot.champ.matricules = "";
+  	this.Rot.champ.idLoc = "";
+  }
+
+  clickEvent(eventObject){
+    console.log("event element",eventObject);
+  }
+
+  chargerListeRot(){
+
+  }
+
+  ouvreModalSite(){
+  	$(this.modalAjoutModifRot.nativeElement).modal("hide");
+  	$(this.modalAjoutSite.nativeElement).modal("show");
+  	if(this.Site.provinces.length == 0){
+  		let that = this;
+	  	let observ = this.immoService.immoTopic("listeProvinceInt", "", false).subscribe(obs=>{
+	  		if(obs.success){
+	  			that.Site.provinces = obs.msg;
+	  		}
+	  		observ.unsubscribe();
+	  	});
+	  }
+  }
+
+  provinceChange(){
+  	let that = this;
+  	let observ = this.immoService.immoTopic("listeRegionInt", this.Site.champ.idProv, false).subscribe(obs=>{
+  		if(obs.success){
+  			that.Site.regions = obs.msg;
+  		}
+  		observ.unsubscribe();
+  	});
+  }
+
+  fermeModalSite(){
+  	$(this.modalAjoutSite.nativeElement).modal("hide");
+  	$(this.modalAjoutModifRot.nativeElement).modal("show");
+  }
+
+  champSiteBon(){
+  	this.Site.champ.libelleCommune = this.Site.champ.libelleCommune.trim();
+  	this.Site.champ.libelleLoc = this.Site.champ.libelleLoc.trim();
+  	if(this.Site.champ.idProv == ""){
+  		return {estBon: false, msg: "Veuillez choisir une province"};
+  	}
+  	if(this.Site.champ.idReg == ""){
+  		return {estBon: false, msg: "Veuillez choisir une région"};
+  	}
+  	if(this.Site.champ.libelleCommune == ""){
+  		return {estBon: false, msg: "Commune invalide"};
+  	}
+  	if(this.Site.champ.libelleLoc == ""){
+  		return {estBon: false, msg: "L'indication de la localisation est invalide"};
+  	}
+  	return {estBon: true, msg: null};
+  }
+
+  enregistreSite(){
+  	let verif = this.champSiteBon();
+  	if(!verif.estBon){
+  		this.toast.error(verif.msg);
+  	}
+  	else{
+  		this.Site.chargeModal = true;
+  		let that = this;
+  		let observ = this.immoService.immoTopic("ajoutLocalisationInt", this.Site.champ,true).subscribe(obs=>{
+  			console.log(obs);
+  			if(obs.success){
+  				let nouvSite = obs.msg;
+  				that.Rot.ngxSite = [{id: nouvSite.idLoc, text: nouvSite.libelle}];
+  				that.Rot.champ.idLoc = nouvSite.idLoc;
+  				that.fermeModalSite();
+  			}
+  			else{
+  				that.toast.error(obs.msg);
+  			}
+  			this.Site.chargeModal = false;
+  			observ.unsubscribe();
+  		});
+  	}
   }
 
 }

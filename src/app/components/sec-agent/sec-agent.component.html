@@ -11,7 +11,7 @@
 			<ul class="menu1">
 				<li (click)="clickInMenu1('sec-visiteur')"><span>VISITEURS</span></li>
 				<li (click)="clickInMenu1('sec-acces')"><span>ACCES WEEKEND / JOURS FERIES</span></li>
-				<li class="menu1-active"><span>AGENT DE SECURITE</span></li>
+				<li class="menu1-active"><span>AGENTS</span></li>
 				<li (click)="clickInMenu1('sec-sys')"><span>SYSTEME DE SECURITE</span></li>
 			</ul>
 		</div>
@@ -19,7 +19,7 @@
 	    <div class="conteneur-de-menu2">
 			<ul class="menu1">
 				<li (click)="clickSousMenu('liste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'liste'}"><span>LISTE</span></li>
-				<li (click)="clickSousMenu('rotation')" [ngClass]="{'menu1-active': Menu.sousMenu == 'rotation'}"><span>ROTATION</span></li>
+				<li (click)="clickSousMenu('rotation')" [ngClass]="{'menu1-active': Menu.sousMenu == 'rotation'}"><span>PLANNING DE ROTATION</span></li>
 				<li (click)="clickSousMenu('conge')" [ngClass]="{'menu1-active': Menu.sousMenu == 'conge'}"><span>CONGE</span></li>
 			</ul>
 		</div>
@@ -175,7 +175,145 @@
 					</div>
 				</div>
 			</div>
+			<!-- PLANNING DE ROTATION -->
+			<div *ngIf="Menu.sousMenu == 'rotation'" class="col-sm-12">
+				<h6 style="text-transform: uppercase;">{{Saisie.titre}}</h6>
+				<hr>
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<select [(ngModel)]="Rot.mois" (change)="dateFiltreChange()" class="form-control custom-select">
+							<option *ngFor="let m of Rot.listeMois; let index = index" value="{{index+1}}">{{m}}</option>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<input [(ngModel)]="Rot.annee" (ngModelChange)="dateFiltreChange()" type="number" class="form-control">
+					</div>
+					<div class="form-group col-md-3">
+						<input type="submit" class="btn btn-info" value="Charger" (click)="chargerListeRot()">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<ng-fullcalendar #fullcalendar [options]="calendarOptions" (eventClick)="clickEvent($event.detail.event)" (dayClick)="clickJour($event.detail.date)"></ng-fullcalendar>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
+
+	<!-- MODAL -->
+	<!-- MODAL AJOUT/MODIF ROTATION -->
+	<div #modalAjoutModifRot class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">{{Rot.titreModal}}</h6>
+	        <button *ngIf="Rot.chargeModal == false" type="button" class="close" (click)="fermeModalRot()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="row">
+	      		<div class="col-md-12">
+	      			<div class="form-group">
+	      				<label>Type</label>
+	      				<select [(ngModel)]="Rot.typeChamp" class="form-control custom-select">
+	      					<option value="s">EN SERVICE</option>
+	      					<option value="c">EN CONGE</option>
+	      				</select>
+	      			</div>
+	      		</div>
+	      		<div class="col-md-6">
+	      			<label>Date début</label>
+	      			<div class="row">
+	      				<div class="col-6">
+	      					<input [(ngModel)]="Rot.champ.dateDebut" type="date" class="form-control">
+	      				</div>
+	      				<div class="col-3">
+	      					<input [(ngModel)]="Rot.champ.heureDebut" type="text" class="form-control">
+	      				</div>
+	      			</div>
+	      		</div>
+	      		<div class="col-md-6">
+	      			<label>Date fin</label>
+	      			<div class="row">
+	      				<div class="col-6">
+	      					<input [(ngModel)]="Rot.champ.dateFin" type="date" class="form-control">
+	      				</div>
+	      				<div class="col-3">
+	      					<input [(ngModel)]="Rot.champ.heureFin" type="text" class="form-control">
+	      				</div>
+	      			</div>
+	      		</div>
+	      	</div>
+	      	<hr>
+    			<div class="form-group">
+    				<label>Matricule(s) agent(s)</label>
+    				<p style="font-size: 12px; opacity: 0.85;">Séparez les matricules par des virgules si plusieurs agent seront dans la même condition</p>
+    				<input [(ngModel)]="Rot.champ.matricules" type="text" placeholder="MATRICULE_1, MATRICULE_2, ..." class="form-control">
+    			</div>
+    			<div *ngIf="Rot.typeChamp == 's'" class="form-group">
+    				<label>Site</label>
+    				<div class="row">
+    					<div class="col-11">
+		    				<ngx-select [(ngModel)]="Rot.champ.idLoc" (typed)="ngxTexteSiteChange($event)" [items]="Rot.ngxSite"></ngx-select>
+		    			</div>
+    					<div class="col-1">
+    						<button (click)="ouvreModalSite()" class="btn btn-info"><i class="fa fa-plus"></i></button>
+    					</div>
+    				</div>
+    			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button *ngIf="Rot.chargeModal == false" (click)="validerRotation()" type="button" class="btn btn-info">Valider</button>
+	        <div *ngIf="Rot.chargeModal" class="loader"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- MODAL AJOUT SITE -->
+	<div #modalAjoutSite class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title">Insertion de nouveau Site</h6>
+	        <button *ngIf="Site.chargeModal == false" type="button" class="close" (click)="fermeModalSite()">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="form-group">
+	      		<label>Province</label>
+	      		<select [(ngModel)]="Site.champ.idProv" (change)="provinceChange()" class="form-control custom-select">
+	      			<option *ngFor="let p of Site.provinces" value="{{p.idProv}}">{{p.libelle}}</option>
+	      		</select>
+	      	</div>
+	      	<div class="form-group">
+	      		<label>Région</label>
+	      		<select [(ngModel)]="Site.champ.idReg" class="form-control custom-select">
+	      			<option></option>
+	      			<option *ngFor="let r of Site.regions" value="{{r.idReg}}">{{r.libelle}}</option>
+	      		</select>
+	      	</div>
+	      	<div class="form-group">
+	      		<label>Commune</label>
+	      		<input [(ngModel)]="Site.champ.libelleCommune" matInput [formControl]="Site.fComControl" [matAutocomplete]="comComplete" type="text" class="form-control">
+
+						<mat-autocomplete #comComplete="matAutocomplete">
+						  <mat-option *ngFor="let option of Site.comOptions" [value]="option.libelle">{{option.libelle}}</mat-option>
+						</mat-autocomplete>
+	      	</div>
+	      	<div class="form-group">
+	      		<label>Site</label>
+	      		<input [(ngModel)]="Site.champ.libelleLoc" type="text" class="form-control" placeholder="Libellé">
+	      	</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button *ngIf="Site.chargeModal == false" (click)="enregistreSite()" type="button" class="btn btn-info">Valider</button>
+	        <div *ngIf="Site.chargeModal" class="loader"></div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 </div>
 
