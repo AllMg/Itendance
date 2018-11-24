@@ -21,6 +21,7 @@ export class ImmoInventaireComponent implements OnInit {
 	};
 
 	listeService = [];
+	ngxServices = [];
 
 	Pv = {
 		refService: "",
@@ -91,6 +92,14 @@ export class ImmoInventaireComponent implements OnInit {
           return 0;
         });
 				that.listeService = obs.msg;
+				let liste = [];
+				for(let i=0; i<that.listeService.length; i++){
+					liste.push({
+						id: that.listeService[i].code_service, 
+						text: that.listeService[i].libelle + " " + that.listeService[i].code_service
+					});
+				}
+				that.ngxServices = liste;
 			}
 			observ.unsubscribe();
 		});
@@ -123,10 +132,11 @@ export class ImmoInventaireComponent implements OnInit {
 		if(this.Pv.refService != ""){
 			this.afficheChargement();
 			let that = this;
-			let observ = this.immoService.immoTopic("listeImmoServiceInt", this.Pv.refService, false).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("listeDetAvecCodeArtServiceInt", this.Pv.refService, false).subscribe(obs=>{
+				console.log("listeDetentionArticleServiceInt",obs);
 				if(obs.success){
 					let liste = obs.msg;
-					for(let i=0; i<that.Pv.listeASauver.length; i++){
+					for(let i=0; i<liste.length; i++){
 						liste[i].presence = true;
 						let indice = i;
 						let observ2 = that.immoService.immoTopic("detailsArticleInt", liste[i].codeArticle.refArticle, false).subscribe(obs2=>{

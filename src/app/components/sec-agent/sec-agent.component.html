@@ -194,7 +194,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<ng-fullcalendar #fullcalendar [options]="calendarOptions" (eventClick)="clickEvent($event.detail.event)" (dayClick)="clickJour($event.detail.date)"></ng-fullcalendar>
+						<ng-fullcalendar #fullcalendar [options]="calendarOptions" (eventClick)="clickEvent($event.detail.event)" (dayClick)="clickJour($event.detail.date)" (eventDrop)="dropEvent($event.detail.event)" (eventResize)="retailleEvent($event.detail.event)"></ng-fullcalendar>
 					</div>
 				</div>
 			</div>
@@ -202,6 +202,13 @@
 	</div>
 
 	<!-- MODAL -->
+	<!-- MODAL CHARGEMENT -->
+	<div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="loader">
+		</div>
+	  </div>
+	</div>
 	<!-- MODAL AJOUT/MODIF ROTATION -->
 	<div #modalAjoutModifRot class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div class="modal-dialog modal-lg" role="document">
@@ -215,7 +222,7 @@
 	      <div class="modal-body">
 	      	<div class="row">
 	      		<div class="col-md-12">
-	      			<div class="form-group">
+	      			<div *ngIf="Rot.typeAction == 'a'" class="form-group">
 	      				<label>Type</label>
 	      				<select [(ngModel)]="Rot.typeChamp" class="form-control custom-select">
 	      					<option value="s">EN SERVICE</option>
@@ -229,7 +236,7 @@
 	      				<div class="col-6">
 	      					<input [(ngModel)]="Rot.champ.dateDebut" type="date" class="form-control">
 	      				</div>
-	      				<div class="col-3">
+	      				<div *ngIf="Rot.typeChamp == 's'" class="col-3">
 	      					<input [(ngModel)]="Rot.champ.heureDebut" type="text" class="form-control">
 	      				</div>
 	      			</div>
@@ -240,7 +247,7 @@
 	      				<div class="col-6">
 	      					<input [(ngModel)]="Rot.champ.dateFin" type="date" class="form-control">
 	      				</div>
-	      				<div class="col-3">
+	      				<div *ngIf="Rot.typeChamp == 's'" class="col-3">
 	      					<input [(ngModel)]="Rot.champ.heureFin" type="text" class="form-control">
 	      				</div>
 	      			</div>
@@ -250,7 +257,7 @@
     			<div class="form-group">
     				<label>Matricule(s) agent(s)</label>
     				<p style="font-size: 12px; opacity: 0.85;">Séparez les matricules par des virgules si plusieurs agent seront dans la même condition</p>
-    				<input [(ngModel)]="Rot.champ.matricules" type="text" placeholder="MATRICULE_1, MATRICULE_2, ..." class="form-control">
+    				<input [(ngModel)]="Rot.champ.matricules" type="text" placeholder="MATRICULE_1, MATRICULE_2, ..." class="form-control" [disabled]="Rot.typeAction == 'm'">
     			</div>
     			<div *ngIf="Rot.typeChamp == 's'" class="form-group">
     				<label>Site</label>
@@ -265,7 +272,8 @@
     			</div>
 	      </div>
 	      <div class="modal-footer">
-	        <button *ngIf="Rot.chargeModal == false" (click)="validerRotation()" type="button" class="btn btn-info">Valider</button>
+	        <button *ngIf="Rot.chargeModal == false && Rot.typeAction == 'a'" (click)="validerRotOuCon()" type="button" class="btn btn-info">Valider l'insertion</button>
+	        <button *ngIf="Rot.chargeModal == false && Rot.typeAction == 'm'" (click)="validerModifRotOuCon()" type="button" class="btn btn-info">Valider la modification</button>
 	        <div *ngIf="Rot.chargeModal" class="loader"></div>
 	      </div>
 	    </div>
@@ -297,10 +305,10 @@
 	      	</div>
 	      	<div class="form-group">
 	      		<label>Commune</label>
-	      		<input [(ngModel)]="Site.champ.libelleCommune" matInput [formControl]="Site.fComControl" [matAutocomplete]="comComplete" type="text" class="form-control">
+	      		<input [(ngModel)]="Site.champ.libelleCommune" matInput [formControl]="Site.fComControl" [matAutocomplete]="auto" type="text" class="form-control">
 
-						<mat-autocomplete #comComplete="matAutocomplete">
-						  <mat-option *ngFor="let option of Site.comOptions" [value]="option.libelle">{{option.libelle}}</mat-option>
+						<mat-autocomplete #auto="matAutocomplete">
+						  <mat-option *ngFor="let option of Site.comOptions" [value]="option">{{option}}</mat-option>
 						</mat-autocomplete>
 	      	</div>
 	      	<div class="form-group">

@@ -18,6 +18,7 @@ declare var $: any;
 })
 export class SecAgentComponent implements OnInit {
 
+  @ViewChild('modalChargement') modalChargement;
 	@ViewChild('modalAjoutSite') modalAjoutSite;
 	@ViewChild('modalAjoutModifRot') modalAjoutModifRot;
 	@ViewChild("fullcalendar") fullcalendar: CalendarComponent;
@@ -64,12 +65,14 @@ export class SecAgentComponent implements OnInit {
 	Rot = {
 		listeMois: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
 		listeRotation: [],
+		listeConge: [],
 		mois: 0,
 		annee: 0,
 		titreModal: "Insertion",
 		chargeModal: false,
 		ngxSite: [],
 		typeChamp: "s",
+		typeAction: "a",
 		champ: {
 			dateDebut: null,
 			heureDebut: null,
@@ -77,7 +80,10 @@ export class SecAgentComponent implements OnInit {
 			heureFin: null,
 			idLoc: "",
 			matricules: ""
-		}
+		},
+		objetAModifier: null,
+		couleurRotation: "#0099FF",
+		couleurConge: "#0000FF"
 	};
 
 	Site = {
@@ -104,8 +110,13 @@ export class SecAgentComponent implements OnInit {
       term = term.toString().trim();
       if (term.length >= 3) {
         let observ = that.immoService.immoTopic("rechercheCommuneInt", term, false).subscribe(obs=>{
+          console.log("rechercheCommuneInt", obs);
           if(obs.success){
-            that.Site.comOptions = obs.msg;
+          	let liste = [];
+            for(let i=0; i<obs.msg.length; i++){
+            	liste.push(obs.msg[i].libelle);
+            }
+            that.Site.comOptions = liste;
           }
           observ.unsubscribe();
         });
@@ -366,6 +377,7 @@ export class SecAgentComponent implements OnInit {
   		if(obs.success){
   			let dataUrl = that.Saisie.photo;
   			that.modifierPhoto(dataUrl, that.Saisie.idAgentSec);
+  			that.toast.success("Modification terminé");
   		}
   		else{
   			that.toast.error(obs.msg);
@@ -399,48 +411,224 @@ export class SecAgentComponent implements OnInit {
   	}
   	this.Rot.champ.dateDebut = annee+"-"+mois+"-"+jour;
   	this.Rot.champ.heureDebut = "00:00";
-  	this.Rot.champ.heureFin = "00:00";
+  	this.Rot.champ.heureFin = "23:59";
+
+  	this.Rot.typeChamp = "s";
+  	this.Rot.titreModal = "Insertion";
+  	this.Rot.typeAction = "a";
     $(this.modalAjoutModifRot.nativeElement).modal("show");
   }
 
   ngxTexteSiteChange(texte: string){
   	texte = texte.trim();
   	if(texte != ""){
-  		this.Rot.ngxSite = [];
   		let that = this;
   		let observ = this.immoService.immoTopic("rechercheLocalisationInt", texte, false).subscribe(obs=>{
+  			console.log("rechercheLocalisationInt",obs);
+  			that.Rot.ngxSite = [];
   			if(obs.success){
+  				let liste = [];
   				for(let i=0; i<obs.msg.length; i++){
-  					that.Rot.ngxSite.push({id: obs.msg[i].idLoc, text: obs.msg[i].libelle});
+  					liste.push({id: obs.msg[i].idLoc, text: obs.msg[i].libelle});
   				}
+  				that.Rot.ngxSite = liste;
   			}
   			observ.unsubscribe();
   		});
   	}
   }
 
-  validerRotation(){
+  validerRotOuCon(){
   	this.Rot.chargeModal = true;
-  	let topic = "ajoutRotationInt";
   	if(this.Rot.typeChamp == "c"){
-  		topic = "ajoutCongeInt";
+  		this.validerAjoutConge();
   	}
+  	else{
+  		this.validerAjoutRotation();
+  	}
+  }
+
+  validerModifRotOuCon(){
+  	this.Rot.chargeModal = true;
+  	if(this.Rot.typeChamp == "c"){
+  		this.validerModifConge();
+  	}
+  	else{
+  		this.validerModifRotation();
+  	}
+  }
+
+  validerAjoutRotation(){
+  	this.Rot.chargeModal = true;
   	let that = this;
-  	let observ = this.immoService.immoTopic(topic, this.Rot.champ, true).subscribe(obs=>{
+  	let observ = this.immoService.immoTopic("ajoutRotationInt", this.Rot.champ, true).subscribe(obs=>{
 			if(obs.success){
-				let nouv = obs.msg;
-				that.Rot.listeRotation.push(nouv);
-				that.fullcalendar.fullCalendar('renderEvent', {
-					id: nouv.idRotation,
-					start: nouv.dateDebut,
-					end: nouv.dateFin,
-					title: nouv.idRotation,
-					backgroundColor: "#0099FF",
-					textColor: "white",
-					rotation: nouv
-				});
+				let nouvs = obs.msg;
+				for(let i=0; i<nouvs.length; i++){
+					let nouv = nouvs[i];
+					let objetEvent = {
+						id: "s"+nouvs[i].idRotation,
+						start: nouvs[i].dateDebut+"T"+nouvs[i].heureDebut,
+						end: nouvs[i].dateFin+"T"+nouvs[i].heureFin,
+						title: "",
+						backgroundColor: that.Rot.couleurRotation,
+						textColor: "white",
+						rotation: nouvs[i]
+					};
+					let observ2 = this.immoService.immoTopic("prendAgentParIdInt", nouv.idAgentSec, false)
+					.subscribe(obs2=>{
+						if(obs2.success){
+							objetEvent["agent"] = obs2.msg;
+							nouv["agent"] = obs2.msg;
+							let observ3 = this.immoService.immoTopic("prendLocalisationParIdInt", nouv.idLoc, false)
+							.subscribe(obs3=>{
+								if(obs3.success){
+									objetEvent.title = obs2.msg.matricule+" - "+obs3.msg.libelle;
+									that.Rot.listeRotation.push(nouv);
+									that.fullcalendar.fullCalendar('renderEvent', objetEvent);
+								}
+								observ3.unsubscribe();
+							});
+						}
+						observ2.unsubscribe();
+					});
+				}
 				that.fermeModalRot();
-				that.toast.error("Enregistré");
+				that.toast.success("Enregistré");
+			}
+			else{
+				that.toast.error(obs.msg);
+			}
+			that.Rot.chargeModal = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+  validerModifRotation(){
+  	this.Rot.chargeModal = true;
+  	let that = this;
+  	let argument = {
+  		idRotation: this.Rot.objetAModifier.rotation.idRotation,
+  		dateDebut: this.Rot.champ.dateDebut,
+  		heureDebut: this.Rot.champ.heureDebut,
+  		dateFin: this.Rot.champ.dateFin,
+  		heureFin: this.Rot.champ.heureFin,
+  		idAgentSec: this.Rot.objetAModifier.rotation.idAgentSec,
+  		idLoc: this.Rot.champ.idLoc
+  	};
+  	let observ = this.immoService.immoTopic("modifierRotationInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				let modif = obs.msg;
+				for(let i=0; i<that.Rot.listeRotation.length; i++){
+					if(that.Rot.listeRotation[i].idRotation == that.Rot.objetAModifier.rotation.idRotation){
+						that.Rot.listeRotation[i].dateDebut = modif.dateDebut;
+						that.Rot.listeRotation[i].heureDebut = modif.heureDebut;
+						that.Rot.listeRotation[i].dateFin = modif.dateFin;
+						that.Rot.listeRotation[i].heureFin = modif.heureFin;
+						break;
+					}
+				}
+				that.Rot.objetAModifier.rotation = modif;
+				that.Rot.objetAModifier.start = modif.dateDebut+"T"+modif.heureDebut;
+				that.Rot.objetAModifier.end = modif.dateFin+"T"+modif.heureFin;
+				let observ3 = this.immoService.immoTopic("prendLocalisationParIdInt", modif.idLoc, false)
+				.subscribe(obs3=>{
+					if(obs3.success){
+						that.Rot.objetAModifier.title = that.Rot.objetAModifier.agent.matricule+" - "+obs3.msg.libelle;
+						that.fullcalendar.fullCalendar('updateEvent', that.Rot.objetAModifier);
+						that.fermeModalRot();
+						that.toast.success("Element modifié");
+					}
+					else{
+						that.toast.error("Erreur pendant la récupération du site de localisation");
+					}
+					observ3.unsubscribe();
+				});
+			}
+			else{
+				that.toast.error(obs.msg);
+			}
+			that.Rot.chargeModal = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+  validerAjoutConge(){
+  	this.Rot.chargeModal = true;
+  	let that = this;
+  	let argument = {
+  		debutConge: this.Rot.champ.dateDebut,
+  		finConge: this.Rot.champ.dateFin,
+  		matricules: this.Rot.champ.matricules
+  	};
+  	let observ = this.immoService.immoTopic("ajoutCongeInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				let nouvs = obs.msg;
+				for(let i=0; i<nouvs.length; i++){
+					let nouv = nouvs[i];
+					let objetEvent = {
+						id: "c"+nouvs[i].idConge,
+						start: nouvs[i].debutConge,
+						end: nouvs[i].finConge+"T23:59",
+						title: null,
+						backgroundColor: that.Rot.couleurConge,
+						textColor: "white",
+						conge: nouvs[i]
+					};
+					let observ2 = this.immoService.immoTopic("prendAgentParIdInt", nouv.idAgentSec, false)
+					.subscribe(obs2=>{
+						if(obs2.success){
+							nouv["agent"] = obs2.msg;
+							that.Rot.listeConge.push(nouv);
+							objetEvent["agent"] = obs2.msg;
+							objetEvent.title = obs2.msg.matricule+" - En congé";
+							that.fullcalendar.fullCalendar('renderEvent', objetEvent);
+							that.fermeModalRot();
+							that.toast.success("Enregistré");
+						}
+						else{
+							that.toast.error(obs2.msg);
+						}
+						observ2.unsubscribe();
+					});
+				}
+			}
+			else{
+				that.toast.error(obs.msg);
+			}
+			that.Rot.chargeModal = false;
+  		observ.unsubscribe();
+  	});
+  }
+
+  validerModifConge(){
+  	this.Rot.chargeModal = true;
+  	let that = this;
+  	let argument = {
+  		idConge: this.Rot.objetAModifier.conge.idConge,
+  		debutConge: this.Rot.champ.dateDebut,
+  		finConge: this.Rot.champ.dateFin,
+  		idAgentSec: this.Rot.objetAModifier.conge.idAgentSec
+  	};
+  	let observ = this.immoService.immoTopic("modifierCongeInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				let modif = obs.msg;
+				let indice = -1;
+				for(let i=0; i<that.Rot.listeConge.length; i++){
+					if(that.Rot.listeConge[i].idConde == that.Rot.objetAModifier.conge.idConge){
+						that.Rot.listeConge[i].debutConge = modif.debutConge;
+						that.Rot.listeConge[i].finConge = modif.finConge;
+						indice = i;
+						break;
+					}
+				}
+				that.Rot.objetAModifier.conge = that.Rot.listeConge[indice];
+				that.Rot.objetAModifier.start = modif.debutConge;
+				that.Rot.objetAModifier.end = modif.finConge+"T23:59";
+
+				that.fullcalendar.fullCalendar('updateEvent', that.Rot.objetAModifier);
+				that.fermeModalRot();
+				that.toast.success("Element modifié");
 			}
 			else{
 				that.toast.error(obs.msg);
@@ -458,14 +646,128 @@ export class SecAgentComponent implements OnInit {
   	this.Rot.champ.heureFin = null;
   	this.Rot.champ.matricules = "";
   	this.Rot.champ.idLoc = "";
+  	this.Rot.objetAModifier = null;
   }
 
   clickEvent(eventObject){
-    console.log("event element",eventObject);
+    console.log("clickEvent",eventObject);
+    this.Rot.objetAModifier = eventObject;
+  	let event = null;
+    if(eventObject.rotation != undefined){
+    	event = eventObject.rotation;
+	  	this.Rot.typeChamp = "s";
+	  	this.Rot.champ.heureDebut = event.heureDebut;
+	  	this.Rot.champ.heureFin = event.heureFin;
+
+	  	let that = this;
+  		let observ = this.immoService.immoTopic("prendLocalisationParIdInt", event.idLoc, false).subscribe(obs=>{
+  			if(obs.success){
+  				that.Rot.ngxSite = [];
+  				that.Rot.ngxSite.push({id: obs.msg.idLoc, text: obs.msg.libelle});
+  			}
+  			observ.unsubscribe();
+  		});
+	  }
+	  else{
+	  	event = eventObject.conge;
+	  	this.Rot.typeAction = "c";
+	  	this.Rot.champ.heureDebut = null;
+	  	this.Rot.champ.heureFin = null;
+	  }
+  	this.Rot.titreModal = "Modification";
+  	this.Rot.typeAction = "m";
+  	this.Rot.champ.dateDebut = event.dateDebut;
+  	this.Rot.champ.dateDebut = event.dateFin;
+  	this.Rot.champ.matricules = event.agent.matricule;
+
+    $(this.modalAjoutModifRot.nativeElement).modal("show");
+  }
+
+  dropEvent(event){
+  	console.log("dropEvent",event);
+  	let dateDebut = event.start.format().toString().split("T")[0];
+  	let dateFin = event.end.format().toString().split("T")[0];
+  	if(event.rotation != undefined){
+  		this.majRotationDate(event, dateDebut, dateFin);
+  	}
+  	else{
+  		this.majCongeDate(event, dateDebut, dateFin);
+  	}
+  }
+
+  retailleEvent(event){
+  	console.log("retailleEvent",event);
+  	let dateDebut = event.start.format().toString().split("T")[0];
+  	let dateFin = event.end.format().toString().split("T")[0];
+  	if(event.rotation != undefined){
+  		this.majRotationDate(event, dateDebut, dateFin);
+  	}
+  	else{
+  		this.majCongeDate(event, dateDebut, dateFin);
+  	}
+  }
+
+  majRotationDate(eventObject, dateDebut, dateFin){
+  	let that = this;
+  	let argument = {
+  		idRotation: eventObject.rotation.idRotation,
+  		dateDebut: dateDebut,
+  		dateFin: dateFin
+  	};
+  	let observ = this.immoService.immoTopic("majRotationDateInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				let modif = obs.msg;
+				for(let i=0; i<that.Rot.listeRotation.length; i++){
+					if(that.Rot.listeRotation[i].idRotation == eventObject.rotation.idRotation){
+						that.Rot.listeRotation[i] = modif;
+						break;
+					}
+				}
+				eventObject.rotation = modif;
+				that.fullcalendar.fullCalendar('updateEvent', eventObject);
+			}
+			else{
+				that.toast.error("Erreur réseau, mise à jour non pris en charge");
+			}
+  		observ.unsubscribe();
+  	});
+  }
+
+  majCongeDate(eventObject, dateDebut, dateFin){
+  	let that = this;
+  	let argument = {
+  		idConge: eventObject.conge.idConge,
+  		debutConge: dateDebut,
+  		finConge: dateFin
+  	};
+  	let observ = this.immoService.immoTopic("majCongeDateInt", argument, true).subscribe(obs=>{
+			if(obs.success){
+				let modif = obs.msg;
+				for(let i=0; i<that.Rot.listeConge.length; i++){
+					if(that.Rot.listeConge[i].idConde == eventObject.conge.idConge){
+						that.Rot.listeConge[i] = modif;
+					}
+				}
+				eventObject.conge = modif;
+				that.fullcalendar.fullCalendar('updateEvent', eventObject);
+			}
+			else{
+				that.toast.error("Erreur réseau, mise à jour non pris en charge");
+			}
+  		observ.unsubscribe();
+  	});
   }
 
   chargerListeRot(){
-
+  	this.afficheChargement();
+  	let that = this;
+  	let argument = {
+  		annee: this.Rot.annee,
+  		mois: this.Rot.mois 
+  	};
+  	let observ = this.immoService.immoTopic("rechercheRotation", argument, true).subscribe(obs=>{
+  		observ.unsubscribe();
+  	});
   }
 
   ouvreModalSite(){
@@ -526,10 +828,17 @@ export class SecAgentComponent implements OnInit {
   		let observ = this.immoService.immoTopic("ajoutLocalisationInt", this.Site.champ,true).subscribe(obs=>{
   			console.log(obs);
   			if(obs.success){
-  				let nouvSite = obs.msg;
-  				that.Rot.ngxSite = [{id: nouvSite.idLoc, text: nouvSite.libelle}];
-  				that.Rot.champ.idLoc = nouvSite.idLoc;
-  				that.fermeModalSite();
+  				if(obs.msg != null){
+	  				let nouvSite = obs.msg;
+	  				that.Rot.ngxSite = [{id: nouvSite.idLoc, text: nouvSite.libelle}];
+	  				that.Rot.champ.idLoc = nouvSite.idLoc;
+	  				that.fermeModalSite();
+	  				that.Site.champ.libelleCommune = "";
+	  				that.Site.champ.libelleLoc = "";
+	  			}
+	  			else{
+	  				that.toast.error("Erreur du serveur");
+	  			}
   			}
   			else{
   				that.toast.error(obs.msg);
@@ -538,6 +847,14 @@ export class SecAgentComponent implements OnInit {
   			observ.unsubscribe();
   		});
   	}
+  }
+
+  afficheChargement(){
+    $(this.modalChargement.nativeElement).modal("show");
+  }
+
+  fermeChargement(){
+    $(this.modalChargement.nativeElement).modal('hide');
   }
 
 }

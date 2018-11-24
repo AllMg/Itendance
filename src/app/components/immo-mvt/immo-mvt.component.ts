@@ -21,6 +21,7 @@ export class ImmoMvtComponent implements OnInit {
 	};
 
 	listeService = [];
+	ngxServices = [];
 
 	Det = {
 		refService: 0,
@@ -52,6 +53,14 @@ export class ImmoMvtComponent implements OnInit {
           return 0;
         });
 				that.listeService = obs.msg;
+				let liste = [];
+				for(let i=0; i<that.listeService.length; i++){
+					liste.push({
+						id: that.listeService[i].code_service, 
+						text: that.listeService[i].libelle + " " + that.listeService[i].code_service
+					});
+				}
+				that.ngxServices = liste;
 			}
 			observ.unsubscribe();
 		});
@@ -176,7 +185,7 @@ export class ImmoMvtComponent implements OnInit {
 								listeDetService[i].codeArticle = listeCodeArt[i];
 								listeDetService[i].libelleArticle = "";
 								listeDetService[i].horsService = false;
-								listeIdArt.push(listeCodeArt[i]);
+								listeIdArt.push(listeCodeArt[i].refArticle);
 							}
 							that.Cess.listeDetService = listeDetService;
 							let observ2 = that.immoService.immoTopic("listeArticleParIdInt", listeIdArt, true).subscribe(obs2=>{
@@ -223,7 +232,7 @@ export class ImmoMvtComponent implements OnInit {
 						idDetArt: this.Cess.listeDetService[i].idDetArt,
 						refService: this.Cess.refService,
 						detenteur: this.Cess.listeDetService[i].refIndividu,
-						anneeAcquisition: this.Cess.listeDetService[i].codeArticle.datePremierAcqui,
+						anneeAcquisition: this.prendAnneeDepuisDate(this.Cess.listeDetService[i].codeArticle.datePremierAcqui),
 						etatArt: this.Cess.listeDetService[i].codeArticle.etat,
 						valeur: this.Cess.listeDetService[i].codeArticle.prix
 					}
@@ -255,6 +264,11 @@ export class ImmoMvtComponent implements OnInit {
 
 	fermeChargement(){
 		$(this.modalChargement.nativeElement).modal('hide');
+	}
+
+	prendAnneeDepuisDate(date){
+		let str = date.toString().split("-")[0];
+		return parseInt(str);
 	}
 
 }

@@ -97,9 +97,7 @@
 					<div class="col-4">
 						<div class="form-group">
 							<label>Service destinataire</label>
-							<select [(ngModel)]="Det.refService" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
-							</select>
+							<ngx-select [(ngModel)]="Det.refService" [items]="ngxServices"></ngx-select>
 						</div>
 					</div>
 					<div class="col-4">
@@ -160,12 +158,10 @@
 				<h6 style="text-transform: uppercase;">Etablissement des articles hors services ou non utiles</h6>
 				<hr>
 				<div class="row">
-					<div class="col-md-6 form-group">
+					<div class="col-md-12 form-group">
 						<label>Service</label>
 						<div class="input-group mb-3">
-							<select [(ngModel)]="Cess.refService" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
-							</select>
+							<ngx-select [(ngModel)]="Cess.refService" [items]="ngxServices" style="width: 500px;"></ngx-select>
 							<div class="input-group-append">
 								<button (click)="chargerServiceImmo()" class="btn btn-info">Charger</button>
 							</div>
@@ -188,9 +184,9 @@
 							<td>{{da.idCodeArt}}</td>
 							<td>{{da.libelleArticle}}</td>
 							<td>{{da.codeArticle.reference}}</td>
-							<td>{{ca.codeArticle.etat}}</td>
-							<td>
-								<input [(ngModel)]="Cess.listeDetService[index].horsService" name="horsService" type="checkbox" value="{{ca.horsService}}" class="form-check-input">
+							<td>{{da.codeArticle.etat}}</td>
+							<td style="text-align: center;">
+								<input [(ngModel)]="Cess.listeDetService[index].horsService" name="horsService{{index}}" type="checkbox" value="{{da.horsService}}">
 							</td>
 						</tr>
 					</tbody>

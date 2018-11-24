@@ -34,16 +34,14 @@
 				<h6 style="text-transform: uppercase;">Inventaire des immobilisations</h6>
 				<hr>
 				<div class="row">
-					<div class="col-md-6 form-group">
+					<div class="col-md-9 form-group">
 						<label>Service</label>
 						<div class="input-group mb-3">
-								<select [(ngModel)]="Pv.refService" class="form-control custom-select">
-									<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
-								</select>
-								<div class="input-group-append">
-									<button (click)="chargerListeImmoService()" class="btn btn-info">Charger</button>
-								</div>
+							<ngx-select [(ngModel)]="Pv.refService" [items]="ngxServices" style="width: 500px;"></ngx-select>
+							<div class="input-group-append">
+								<button (click)="chargerListeImmoService()" class="btn btn-info">Charger</button>
 							</div>
+						</div>
 					</div>
 				</div>
 				<p>Liste des immobilisations du service</p>
@@ -89,9 +87,10 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Service</label>
-							<select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" class="form-control custom-select">
+							<ngx-select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" [items]="ngxServices" style="width: 500px;"></ngx-select>
+							<!--<select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" class="form-control custom-select">
 								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
-							</select>
+							</select>-->
 						</div>
 					</div>
 					<div class="col-md-6">

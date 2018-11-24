@@ -32,6 +32,7 @@ export class ImmoArtComponent implements OnInit {
   listeSpecificite = [];
 
   listeService = [];
+  ngxServices = [];
 
   Stock = {
     liste: [],
@@ -431,6 +432,14 @@ export class ImmoArtComponent implements OnInit {
             return 0;
           });
           that.listeService = obs.msg;
+          let liste = [];
+          for(let i=0; i<that.listeService.length; i++){
+            liste.push({
+              id: that.listeService[i].code_service, 
+              text: that.listeService[i].libelle + " " + that.listeService[i].code_service
+            });
+          }
+          that.ngxServices = liste;
         }
         observ.unsubscribe();
       });
