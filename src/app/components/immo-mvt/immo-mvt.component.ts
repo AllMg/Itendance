@@ -23,6 +23,13 @@ export class ImmoMvtComponent implements OnInit {
 	listeService = [];
 	ngxServices = [];
 
+	Entree = {
+		numTef: null,
+		numImputation: null,
+		dateEntree: null,
+		listeArticle: []
+	};
+
 	Det = {
 		refService: 0,
 		refIndividu: "",
@@ -91,6 +98,7 @@ export class ImmoMvtComponent implements OnInit {
 			let codeArt = {};
 			let that = this;
 			let observ = this.immoService.immoTopic("detailsCodeArticleInt", this.Det.idCodeArt, false).subscribe(obs=>{
+				console.log("detailsCodeArticleInt",obs);
 				if(obs.success){
 					codeArt["idCodeArt"] = obs.msg.idCodeArt;
 					codeArt["reference"] = obs.msg.reference;
@@ -99,6 +107,7 @@ export class ImmoMvtComponent implements OnInit {
 					codeArt["fournisseur"] = obs.msg.fournisseur;
 					codeArt["typeDet"] = "DOTATION";
 					let observ1 = that.immoService.immoTopic("detailsArticleInt", obs.msg.refArticle, false).subscribe(obs1=>{
+						console.log("detailsArticleInt", obs1);
 						that.fermeChargement();
 						if(obs1.success){
 							codeArt["libelle"] = obs1.msg.libelle;
@@ -170,6 +179,7 @@ export class ImmoMvtComponent implements OnInit {
 			this.Cess.listeDetService = [];
 			let that = this;
 			let observ = this.immoService.immoTopic("listeDetentionArticleServiceInt", this.Cess.refService, false).subscribe(obs=>{
+				console.log("listeDetentionArticleServiceInt", obs);
 				if(obs.success){
 					let listeDetService = obs.msg;
 					let idCodeArt = [];
@@ -177,6 +187,7 @@ export class ImmoMvtComponent implements OnInit {
 						idCodeArt.push(listeDetService[i].idCodeArt);
 					}
 					let observ1 = that.immoService.immoTopic("listeCodeArtParCodeInt", idCodeArt, true).subscribe(obs1=>{
+						console.log("listeCodeArtParCodeInt", obs1);
 						that.fermeChargement();
 						if(obs1.success){
 							let listeCodeArt = obs1.msg;
@@ -189,6 +200,7 @@ export class ImmoMvtComponent implements OnInit {
 							}
 							that.Cess.listeDetService = listeDetService;
 							let observ2 = that.immoService.immoTopic("listeArticleParIdInt", listeIdArt, true).subscribe(obs2=>{
+								console.log("listeArticleParIdInt", obs2);
 								if(obs2.success){
 									let libArt = obs2.msg;
 									for(let i=0; i<libArt.length; i++){
@@ -241,6 +253,7 @@ export class ImmoMvtComponent implements OnInit {
 			}
 			let that = this;
 			let observ = this.immoService.immoTopic("ajoutCondamnationInt", argument, true).subscribe(obs=>{
+				console.log("ajoutCondamnationInt", obs);
 				that.fermeChargement();
 				if(obs.success){
 					that.Cess.listeDetService = [];

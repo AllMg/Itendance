@@ -58,20 +58,20 @@
 					</thead>
 					<tbody>
 						<tr *ngFor="let las of Pv.listeASauver; let index = index">
-							<td>{{las.idCodeArt}}</td>
+							<td>{{las.codeArticle.idCodeArt}}</td>
 							<td>{{las.libelleArt}}</td>
 							<td>{{las.codeArticle.reference}}</td>
-							<td>
-								<select [(ngModel)]="Pv.listeASauver[index].codeArticle.etat" name="etat{{index}}" class="form-control custom-select">
+							<td style="text-align: center;">
+								<select [(ngModel)]="Pv.listeASauver[index].codeArticle.etat" name="etat{{index}}" class="form-control custom-select" style="width: 150px;">
 									<option value="NEUF">NEUF</option>
 									<option value="BON">BON</option>
 									<option value="PRUDENCE">PRUDENCE</option>
 									<option value="MAUVAIS">MAUVAIS</option>
 								</select>
 							</td>
-							<td>{{las.refIndividu}}</td>
-							<td>
-								<input [(ngModel)]="Pv.listeASauver[index].presence" type="checkbox" class="form-check-input" name="check{{index}}">
+							<td>{{las.detention.refIndividu}}</td>
+							<td style="text-align: center;">
+								<input [(ngModel)]="Pv.listeASauver[index].presence" type="checkbox" name="check{{index}}">
 							</td>
 						</tr>
 					</tbody>
@@ -87,16 +87,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Service</label>
-							<ngx-select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" [items]="ngxServices" style="width: 500px;"></ngx-select>
-							<!--<select [(ngModel)]="Liste.filtre.refService" (change)="filtrePVChange()" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelle}}</option>
-							</select>-->
+							<ngx-select [(ngModel)]="Liste.filtre.refService" (ngModelChange)="filtrePVChange()" [items]="ngxServices"></ngx-select>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Année de génération</label>
-							<input [(ngModel)]="Liste.filtre.annee" (ngModelChange)="filtrePVChange()" type="number" class="form-control">
+							<ngx-select [(ngModel)]="Liste.filtre.annee" (ngModelChange)="filtrePVChange()" [items]="ngxAnnees"></ngx-select>
 						</div>
 					</div>
 				</div>
@@ -115,7 +112,7 @@
 							<td>{{pv.refService}}</td>
 							<td>{{pv.libelleService}}</td>
 							<td>{{avoirDateSlash(pv.dateInv)}}</td>
-							<td>
+							<td style="text-align: center;">
 								<button (click)="ouvreDetailPV(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
 							</td>
 						</tr>
@@ -142,16 +139,22 @@
 				<h6 style="text-transform: uppercase;">Détail PV d'inventaire</h6>
 				<hr>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-2">
 						<div class="form-group">
-							<label>Service</label>
-							<input type="text" class="form-control" readonly="true">
+							<label>Code Service</label>
+							<input [(ngModel)]="Detail.codeService" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
+							<label>Libellé Service</label>
+							<input [(ngModel)]="Detail.libelleService" type="text" class="form-control" readonly="true">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
 							<label>Date d'inventaire</label>
-							<input type="text" class="form-control" readonly="true">
+							<input [(ngModel)]="Detail.dateInventaire" type="text" class="form-control" readonly="true">
 						</div>
 					</div>
 				</div>
@@ -167,22 +170,22 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td colspan="4">Liste des immobilisations présent pendant l'établissement de l'inventaire</td>
+							<td colspan="4" style="text-align: center; font-size: 12px;">Liste des immobilisations présent pendant l'établissement de l'inventaire</td>
 						</tr>
 						<tr *ngFor="let ia of Detail.listePresent">
-							<td>{{ia.idCodeArt}}</td>
+							<td>{{ia.pvInventaire.idCodeArt}}</td>
 							<td>{{ia.libelleArt}}</td>
-							<td>{{ia.detenteur}}</td>
-							<td>{{ia.etat}}</td>
+							<td>{{ia.pvInventaire.detenteur}}</td>
+							<td>{{ia.pvInventaire.etat}}</td>
 						</tr>
 						<tr>
-							<td colspan="4">Liste des immobilisations non présent pendant l'établissement de l'inventaire</td>
+							<td colspan="4" style="text-align: center; font-size: 12px;">Liste des immobilisations non présent pendant l'établissement de l'inventaire</td>
 						</tr>
 						<tr *ngFor="let ia of Detail.listeNonPresent">
-							<td>{{ia.idCodeArt}}</td>
+							<td>{{ia.pvInventaire.idCodeArt}}</td>
 							<td>{{ia.libelleArt}}</td>
-							<td>{{ia.detenteur}}</td>
-							<td>{{ia.etat}}</td>
+							<td>{{ia.pvInventaire.detenteur}}</td>
+							<td>{{ia.pvInventaire.etat}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -197,14 +200,14 @@
 				<p style="font-size: 13px; opacity: 0.85;">L'état d'inventaire est établit depuis les derniers PV d'inventaire de l'exercice</p>
 				<hr>
 				<div class="row">
-					<div class="col-md-4 form-group">
+					<div class="col-md-6 form-group">
 						<label>Année d'exercice</label>
 						<div class="input-group mb-3">
-								<input [(ngModel)]="Etat.annee" type="number" class="form-control">
-								<div class="input-group-append">
-									<button (click)="etablirEtatInventaire()" class="btn btn-info">Etablir</button>
-								</div>
+							<ngx-select [(ngModel)]="Etat.annee" [items]="ngxAnnees" style="width: 500px;"></ngx-select>
+							<div class="input-group-append">
+								<button (click)="etablirEtatInventaire()" class="btn btn-info">Etablir</button>
 							</div>
+						</div>
 					</div>
 				</div>
 				<table class="table table-bordered">
@@ -239,10 +242,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Service</label>
-							<select [(ngModel)]="Cond.filtre.refService" (change)="filtreCondChange()" class="form-control custom-select">
-								<option value=""></option>
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.libelleService}}</option>
-							</select>
+							<ngx-select [(ngModel)]="Cond.filtre.refService" (ngModelChange)="filtreCondChange()" [items]="ngxServices" style="width: 500px;"></ngx-select>
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -260,7 +260,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Date condamnation</label>
-							<input [(ngModel)]="Cond.filtre.dateCond" (ngModelChange)="filtreCondChange()" type="date" class="form-control">
+							<input [(ngModel)]="Cond.filtre.dateCondamnation" (ngModelChange)="filtreCondChange()" type="date" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -299,13 +299,13 @@
 					</thead>
 					<tbody>
 						<tr *ngFor="let c of Cond.liste; let index = index">
-							<td>{{c.idCodeArt}}</td>
+							<td>{{c.codeArticle.idCodeArt}}</td>
 							<td>{{c.libelleArt}}</td>
-							<td>{{c.etatArt}}</td>
+							<td>{{c.condamnation.etatArt}}</td>
 							<td>{{c.codeArticle.imputation}}</td>
-							<td>{{c.refService}}</td>
-							<td>{{c.detenteur}}</td>
-							<td>
+							<td>{{c.condamnation.refService}}</td>
+							<td>{{c.condamnation.detenteur}}</td>
+							<td style="text-align: center">
 								<button (click)="ouvreModifCond(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
 							</td>
 						</tr>
@@ -341,7 +341,7 @@
 	</div>
 	<!-- MODAL MODIF CONDAMNATION -->
 	<div #modalModifCond class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
-	  <div *ngIf="Cond.modif != null" class="modal-dialog" role="document">
+	  <div *ngIf="Cond.modif != null" class="modal-dialog modal-lg" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h6 class="modal-title">Détail de condamnation de l'article</h6>
@@ -350,38 +350,52 @@
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	  			<div class="form-group">
-	  				<label>Code</label>
-	  				<input value="{{Cond.liste[Cond.indice].idCodeArt}}" type="text" class="form-control input-upper" readonly="true">
-	  			</div>
-	  			<div class="form-group">
-	  				<label>Désignation</label>
-	  				<input value="{{Cond.liste[Cond.indice].libelleArt}}" type="text" class="form-control input-upper" readonly="true">
-	  			</div>
-	  			<div class="form-group">
-	  				<label>Imputation</label>
-	  				<input value="{{Cond.liste[Cond.indice].codeArticle.imputation}}" type="text" class="form-control input-upper" readonly="true">
-	  			</div>
-	  			<div class="form-group">
-	  				<label>Date condamnation</label>
-	  				<input value="{{avoirDateSlash(Cond.liste[Cond.indice].dateCondamnation)}}" type="text" class="form-control input-upper" readonly="true">
-	  			</div>
+			  <div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Date condamnation</label>
+						<input value="{{avoirDateSlash(Cond.liste[Cond.indice].condamnation.dateCondamnation)}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="form-group">
+						<label>Imputation</label>
+						<input value="{{Cond.liste[Cond.indice].codeArticle.imputation}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Code</label>
+						<input value="{{Cond.liste[Cond.indice].condamnation.idCodeArt}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="form-group">
+						<label>Désignation</label>
+						<input value="{{Cond.liste[Cond.indice].libelleArt}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Service (Dernier détenteur)</label>
+						<input value="{{avoirLibelleService(Cond.liste[Cond.indice].condamnation.refService)}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>Agent (Dernier détenteur)</label>
+						<input value="{{Cond.liste[Cond.indice].condamnation.detenteur}}" type="text" class="form-control input-upper" readonly="true">
+					</div>
+				</div>
+			  </div>
 	  			<div class="form-group">
 	  				<label>Etat</label>
-	  				<select [(ngModel)]="Cond.modif.etat" class="form-control custom-select">
+	  				<select [(ngModel)]="Cond.modif.etatArt" class="form-control custom-select">
 	  					<option value="NEUF">NEUF</option>
 	  					<option value="BON">BON</option>
 	  					<option value="PRUDENCE">PRUDENCE</option>
 	  					<option value="MAUVAIS">MAUVAIS</option>
 	  				</select>
-	  			</div>
-	  			<div class="form-group">
-	  				<label>Service</label>
-	  				<input value="{{Cond.liste[Cond.indice].refService}}" type="text" class="form-control input-upper" readonly="true">
-	  			</div>
-	  			<div class="form-group">
-	  				<label>Agent</label>
-	  				<input value="{{Cond.liste[Cond.indice].detenteur}}" type="text" class="form-control input-upper" readonly="true">
 	  			</div>
 	  			<div class="form-group">
 	  				<label>A vendre</label>
@@ -390,16 +404,16 @@
 	  					<option value="0">NON</option>
 	  				</select>
 	  			</div>
-	  			<div *ngIf="Cond.liste[Cond.indice].aVendre == 1" class="form-group">
+	  			<div *ngIf="Cond.liste[Cond.indice].condamnation.aVendre == 1" class="form-group">
 	  				<label>Est vendu</label>
 	  				<select [(ngModel)]="Cond.modif.estVendu" class="form-control custom-select">
 	  					<option value="1">OUI</option>
 	  					<option value="0">NON</option>
 	  				</select>
 	  			</div>
-	  			<div *ngIf="Cond.liste[Cond.indice].estVendu == 1" class="form-group">
+	  			<div *ngIf="Cond.liste[Cond.indice].condamnation.estVendu == 1" class="form-group">
 	  				<label>Vendu le</label>
-	  				<input [(ngModel)]="Cond.modif.venduLe" type="date" class="form-control input-upper" readonly="true">
+	  				<input [(ngModel)]="Cond.modif.venduLe" type="date" class="form-control input-upper">
 	  			</div>
 	      </div>
 	      <div class="modal-footer">

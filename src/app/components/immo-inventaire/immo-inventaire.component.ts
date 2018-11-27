@@ -22,6 +22,7 @@ export class ImmoInventaireComponent implements OnInit {
 
 	listeService = [];
 	ngxServices = [];
+	ngxAnnees = [];
 
 	Pv = {
 		refService: "",
@@ -36,13 +37,14 @@ export class ImmoInventaireComponent implements OnInit {
 		ligneMax: 25,
 		filtre: {
 			refService: "",
-			annnee: null
+			annee: null
 		}
 	};
 
 	Detail = {
 		charge: false,
-		service: "",
+		libelleService: "",
+		codeService: "",
 		dateInventaire: "",
 		listePresent: [],
 		listeNonPresent: []
@@ -67,7 +69,7 @@ export class ImmoInventaireComponent implements OnInit {
 			refService: "",
 			detenteur: "",
 			idCodeArt: "",
-			dateCond: null,
+			dateCondamnation: null,
 			aVendre: "",
 			estVendu: ""
 		},
@@ -106,6 +108,14 @@ export class ImmoInventaireComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		let debut = 1940;
+		let date = new Date(Date.now());
+		let fin = date.getFullYear();
+		let liste = [];
+		for(let annee = fin; annee>=debut; annee--){
+			liste.push({id: annee, text: annee});
+		}
+		this.ngxAnnees = liste;
 	}
 
 	clickInMenu1(lien:string){
@@ -133,13 +143,14 @@ export class ImmoInventaireComponent implements OnInit {
 			this.afficheChargement();
 			let that = this;
 			let observ = this.immoService.immoTopic("listeDetAvecCodeArtServiceInt", this.Pv.refService, false).subscribe(obs=>{
-				console.log("listeDetentionArticleServiceInt",obs);
-				if(obs.success){
+				console.log("listeDetAvecCodeArtServiceInt",obs);
+				if(obs.success && obs.msg != null){
 					let liste = obs.msg;
 					for(let i=0; i<liste.length; i++){
 						liste[i].presence = true;
 						let indice = i;
 						let observ2 = that.immoService.immoTopic("detailsArticleInt", liste[i].codeArticle.refArticle, false).subscribe(obs2=>{
+							console.log("detailsArticleInt",obs2);
 							if(obs2.success){
 								liste[indice].libelleArt = obs2.msg.libelle;
 							}
@@ -151,7 +162,12 @@ export class ImmoInventaireComponent implements OnInit {
 				}
 				else{
 					this.fermeChargement();
-					that.toast.error(obs.msg);
+					if(obs.msg != null) {
+						that.toast.error(obs.msg);
+					}
+					else{
+						that.toast.error("Erreur depuis le serveur");
+					}
 				}
 			});
 		}
@@ -177,14 +193,15 @@ export class ImmoInventaireComponent implements OnInit {
 			};
 			for(let i=0; i<this.Pv.listeASauver.length; i++){
 				argument.liste.push({
-					idCodeArt: this.Pv.listeASauver[i].idCodeArt,
+					idCodeArt: this.Pv.listeASauver[i].codeArticle.idCodeArt,
 					etat: this.Pv.listeASauver[i].codeArticle.etat,
-					detenteur: this.Pv.listeASauver[i].refIndividu,
+					detenteur: this.Pv.listeASauver[i].detention.refIndividu,
 					prix: this.Pv.listeASauver[i].codeArticle.prix,
 					present: this.avoirPresence(this.Pv.listeASauver[i].presence)
 				});
 			}
-			let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("ajoutPvInventaireInt", argument, true).subscribe(obs=>{
+				console.log("ajoutPvInventaireInt", obs);
 				that.fermeChargement();
 				if(obs.success){
 					that.toast.success("Le PV d'inventaire est enrégistré");
@@ -201,7 +218,14 @@ export class ImmoInventaireComponent implements OnInit {
 	listePV(){
 		this.Liste.charge = true;
 		let that = this;
-		let observ = this.immoService.immoTopic("listePVInventaire", this.Liste.filtre, true).subscribe(obs=>{
+		let argument = {
+			pagination: this.Liste.page,
+			refService: this.Liste.filtre.refService,
+			annee: this.Liste.filtre.annee
+		};
+		console.log("argument: ", argument);
+		let observ = this.immoService.immoTopic("listePvInventaireInt", argument, true).subscribe(obs=>{
+			console.log("listePvInventaireInt", obs);
 			if(obs.success){
 				let liste = obs.msg;
 				for(let i=0; i<liste.length; i++){
@@ -246,16 +270,17 @@ export class ImmoInventaireComponent implements OnInit {
   ouvreDetailPV(index){
   	this.Menu.sousMenu = "detail_pv";
   	this.Detail.charge = true;
-  	this.Detail.service = this.Liste.liste[index].refService;
-  	this.Detail.dateInventaire = this.avoirDateSlash(this.Liste.liste[index].DateInv);
+  	this.Detail.dateInventaire = this.avoirDateSlash(this.Liste.liste[index].dateInv);
   	let that = this;
-  	let observ = this.immoService.getByIdRefDrhService(this.Liste.liste[index].refService).subscribe(obs=>{
-  		if(obs.success){
-  			that.Detail.service += obs.msg.libelle;
+  	for(let i=0; i<this.listeService.length; i++){
+  		if(this.listeService[i].code_service == this.Liste.liste[index].refService){
+  			this.Detail.libelleService = this.Liste.liste[index].libelleService;
+  			this.Detail.codeService = this.Liste.liste[index].refService;
+  			break;
   		}
-  		observ.unsubscribe();
-  	});
-  	let observ1 = this.immoService.immoTopic("listeArticleInventaireInt", this.Liste.liste[index].refService, false).subscribe(obs=>{
+  	}
+  	let observ1 = this.immoService.immoTopic("detailsPvInventaireArticleInt", this.Liste.liste[index].idPvInventaire, false).subscribe(obs=>{
+  		console.log("detailPvInventaireInt",obs);
   		if(obs.success){
   			let liste = obs.msg;
   			let idArticles = [];
@@ -272,7 +297,7 @@ export class ImmoInventaireComponent implements OnInit {
   				observ2.unsubscribe();
   			});
   			for(let i=0; i<liste.length; i++){
-  				if(liste[i].present == 1){
+  				if(liste[i].pvInventaire.present == 1){
   					that.Detail.listePresent.push(liste[i]);
   				}
   				else{
@@ -309,8 +334,9 @@ export class ImmoInventaireComponent implements OnInit {
   		page: this.Etat.page
   	};
   	let that = this;
-  	let observ = this.immoService.immoTopic("listeEtatInventaireInt", this.Etat.annee, false).subscribe(obs=>{
-  		if(obs.success){
+  	let observ = this.immoService.immoTopic("etatPvInventaireInt", this.Etat.annee, false).subscribe(obs=>{
+		console.log("etatPvInventaireInt",obs);  
+		if(obs.success){
   			let liste = obs.msg;
 				if(liste.length < that.Etat.ligneMax){
 					that.Etat.finAtteint = true;
@@ -327,9 +353,6 @@ export class ImmoInventaireComponent implements OnInit {
 	  						liste[i].libelleArt = obs2.msg[i];
 	  					}
 	  					that.Etat.liste = that.Etat.liste.concat(liste);
-	  				}
-	  				else{
-	  					that.toast.error(obs2.msg);
 	  				}
 	  				that.fermeChargement();
 	  				observ2.unsubscribe();
@@ -351,9 +374,14 @@ export class ImmoInventaireComponent implements OnInit {
 
   listeCond(){
   	this.Cond.charge = true;
-  	let that = this;
-  	let observ = this.immoService.immoTopic("listeCondamneInt", this.Cond.filtre, true).subscribe(obs=>{
-  		if(obs.success){
+	let that = this;
+	let argument = {
+		pagination: this.Cond.page,
+		filtre: this.Cond.filtre
+	};
+  	let observ = this.immoService.immoTopic("filtreCondamnationInt", argument, true).subscribe(obs=>{
+		console.log("filtreCondamnationInt", obs);  
+		if(obs.success){
   			let liste = obs.msg;
   			let idArticles = [];
   			for(let i=0; i<liste.length; i++){
@@ -405,20 +433,26 @@ export class ImmoInventaireComponent implements OnInit {
 		$(this.modalModifCond.nativeElement).modal("show");
 		this.Cond.indice = index;
 		this.Cond.modif = {
-			idCond: this.Cond.liste[index].idCond,
-			etat: this.Cond.liste[index].etatArt,
-			aVendre: this.Cond.liste[index].aVendre,
-			estVendu: this.Cond.liste[index].estVendu,
-			venduLe: this.Cond.liste[index].venduLe
+			idCond: this.Cond.liste[index].condamnation.idCond,
+			etatArt: this.Cond.liste[index].condamnation.etatArt,
+			aVendre: this.Cond.liste[index].condamnation.aVendre,
+			estVendu: this.Cond.liste[index].condamnation.estVendu,
+			venduLe: this.Cond.liste[index].condamnation.venduLe
 		};
 	}
 
 	modifierCond(){
 		this.Cond.chargeModif = true;
 		let that = this;
-		let observ = this.immoService.immoTopic("", this.Cond.modif, true).subscribe(obs=>{
+		let observ = this.immoService.immoTopic("modifierCondamnationInt", this.Cond.modif, true).subscribe(obs=>{
+			console.log("modifierCondamnationInt",obs);
 			if(obs.success){
 				that.toast.success("Modification terminé");
+				let modif = obs.msg;
+				that.Cond.liste[that.Cond.indice].condamnation.etatArt = modif.etatArt;
+				that.Cond.liste[that.Cond.indice].condamnation.aVendre = modif.aVendre;
+				that.Cond.liste[that.Cond.indice].condamnation.estVendu = modif.estVendu;
+				that.Cond.liste[that.Cond.indice].condamnation.venduLe = modif.venduLe;
 			}
 			else{
 				that.toast.error(obs.msg);
@@ -431,6 +465,15 @@ export class ImmoInventaireComponent implements OnInit {
 	fermeModifCond(){
 		$(this.modalModifCond.nativeElement).modal("hide");
 		this.Cond.modif = null;
+	}
+
+	avoirLibelleService(refService){
+		for(let i=0; i<this.listeService.length; i++){
+			if(this.listeService[i].code_service == refService){
+				return this.listeService[i].libelle;
+			}
+		}
+		return "";
 	}
 
 	afficheChargement(){
