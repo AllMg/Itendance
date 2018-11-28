@@ -69,7 +69,8 @@ export class MouvementService {
   postule(nom: string, prenom: string, email: string, telephone: string, idposte: number, idetat: number) {
     const data = {
       data: {
-        nom: nom + ' ' + prenom,
+        nom: nom ,
+        prenom: prenom,
         email: email,
         telephone: telephone,
         idposte: {
@@ -78,6 +79,7 @@ export class MouvementService {
         idetat: idetat
       }
     };
+    console.log(data);
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.post(this.host + 'rh/mouvement/postule/', data, {headers: headers})
@@ -89,7 +91,8 @@ export class MouvementService {
     const data = {
       data: {
         idpostule: id,
-        nom: nom + ' ' + prenom,
+        nom: nom,
+        prenom: prenom,
         email: email,
         telephone: telephone,
         idposte: {

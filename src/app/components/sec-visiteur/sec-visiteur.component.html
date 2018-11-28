@@ -62,7 +62,7 @@
     					<label class="form-check-label" for="exampleCheck1">Est un agent de la CNaPS</label>
 						</div>
 					</div>
-					<div *ngIf="!Entree.estAgent" class="col-md-6">
+					<div *ngIf="Entree.estAgent" class="col-md-6">
 						<div class="form-group">
 							<label>Matricule</label>
 							<input [(ngModel)]="Entree.champ.refIndividuCnaps" type="text" class="form-control">
@@ -71,10 +71,7 @@
 					<div *ngIf="!Entree.estAgent" class="col-md-6">
 						<div class="form-group">
 							<label>Service destination</label>
-							<select [(ngModel)]="Entree.champ.refService" class="form-control custom-select">
-								<option value=""></option>
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service + " " + s.libelle}}</option>
-							</select>
+							<ngx-select [(ngModel)]="Entree.champ.refService" [items]="ngxServices"></ngx-select>
 						</div>
 					</div>
 					<div *ngIf="!Entree.estAgent" class="col-md-6">
@@ -86,7 +83,9 @@
 				</div>
 				<div class="form-group">
 					<label>Motif</label>
-					<textarea [(ngModel)]="Entree.champ.motif" class="form-control" rows="7" cols="50"></textarea>
+					<select [(ngModel)]="Entree.champ.idMotif" class="form-control custom-select">
+						<option *ngFor="let m of listeMotif" value="{{m.idMotif}}">{{m.libelle}}</option>
+					</select>
 				</div>
 				<button *ngIf="!Entree.charge" (click)="enregistrerEntree()" class="btn btn-info">Enregistrer</button>
 				<div *ngIf="Entree.charge" class="loader"></div>
@@ -111,13 +110,13 @@
 					</thead>
 					<tbody>
 						<tr *ngFor="let v of Sortie.liste; let index = index">
-							<td>{{v.nom}}</td>
-							<td>{{v.prenom}}</td>
-							<td>{{v.cin}}</td>
-							<td>{{v.numeroVehicule}}</td>
-							<td>{{v.heureEntree}}</td>
-							<td *ngIf="v.heureSortie != null">{{v.heureSortie}}</td>
-							<td *ngIf="v.heureSortie == null">
+							<td>{{v.visiteur.nom}}</td>
+							<td>{{v.visiteur.prenom}}</td>
+							<td>{{v.visiteur.cin}}</td>
+							<td><span *ngIf="v.vehicule != null">{{v.vehicule.numeroVehicule}}</span></td>
+							<td>{{v.mvt.heureEntre}}</td>
+							<td *ngIf="v.mvt.heureSortie != null" style="text-align: center;">{{v.mvt.heureSortie}}</td>
+							<td *ngIf="v.mvt.heureSortie == null" style="text-align: center;">
 								<button *ngIf="!Sortie.liste[index].charge" (click)="ouvreConfirmeSortie(index)" class="btn btn-info">Marquer</button>
 								<div *ngIf="Sortie.liste[index].charge" class="mini-loader"></div>
 							</td>
@@ -136,23 +135,20 @@
 				<div class="row">
 					<div class="col-md-4">
 						<div class="form-group">
-							<label>Service</label>
-							<select [(ngModel)]="Liste.filtre.refService" (change)="filtreChange()" class="form-control custom-select">
-								<option value=""></option>
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service + " " + s.libelle}}</option>
-							</select>
+							<label>Date</label>
+							<input [(ngModel)]="Liste.filtre.date" (ngModelChange)="filtreChange()" type="date" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label>Nom/Prénom</label>
+							<label>Nom/Prénom (cherché par le visiteur)</label>
 							<input [(ngModel)]="Liste.filtre.nomPrenom" (ngModelChange)="filtreChange()" type="text" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
-							<label>Date</label>
-							<input [(ngModel)]="Liste.filtre.date" (ngModelChange)="filtreChange()" type="date" class="form-control">
+							<label>Service (visité)</label>
+							<ngx-select [(ngModel)]="Liste.filtre.refService" (ngModelChange)="filtreChange()" [items]="ngxServices"></ngx-select>
 						</div>
 					</div>
 				</div>
@@ -168,9 +164,9 @@
 					</thead>
 					<tbody>
 						<tr *ngFor="let v of Liste.liste; let index = index">
-							<td>{{v.date}}</td>
+							<td>{{avoirDateSlash(v.dateMvt)}}</td>
 							<td>{{v.nom+" "+v.prenom}}</td>
-							<td>{{v.heureEntree}}</td>
+							<td>{{v.heureEntre}}</td>
 							<td>{{v.heureSortie}}</td>
 							<td>
 								<button (click)="afficheInfoVisiteur(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
@@ -210,7 +206,7 @@
 	      </div>
 	      <div class="modal-body">
   			<div *ngIf="Sortie.indice > -1" class="form-group">
-  				<label>Êtes-vous de la sortie de {{Sortie.liste[Sortie.indice].nom + " " + Sortie.liste[Sortie.indice].nom}} ?</label>
+  				<label>Êtes-vous de la sortie de {{Sortie.liste[Sortie.indice].visiteur.nom + " " + Sortie.liste[Sortie.indice].visiteur.prenom}} ?</label>
   			</div>
 	      </div>
 	      <div class="modal-footer">
@@ -235,13 +231,13 @@
 	      		<div class="col-md-4">
 		  				<div class="form-group">
 		  					<label>Date</label>
-		  					<input value="{{avoirDateSlash(Liste.liste[Liste.indice].date)}}" type="text" class="form-control" readonly="true">
+		  					<input value="{{avoirDateSlash(Liste.liste[Liste.indice].dateMvt)}}" type="text" class="form-control" readonly="true">
 		  				</div>
 		  			</div>
 		  			<div class="col-md-4">
 		  				<div class="form-group">
 		  					<label>Heure d'entrée</label>
-		  					<input value="{{Liste.liste[Liste.indice].heureEntree}}" type="text" class="form-control" readonly="true">
+		  					<input value="{{Liste.liste[Liste.indice].heureEntre}}" type="text" class="form-control" readonly="true">
 		  				</div>
 		  			</div>
 		  			<div class="col-md-4">
@@ -251,6 +247,10 @@
 		  				</div>
 		  			</div>
 	      	</div>
+  				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps != null" class="form-group">
+  					<label>Matricule agent (CNaPS)</label>
+  					<input value="{{Liste.liste[Liste.indice].refIndividuCnaps}}" type="text" class="form-control" readonly="true">
+  				</div>
   				<div class="form-group">
   					<label>Nom</label>
   					<input value="{{Liste.liste[Liste.indice].nom}}" type="text" class="form-control" readonly="true">
@@ -267,10 +267,6 @@
   					<label>Véhicule (Numéro)</label>
   					<input value="{{Liste.liste[Liste.indice].numeroVehicule}}" type="text" class="form-control" readonly="true">
   				</div>
-  				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps != null" class="form-group">
-  					<label>Matricule agent</label>
-  					<input value="{{Liste.liste[Liste.indice].refIndividuCnaps}}" type="text" class="form-control" readonly="true">
-  				</div>
   				<div *ngIf="Liste.liste[Liste.indice].refIndividuCnaps == null" class="form-group">
   					<label>Service destination</label>
   					<input value="{{Liste.liste[Liste.indice].refService}}" type="text" class="form-control" readonly="true">
@@ -280,8 +276,8 @@
   					<input value="{{Liste.liste[Liste.indice].refIndividuRecherche}}" type="text" class="form-control" readonly="true">
   				</div>
   				<div class="form-group">
-  					<label>Motif</label>
-  					<textarea cols="20" rows="7" readonly="true">{{Liste.liste[Liste.indice].motif}}</textarea>
+						<label>Motif</label>
+  					<input value="{{prendLibelleMotif(Liste.liste[Liste.indice].idMotif)}}" type="text" class="form-control" readonly="true">
   				</div>
 	      </div>
 	      <div class="modal-footer">

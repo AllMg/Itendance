@@ -7,7 +7,7 @@ import { Options, EventObject } from 'fullcalendar';
 import { FileModel } from '../../models/file-model';
 import { ImmoService } from '../../services/immo/immo.service';
 import { FileService } from '../../services/file/file.service';
-import {CalendarDataModel} from '../../models/CalendarDataModel';
+import { MouvementService } from '../../services/rh/mouvement.service';
 
 declare var $: any;
 
@@ -103,9 +103,10 @@ export class SecAgentComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private toast: ToastrService,
-    private fileService: FileService,
+		private fileService: FileService,
+		private mouvementService: MouvementService,
 		private immoService: ImmoService) { 
-		let that = this;
+	let that = this;
     this.Site.fComControl.valueChanges.subscribe(term => {
       term = term.toString().trim();
       if (term.length >= 3) {
@@ -349,7 +350,26 @@ export class SecAgentComponent implements OnInit {
 
   validerNouvAgent(){
   	this.Saisie.charge = true;
-  	let that = this;
+	let that = this;
+		/*nom: ['', Validators.required],
+      prenom: [''],
+      telephone: ['', Validators.required],
+      email: ['', Validators.required],
+      cin: ['', Validators.required],
+      sexe: ['', Validators.required],
+      naissance: ['', Validators.required],
+      embauche: ['', Validators.required],
+      firaisana: ['', Validators.required],
+      service: ['', Validators.required],
+      services: [''],
+      direction: ['', Validators.required],
+      categorie: ['', Validators.required],
+      nationalite: ['', Validators.required],
+      echelon: ['', Validators.required],
+      classe: ['', Validators.required],
+      fonction: ['', Validators.required],
+      drcode: ['42', Validators.required] */
+	//this.mouvementService.newAgent().subscribe(obs=>{});
   	let observ = this.immoService.immoTopic("ajoutAgentSecInt", this.Saisie.champ, true).subscribe(obs=>{
   		if(obs.success){
   			for(let attr in that.Saisie.champ){

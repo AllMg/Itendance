@@ -22,6 +22,8 @@ export class SecVisiteurComponent implements OnInit {
 	};
 
 	listeService = [];
+	ngxServices = [];
+	listeMotif = [];
 
 	Entree = {
 		estAgent: false,
@@ -33,7 +35,7 @@ export class SecVisiteurComponent implements OnInit {
 			refService: "",
 			refIndividuRecherche: "",
 			refIndividuCnaps: "",
-			motif: ""
+			idMotif: 1
 		},
 		charge: false
 	};
@@ -51,7 +53,7 @@ export class SecVisiteurComponent implements OnInit {
 		page: 1,
 		ligneMax: 25,
 		filtre: {
-			refService: "",
+			refService: 0,
 			nomPrenom: "",
 			date: null
 		},
@@ -65,23 +67,39 @@ export class SecVisiteurComponent implements OnInit {
 		private infoService: InfoService) { 
 		let that = this;
 		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
+			console.log("getAllRefDrhService",obs);
 			if(obs.success){
 				obs.msg.sort((a, b)=>{
-          if(a.libelle > b.libelle){
-            return 1;
-          }
-          else if(a.libelle < b.libelle){
-            return -1;
-          }
-          return 0;
-        });
+					if(a.libelle > b.libelle){
+						return 1;
+					}
+					else if(a.libelle < b.libelle){
+						return -1;
+					}
+					return 0;
+				});
 				that.listeService = obs.msg;
+				let liste = [];
+				for(let i=0; i<that.listeService.length; i++){
+					liste.push({
+						id: that.listeService[i].code_service, 
+						text: that.listeService[i].libelle + " " + that.listeService[i].code_service
+					});
+				}
+				that.ngxServices = liste;
 			}
 			observ.unsubscribe();
 		});
 	}
 
 	ngOnInit() {
+		let that = this;
+		let observ = this.immoService.immoTopic("listeMotifVisitInt", "", false).subscribe(obs=>{
+			console.log("listeMotifVisitInt",obs);
+			if(obs.success){
+				that.listeMotif = obs.msg;
+			}
+		});
 	}
 
 	clickInMenu1(lien){
@@ -93,12 +111,19 @@ export class SecVisiteurComponent implements OnInit {
 		if(nom == "sortie"){
 			this.Sortie.charge = true;
 			let that = this;
-			let observ = this.immoService.immoTopic("", "", false).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("listeVisiteurAujourdhuiInt", "", false).subscribe(obs=>{
+				console.log("listeVisiteurAujourdhuiInt", obs);
 				if(obs.success){
-					that.Sortie.liste = obs.msg;
-					for(let i=0; i<that.Sortie.liste.length; i++){
-						that.Sortie.liste[i].charge = false;
+					let liste = [];
+					for(let i=0; i<obs.msg.mvt.length; i++){
+						liste.push({
+							charge: false,
+							mvt: obs.msg.mvt[i],
+							visiteur: obs.msg.visiteur[i],
+							vehicule: obs.msg.vehicule[i]
+						});
 					}
+					that.Sortie.liste = liste;
 				}
 				else{
 					that.toast.error(obs.msg);
@@ -152,18 +177,27 @@ export class SecVisiteurComponent implements OnInit {
 		let champBon = this.champEntreeBon();
 		if(champBon.bon){
 			this.Entree.charge = true;
+			this.Entree.champ.refIndividuRecherche = this.Entree.champ.refIndividuRecherche.trim();
+			if(this.Entree.champ.refIndividuRecherche == ""){
+				this.Entree.champ.refIndividuRecherche = null;
+			}
 			let argument = {
-				nom: this.Entree.champ.nom,
-				prenom: this.Entree.champ.prenom,
-				cin: this.Entree.champ.cin,
-				numeroVehicule: this.Entree.champ.numeroVehicule,
-				motif: this.Entree.champ.motif,
-				refIndividuCnaps: null,
-				refIndividuRecherche: this.Entree.champ.refIndividuRecherche,
-				refService: this.Entree.champ.refService
+				visiteur: {
+					nom: this.Entree.champ.nom,
+					prenom: this.Entree.champ.prenom,
+					cin: this.Entree.champ.cin,
+					idMotif: this.Entree.champ.idMotif,
+					refIndividuCnaps: null,
+					refIndividuRechercher: this.Entree.champ.refIndividuRecherche,
+					refService: this.Entree.champ.refService
+				},
+				vehicule: {
+					numeroVehicule: this.Entree.champ.numeroVehicule
+				}
 			};
 			let that = this;
-			let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("ajoutVisiteurInt", argument, true).subscribe(obs=>{
+				console.log("ajoutVisiteurInt",obs);
 				if(obs.success){
 					that.toast.success("Enregistrement terminé");
 					that.Entree.champ.nom = "";
@@ -173,7 +207,7 @@ export class SecVisiteurComponent implements OnInit {
 					that.Entree.champ.refService = "";
 					that.Entree.champ.refIndividuRecherche = "";
 					that.Entree.champ.refIndividuCnaps = "";
-					that.Entree.champ.motif = "";
+					that.Entree.champ.idMotif = -1;
 				}
 				else{
 					that.toast.error(obs.msg);
@@ -192,19 +226,23 @@ export class SecVisiteurComponent implements OnInit {
 		if(champBon.bon){
 			this.Entree.charge = true;
 			let argument = {
-				nom: this.Entree.champ.nom,
-				prenom: this.Entree.champ.prenom,
-				cin: this.Entree.champ.cin,
-				numeroVehicule: this.Entree.champ.numeroVehicule,
-				motif: this.Entree.champ.motif,
-				refIndividuCnaps: this.Entree.champ.refIndividuCnaps,
-				refIndividuRecherche: null,
-				refService: null
+				visiteur: {
+					nom: this.Entree.champ.nom,
+					prenom: this.Entree.champ.prenom,
+					cin: this.Entree.champ.cin,
+					idMotif: this.Entree.champ.idMotif,
+					refIndividuCnaps: this.Entree.champ.refIndividuCnaps,
+					refIndividuRechercher: null,
+					refService: 0
+				},
+				vehicule: {
+					numeroVehicule: this.Entree.champ.numeroVehicule,
+				}
 			};
 			let that = this;
-			let observ0 = this.infoService.infoIndiv(argument.refIndividuCnaps).subscribe(obs0=>{
+			let observ0 = this.infoService.infoIndiv(argument.visiteur.refIndividuCnaps).subscribe(obs0=>{
 				if(obs0.success){
-					let observ = that.immoService.immoTopic("", argument, true).subscribe(obs=>{
+					let observ = that.immoService.immoTopic("ajoutVisiteurInt", argument, true).subscribe(obs=>{
 						if(obs.success){
 							that.toast.success("Enregistrement terminé");
 							that.Entree.champ.nom = "";
@@ -214,7 +252,7 @@ export class SecVisiteurComponent implements OnInit {
 							that.Entree.champ.refService = "";
 							that.Entree.champ.refIndividuRecherche = "";
 							that.Entree.champ.refIndividuCnaps = "";
-							that.Entree.champ.motif = "";
+							that.Entree.champ.idMotif = -1;
 						}
 						else{
 							that.toast.error(obs.msg);
@@ -244,10 +282,11 @@ export class SecVisiteurComponent implements OnInit {
   	this.fermeConfirmeSortie();
   	this.Sortie.liste[this.Sortie.indice].charge = true;
   	let that = this;
-  	let observ = this.immoService.immoTopic("", this.Sortie.liste[this.Sortie.indice].idVis, false).subscribe(obs=>{
-  		if(obs.success){
+  	let observ = this.immoService.immoTopic("marquerSortieVisiteurInt", this.Sortie.liste[this.Sortie.indice].visiteur.idVis, false).subscribe(obs=>{
+			console.log("marquerSortieVisiteurInt",obs);
+			if(obs.success){
   			that.toast.success("Heure de sortie du visiteur enregistré");
-  			that.Sortie.liste[that.Sortie.indice].heureSortie = obs.msg;
+  			that.Sortie.liste[that.Sortie.indice].mvt.heureSortie = obs.msg;
   		}
   		else{
   			that.toast.error(obs.msg);
@@ -265,10 +304,16 @@ export class SecVisiteurComponent implements OnInit {
   	this.Liste.charge = true;
   	let that = this;
 		let argument = {
-			filtre: this.Liste.filtre,
-			page: this.Liste.page
+			filtre: {
+				refService: this.Liste.filtre.refService,
+				nom: this.Liste.filtre.nomPrenom.trim(),
+				prenom: this.Liste.filtre.nomPrenom.trim(),
+				dateMvt: this.Liste.filtre.date
+			},
+			pagination: this.Liste.page
 		};
 		let observ = this.immoService.immoTopic("listeVisiteurInt", argument, true).subscribe(obs=>{
+			console.log("listeVisiteurInt",obs);
 			if(obs.success){
 				that.Liste.liste = obs.msg;
 			}
@@ -307,7 +352,16 @@ export class SecVisiteurComponent implements OnInit {
 
   fermeInfoVisiteur(){
     $(this.modalInfoVisiteur.nativeElement).modal('hide');
-  }
+	}
+	
+	prendLibelleMotif(idMotif){
+		for(let i=0; i<this.listeMotif.length; i++){
+			if(this.listeMotif[i].idMotif == idMotif){
+				return this.listeMotif[i].libelle;
+			}
+		}
+		return "";
+	}
 
   /* 
   date: aaaa-mm-jj 
