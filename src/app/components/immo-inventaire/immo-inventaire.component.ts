@@ -54,7 +54,7 @@ export class ImmoInventaireComponent implements OnInit {
 		annee: null,
 		liste: [],
 		ligneMax: 25,
-		page: 1,
+		page: 0,
 		finAtteint: false
 	};
 
@@ -322,7 +322,9 @@ export class ImmoInventaireComponent implements OnInit {
   etablirEtatInventaire(){
   	this.Etat.annee = parseInt(this.Etat.annee);
   	if(this.Etat.annee != undefined && this.Etat.annee > 1900){
-	  	this.Etat.page = 1;
+		this.Etat.finAtteint = false;
+		this.Etat.page = 0;
+		this.Etat.liste = [];
 	  	this.prendListeEtat();
 	  }
   }
@@ -332,32 +334,44 @@ export class ImmoInventaireComponent implements OnInit {
   	let argument = {
   		annee: this.Etat.annee,
   		page: this.Etat.page
-  	};
+	};
   	let that = this;
-  	let observ = this.immoService.immoTopic("etatPvInventaireInt", this.Etat.annee, false).subscribe(obs=>{
+  	let observ = this.immoService.immoTopic("etatPvInventaireInt", argument, true).subscribe(obs=>{
 		console.log("etatPvInventaireInt",obs);  
 		if(obs.success){
-  			let liste = obs.msg;
-				if(liste.length < that.Etat.ligneMax){
-					that.Etat.finAtteint = true;
-					that.fermeChargement();
+			if(obs.msg != null && obs.msg.pvInventaireArticle != null){
+				let objet = obs.msg;
+				let liste = [];
+				let idArticles = [];
+				for(let i=0; i<objet.pvInventaireArticle.length; i++){
+					liste.push({
+						idCodeArt: objet.pvInventaireArticle[i].idCodeArt,
+						libelleArt: "",
+						service: objet.pvInventaire.refService,
+						detenteur: objet.pvInventaireArticle[i].detenteur,
+						prix: objet.pvInventaireArticle[i].prix,
+						imputation: objet.codeArticle[i].imputation
+					});
+					idArticles.push(objet.codeArticle[i].refArticle);
 				}
-				else{
-	  			let idArticles = [];
-	  			for(let i=0; i<liste.length; i++){
-	  				idArticles.push(liste[i].codeArticle.refArticle);
-	  			}
-	  			let observ2 = this.immoService.immoTopic("listeArticleParIdInt", idArticles, false).subscribe(obs2=>{
-	  				if(obs2.success){
-	  					for(let i=0; i<liste.length; i++){
-	  						liste[i].libelleArt = obs2.msg[i];
-	  					}
-	  					that.Etat.liste = that.Etat.liste.concat(liste);
-	  				}
-	  				that.fermeChargement();
-	  				observ2.unsubscribe();
-	  			});
-	  		}
+				let observ2 = this.immoService.immoTopic("listeArticleParIdInt", idArticles, true).subscribe(obs2=>{
+					if(obs2.success){
+						for(let i=0; i<liste.length; i++){
+							liste[i].libelleArt = obs2.msg[i];
+						}
+					}
+					else{
+						that.toast.error("Un problème de réseau empêche la récupération des articles");
+					}
+					that.Etat.liste = that.Etat.liste.concat(liste);
+					that.fermeChargement();
+					observ2.unsubscribe();
+				});
+			}
+			else{
+				that.Etat.finAtteint = true;
+				that.fermeChargement();
+			}
   		}
   		else{
   			that.fermeChargement();

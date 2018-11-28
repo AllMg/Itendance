@@ -45,7 +45,7 @@ export class ImmoService {
       .map(res => res.json());
   }
 
-  listeTypeEntrBatInt(){
+  /*listeTypeEntrBatInt(){
     let msg = {data: ""};
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -113,6 +113,6 @@ export class ImmoService {
     headers.append('Content-Type', 'application/json');
     return this.http.post(this.host + 'immo/listeArticleInt', msg, {headers: headers})
       .map(res => res.json());
-  }
+  }*/
 
 }

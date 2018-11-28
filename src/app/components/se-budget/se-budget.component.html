@@ -1,0 +1,52 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+	<div class="col-sm-12 content_page">
+		<div class="row titre_page">
+	      <h4>BUDGET DE PROGRAMME</h4>
+    </div>
+		
+		<!-- MENU -->
+		<div class="conteneur-de-menu">
+			<ul class="menu1">
+				<li class="menu1-active"><span>SAISIE</span></li>
+				<li (click)="clickInMenu1('se-elab')"><span>ELABORATION</span></li>
+				<li (click)="clickInMenu1('se-hist')"><span>HISTORIQUE</span></li>
+			</ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+    <ul class="menu1">
+      <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}"><span>AXES</span></li>
+      <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}"><span>OBJECTIFS STARTEGIQUES</span></li>
+      <li (click)="clickSousMenu('projets')" [ngClass]="{'menu1-active': Menu.sousMenu == 'projets'}"><span>PROJETS</span></li>
+    </ul>
+  </div>
+  <!-- FIN MENU -->
+
+		<!-- CONTENU -->
+		<div class="row" style="padding: 10px;">
+			<!-- AXES -->
+      <div *ngIf="Menu.sousMenu == 'axes'" class="col-md-12">
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [items]="Axes.quinquennat" ></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Code de l'axe</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé de l'axe</label>
+          <input type="text" class="form-control">
+        </div>
+        <button class="btn btn-info">Enregistrer</button>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule, Http} from '@angular/http';
 import {registerLocaleData} from '@angular/common';
@@ -89,7 +89,8 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatNativeDateModule, MatPaginatorModule, MatSelectModule,
-  MatStepperModule, MatTableModule, MatAutocompleteModule
+  MatStepperModule, MatTab, MatTableModule, MatTabsModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import {StatusService} from './services/status/status.service';
 import {CategorieService} from './services/categorie/categorie.service';
@@ -208,8 +209,42 @@ import {ListeFmComponent} from './components/atmp/sem/liste-fm/liste-fm.componen
 import {ListeFpComponent} from './components/atmp/sem/liste-fp/liste-fp.component';
 import {ListeFmAtmpComponent} from './components/atmp/liste-fm-atmp/liste-fm-atmp.component';
 import {ListeFpAtmpComponent} from './components/atmp/liste-fp-atmp/liste-fp-atmp.component';
+import { CreationComponent } from './components/formation/demande/creation/creation.component';
+import { ListeDemandeCreationComponent } from './components/formation/liste/liste-demande-creation/liste-demande-creation.component';
+import {ValidationDcfComponent} from './components/formation/validation/creation/validation-dcf.component';
+import { CalendrierComponent } from './components/calendrier/calendrier.component';
+import {FullCalendarModule} from 'ng-fullcalendar';
+import { EmploieTempComponent } from './components/module/emploie-temp/emploie-temp.component';
+import { DemandeDemissionComponent } from './components/rld/demande-demission/demande-demission.component';
+import { DemandeRecrutementComponent } from './components/rld/demande-recrutement/demande-recrutement.component';
+import { TablePosteComponent } from './components/module/table-poste/table-poste.component';
+import { ListeMouvementRecrutementComponent } from './components/rld/liste/mouvement/liste-mouvement-recrutement.component';
+import { ValidationDemRecrutComponent } from './components/rld/validation/mouvement/recrutement/validation-dem-recrut.component';
+import { DemandeEmploieComponent } from './components/rld/demande-emploie/demande-emploie.component';
+import { ValidRecrutComponent } from './components/rld/validation/recrutement/valid-recrut.component';
+import { ValidationDemDemiComponent } from './components/rld/validation/mouvement/demission/validation-dem-demi.component';
+import { DemandeRepportComponent } from './components/rld/demande-repport/demande-repport.component';
+import { ValidationDemRepComponent } from './components/rld/validation/mouvement/repport/validation-dem-rep.component';
+import { DemandeRetraiteComponent } from './components/rld/demande-retraite/demande-retraite.component';
+import { ValidationDemRetComponent } from './components/rld/validation/mouvement/retraite/validation-dem-ret.component';
+import { ListeFormationsComponent } from './components/formation/liste/liste-formations/liste-formations.component';
+import { InscriptionFormationComponent } from './components/formation/demande/inscription-formation/inscription-formation.component';
+import {MouvementService} from './services/rh/mouvement.service';
+import {AgentGuard} from './guards/agent.guard';
+import {DocteurGuard} from './guards/docteur.guard';
+import { FilesUploadComponent } from './components/module/files-upload/files-upload.component';
+import { EmpruntComponent } from './components/bibliotheque/pret/emprunt/emprunt.component';
+import { RetourComponent } from './components/bibliotheque/pret/retour/retour.component';
+import { RenouvellementComponent } from './components/bibliotheque/pret/renouvellement/renouvellement.component';
+import { AjoutLivreComponent } from './components/bibliotheque/stock/ajout-livre/ajout-livre.component';
+import { ListeLivreComponent } from './components/bibliotheque/stock/liste-livre/liste-livre.component';
+import { DetailLivreComponent } from './components/bibliotheque/stock/detail-livre/detail-livre.component';
+import {TraitDlprComponent} from './components/trait-dlpr/trait-dlpr/trait-dlpr.component';
+import {ServiceRhService} from './services/rh/service-rh.service';
+import {BasemodelService} from './services/base/basemodel.service';
 
 import {ImmoService} from './services/immo/immo.service';
+import {BudgetService} from './services/budget/budget.service';
 import { ImmoDmdComponent } from './components/immo-dmd/immo-dmd.component';
 import { ImmoListeComponent } from './components/immo-liste/immo-liste.component';
 import { ImmoArtComponent } from './components/immo-art/immo-art.component';
@@ -218,6 +253,10 @@ import { ImmoMvtComponent } from './components/immo-mvt/immo-mvt.component';
 import { SecVisiteurComponent } from './components/sec-visiteur/sec-visiteur.component';
 import { SecAccesComponent } from './components/sec-acces/sec-acces.component';
 import { SecAgentComponent } from './components/sec-agent/sec-agent.component';
+import { SecSysComponent } from './components/sec-sys/sec-sys.component';
+import { SeBudgetComponent } from './components/se-budget/se-budget.component';
+
+import * as $ from 'jquery';
 
 const appRoutes: Routes = [
   {path: '', component: AccueilComponent, canActivate: [UnAuthGuard]},
@@ -227,13 +266,11 @@ const appRoutes: Routes = [
   {path: 'demande-rappel-pen', component: DemandeRappelPenComponent, canActivate: [AuthGuard]},
   {path: 'demande-revision-pen', component: DemandeRevisionPenComponent, canActivate: [AuthGuard]},
   {path: 'ouverture-droit-asvt-pen', component: OuvertureDroitAsvtPenComponent, canActivate: [AuthGuard]},
-  {path: 'validation-dat/:id', component: ValidationDatComponent},
+  {path: 'validation-demande/:id', component: ValidationDatComponent},
   {path: 'historique-cie-periode/:periode', component: CiePeriodeComponent, canActivate: [AuthGuard]},
   {path: 'liste-demande-pension', component: ListeDemandePenComponent, canActivate: [AuthGuard]},
   {path: 'detail-demande-pension/:indice', component: DetailDemandePenComponent, canActivate: [AuthGuard]},
   {path: 'demande-paiement-or', component: DemPaiementOrComponent},
-
-  { path: '', component: AccueilComponent, canActivate: [UnAuthGuard] },
   { path: 'ordonance', component: OrdoComponent },
   { path: 'reglement-op', component: ReglementOpComponent, canActivate: [AuthGuard] },
   { path: 'dlpr', component: DlprComponent, canActivate: [AuthGuard] },
@@ -241,7 +278,6 @@ const appRoutes: Routes = [
   { path: 'list-am1', component: ListAmComponent, canActivate: [AuthGuard] },
   { path: 'reglement-op', component: ReglementOpComponent, canActivate: [AuthGuard] },
   { path: 'dlpr', component: DlprComponent, canActivate: [UnAuthGuard] },
-  { path: 'reglement-op/:page', component: ReglementOpComponent, canActivate: [AuthGuard] },
   { path: 'fiche-am2/:id', component: FicheAm2Component, canActivate: [AuthGuard]},
   { path: 'fiche-am1/:id', component: FicheAmComponent, canActivate: [AuthGuard] },
   { path: 'reglement-op-validation/:idOp', component: ReglementOpValidationComponent, canActivate: [AuthGuard] },
@@ -285,8 +321,8 @@ const appRoutes: Routes = [
   { path: 'historique-dn', component: HistoriqueDnComponent, canActivate: [AuthGuard] },
   { path: 'historique-notification/:id', component: HistoriqueNotificationComponent, canActivate: [AuthGuard] },
   { path: 'liste-travailleur', component: ListesTravailleursComponent, canActivate: [AuthGuard] },
-  { path: 'liste-dat/:page/:size', component: ListeDatComponent, canActivate: [AuthGuard] },
-  { path: 'validation-dat/:id', component: ValidationDatComponent, canActivate: [AuthGuard] },
+  { path: 'liste-demande/:page/:size', component: ListeDatComponent, canActivate: [AuthGuard] },
+  { path: 'validation-demande/:id', component: ValidationDatComponent, canActivate: [AuthGuard] },
   { path: 'historique-cie-periode/:periode', component: CiePeriodeComponent, canActivate: [AuthGuard] },
   { path: 'demande-transfert-cotisation', component: DemTransCotComponent, canActivate: [AuthGuard] },
   { path: 'liste-transfert-cotisation', component: ListeTransCotComponent, canActivate: [AuthGuard] },
@@ -313,7 +349,7 @@ const appRoutes: Routes = [
   { path: 'atmp/prestation/:id', component: PrestationChoixComponent },
   { path: 'pmd-mail', component: PmdMailComponent },
   {path: 'demande/:prestation', component: PenComponent, canActivate: [AuthGuard]},
-  {path: 'liste-atmp/:prestation/:nom_prest/:page/:size', component: TraitAtmpComponent, canActivate: [AuthGuard]},
+  {path: 'liste-atmp/:prestation/:nom_prest/:etat/:page/:size', component: TraitAtmpComponent, canActivate: [AuthGuard]},
  { path: 'detail-atmp/:id', component: DetailAtmpComponent, canActivate: [AuthGuard] },
    {path: 'detail-FM/:id', component: AtmpFmComponent, canActivate: [AuthGuard]},
     {path: 'detail-FF/:id', component: AtmpFfComponent, canActivate: [AuthGuard]},
@@ -347,10 +383,33 @@ const appRoutes: Routes = [
   {path: 'detail-modif/:indice', component: DetailModifComponent, canActivate: [AuthGuard]},
   {path: 'info-pension', component: InfoDemandeComponent},
   {path: 'info-pension-dlpr', component: InfoPensionComponent},
-  {path: 'sem/liste-fm', component: ListeFmComponent},
-  {path: 'sem/liste-fp', component: ListeFpComponent},
-  {path: 'atmp/liste-fm', component: ListeFmAtmpComponent},
-  {path: 'atmp/liste-fp', component: ListeFpAtmpComponent},
+  {path: 'sem/liste-fm', component: ListeFmComponent, canActivate: [DocteurGuard]},
+  {path: 'sem/liste-fp', component: ListeFpComponent, canActivate: [DocteurGuard]},
+  {path: 'atmp/liste-fm', component: ListeFmAtmpComponent, canActivate: [AgentGuard]},
+  {path: 'atmp/liste-fp', component: ListeFpAtmpComponent, canActivate: [AgentGuard]},
+  {path: 'formation/demande/creation', component: CreationComponent},
+  {path: 'formation/liste/creation', component: ListeDemandeCreationComponent},
+  {path: 'formation/validation/creation', component: ValidationDcfComponent},
+  {path: 'formations', component: ListeFormationsComponent},
+  {path: 'formation/:id', component: ListeFormationsComponent},
+  {path: 'recrutement/demande', component: DemandeRecrutementComponent, canActivate: [AgentGuard]},
+  {path: 'demission/demande', component: DemandeDemissionComponent, canActivate: [AgentGuard]},
+  {path: 'faute/demande', component: DemandeRepportComponent},
+  {path: 'retraite/demande', component: DemandeRetraiteComponent},
+  {path: 'mouvements/:type', component: ListeMouvementRecrutementComponent},
+  {path: 'mouvement/M23/:id', component: ValidationDemRecrutComponent},
+  {path: 'mouvement/M06/:id', component: ValidationDemDemiComponent},
+  {path: 'mouvement/M24/:id', component: ValidationDemRepComponent},
+  {path: 'mouvement/M25/:id', component: ValidationDemRetComponent},
+  {path: 'recrutement', component: DemandeEmploieComponent},
+  {path: 'recrutements/validation', component: ValidRecrutComponent},
+  {path: 'bibliotheque/emprunt', component: EmpruntComponent},
+  {path: 'bibliotheque/retour', component: RetourComponent},
+  {path: 'bibliotheque/renouvellement', component: RenouvellementComponent},
+  {path: 'bibliotheque/ajout-livre', component: AjoutLivreComponent},
+  {path: 'bibliotheque/livres', component: ListeLivreComponent},
+  {path: 'bibliotheque/livre/:id', component: DetailLivreComponent},
+  {path: 'calendar', component: CalendrierComponent},
   {path: 'immo-dmd', component: ImmoDmdComponent},
   {path: 'immo-liste', component: ImmoListeComponent},
   {path: 'immo-art', component: ImmoArtComponent},
@@ -358,7 +417,9 @@ const appRoutes: Routes = [
   {path: 'immo-inventaire', component: ImmoInventaireComponent},
   {path: 'sec-visiteur', component: SecVisiteurComponent},
   {path: 'sec-acces', component: SecAccesComponent},
-  {path: 'sec-agent', component: SecAgentComponent}
+  {path: 'sec-agent', component: SecAgentComponent},
+  {path: 'sec-sys', component: SecSysComponent},
+  {path: 'se-bp', component: SeBudgetComponent}
 ];
 
 @NgModule({
@@ -500,6 +561,33 @@ const appRoutes: Routes = [
     ListeFpComponent,
     ListeFmAtmpComponent,
     ListeFpAtmpComponent,
+    CreationComponent,
+    ListeDemandeCreationComponent,
+    ValidationDcfComponent,
+    CalendrierComponent,
+    EmploieTempComponent,
+    DemandeDemissionComponent,
+    DemandeRecrutementComponent,
+    TablePosteComponent,
+    ListeMouvementRecrutementComponent,
+    ValidationDemRecrutComponent,
+    DemandeEmploieComponent,
+    ValidRecrutComponent,
+    ValidationDemDemiComponent,
+    DemandeRepportComponent,
+    ValidationDemRepComponent,
+    DemandeRetraiteComponent,
+    ValidationDemRetComponent,
+    ListeFormationsComponent,
+    InscriptionFormationComponent,
+    FilesUploadComponent,
+    EmpruntComponent,
+    RetourComponent,
+    RenouvellementComponent,
+    AjoutLivreComponent,
+    ListeLivreComponent,
+    DetailLivreComponent,
+    TraitDlprComponent,
     ImmoDmdComponent,
     ImmoListeComponent,
     ImmoArtComponent,
@@ -507,12 +595,14 @@ const appRoutes: Routes = [
     ImmoMvtComponent,
     SecVisiteurComponent,
     SecAccesComponent,
-    SecAgentComponent
+    SecAgentComponent,
+    SecSysComponent,
+    SeBudgetComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules}),
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
@@ -534,14 +624,19 @@ const appRoutes: Routes = [
     PdfViewerModule,
     MatPaginatorModule,
     MatTableModule,
+    MatTabsModule,
+    FullCalendarModule,
     MatAutocompleteModule
   ],
   providers: [
+    DatePipe,
     DlprService,
     AuthService,
     FileService,
     AuthGuard,
     UnAuthGuard,
+    AgentGuard,
+    DocteurGuard,
     ChartService,
     InfoService,
     AdresseService,
@@ -596,7 +691,11 @@ const appRoutes: Routes = [
     PmdService,
     DemandeAtmpService,
     DemandePensionService,
-    ImmoService
+    MouvementService,
+    ServiceRhService,
+    BasemodelService,
+    ImmoService,
+    BudgetService
   ],
   bootstrap: [AppComponent]
 })
