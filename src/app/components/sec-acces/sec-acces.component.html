@@ -26,6 +26,7 @@
 		<!-- FIN MENU -->
 
 		<div class="row" style="padding: 10px;">
+			<!-- FORMULAIRE DEMANDE -->
 			<div *ngIf="Menu.sousMenu == 'form_dmd'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Formulaire de demande d'accès en dehors des jours ouvrables</h6>
 				<hr>
@@ -42,20 +43,21 @@
 					<label>Motif</label>
 					<textarea [(ngModel)]="Fdmd.champ.refMotif" class="form-control" rows="7"></textarea>
 				</div>
-				<button *ngIf="!Fdmd.charge" class="btn btn-info">Valider</button>
+				<button *ngIf="!Fdmd.charge" (click)="validerDmdAcces()" class="btn btn-info">Valider</button>
 				<div *ngIf="Fdmd.charge" class="loader"></div>
 			</div>
+			<!-- LISTE DEMANDE -->
 			<div *ngIf="Menu.sousMenu == 'liste_dmd'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes d'accès</h6>
 				<hr>
 				<div class="row">
 					<div class="col-md-3">
-						<label>Date d'accès</label>
-						<input [(ngModel)]="Ldmd.filtre.dateAccesEntree" (ngModelChange)="filtreDmdAccesChange()" type="date" class="form-control">
-					</div>
-					<div class="col-md-3">
 						<label>Date demande</label>
 						<input [(ngModel)]="Ldmd.filtre.dateDmdAcces" (ngModelChange)="filtreDmdAccesChange()" type="date" class="form-control">
+					</div>
+					<div class="col-md-3">
+						<label>Date d'accès</label>
+						<input [(ngModel)]="Ldmd.filtre.dateAccesEntree" (ngModelChange)="filtreDmdAccesChange()" type="date" class="form-control">
 					</div>
 					<div class="col-md-3">
 						<label>Demandeur</label>
@@ -86,8 +88,8 @@
 							<td>{{avoirDateSlash(v.dateAccesEntree)}}</td>
 							<td>{{v.refIndividu}}</td>
 							<td>{{avoirEtat(v.idEtat)}}</td>
-							<td>
-								<button (click)="ouvreDetailDmd(index)"><i class="fa fa-info"></i></button>
+							<td style="text-align: center;">
+								<button (click)="ouvreDetailDmd(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
 							</td>
 						</tr>
 					</tbody>
@@ -108,6 +110,7 @@
 				  </ul>
 				</nav>
 			</div>
+			<!-- LISTE ACCES -->
 			<div *ngIf="Menu.sousMenu == 'liste_acces'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des accès</h6>
 				<hr>
@@ -115,13 +118,13 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Accesseur</label>
-							<input [(ngModel)]="Lacces.filtre.dateMvt" (ngModelChange)="filtreChange()" type="text" class="form-control" placeholder="MATRICULE">
+							<input [(ngModel)]="Lacces.filtre.refIndividuCnaps" (ngModelChange)="filtreChange()" type="text" class="form-control" placeholder="MATRICULE">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Date d'accès</label>
-							<input [(ngModel)]="Lacces.filtre.refIndividuCnaps" (ngModelChange)="filtreChange()" type="date" class="form-control">
+							<input [(ngModel)]="Lacces.filtre.dateMvt" (ngModelChange)="filtreChange()" type="date" class="form-control">
 						</div>
 					</div>
 				</div>
@@ -138,7 +141,7 @@
 					<tbody>
 						<tr *ngFor="let a of Lacces.liste">
 							<td>{{avoirDateSlash(a.dateMvt)}}</td>
-							<td>{{a.heureEntree}}</td>
+							<td>{{a.heureEntre}}</td>
 							<td>{{a.heureSortie}}</td>
 							<td>{{a.refIndividuCnaps}}</td>
 						</tr>
@@ -170,7 +173,7 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h6 class="modal-title">Référence: {{Ldmd.liste[Ldmd.indice].reference}}</h6>
-	        <button *ngIf="DmdRepMob.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailDmd()">
+	        <button *ngIf="Ldmd.chargeStatutChange == false" type="button" class="close" (click)="fermeDetailDmd()">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
@@ -205,12 +208,12 @@
 					</div>
 					<div class="form-group">
 						<label>Motif</label>
-						<textarea rows="5" readonly="true">{{Ldmd.liste[Ldmd.indice].motif}}</textarea>
+						<textarea rows="5" readonly="true" class="form-control">{{Ldmd.liste[Ldmd.indice].refMotif}}</textarea>
 					</div>
 					<div *ngIf="Ldmd.liste[Ldmd.indice].idEtat == 3 || Ldmd.nouveauEtat == 3" class="form-group">
 						<label>Motif de rejet</label>
-						<textarea *ngIf="Ldmd.liste[Ldmd.indice].idEtat != Ldmd.nouveauEtat && Ldmd.nouveauEtat == 3" [(ngModel)]="Ldmd.motifRejet" rows="5" class="form-control">{{Ldmd.liste[Ldmd.indice].motifRejet}}</textarea>
-						<textarea *ngIf="Ldmd.liste[Ldmd.indice].idEtat != Ldmd.nouveauEtat && Ldmd.nouveauEtat != 3" rows="5" class="form-control" readonly="true">{{Ldmd.liste[Ldmd.indice].motifRejet}}</textarea>
+						<textarea *ngIf="Ldmd.nouveauEtat == 3" [(ngModel)]="Ldmd.motifRejet" rows="5" class="form-control">{{Ldmd.liste[Ldmd.indice].motifRejet}}</textarea>
+						<textarea *ngIf="Ldmd.nouveauEtat != 3" rows="5" class="form-control" readonly="true">{{Ldmd.liste[Ldmd.indice].motifRejet}}</textarea>
 					</div>
 	      </div>
 	      <div class="modal-footer">

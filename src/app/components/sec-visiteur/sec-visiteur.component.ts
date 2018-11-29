@@ -51,7 +51,7 @@ export class SecVisiteurComponent implements OnInit {
 		liste: [],
 		indice: -1,
 		page: 1,
-		ligneMax: 25,
+		ligneMax: 15,
 		filtre: {
 			refService: 0,
 			nomPrenom: "",
@@ -99,6 +99,7 @@ export class SecVisiteurComponent implements OnInit {
 			if(obs.success){
 				that.listeMotif = obs.msg;
 			}
+			observ.unsubscribe();
 		});
 	}
 

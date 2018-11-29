@@ -109,53 +109,70 @@
 				<hr>
 				<div class="row">
 					<div class="col-md-6">
+						<h5>Information de l'Individu</h5>
 						<div class="form-group">
 							<label>Nom</label>
 							<input [(ngModel)]="Saisie.champ.nom" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-6">
 						<div class="form-group">
 							<label>Prénom</label>
 							<input [(ngModel)]="Saisie.champ.prenom" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-6">
 						<div class="form-group">
 							<label>CIN</label>
 							<input [(ngModel)]="Saisie.champ.cin" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-6">
 						<div class="form-group">
 							<label>Matricule</label>
 							<input [(ngModel)]="Saisie.champ.matricule" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-6">
 						<div class="form-group">
 							<label>Téléphone</label>
 							<input [(ngModel)]="Saisie.champ.telephone" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-6">
 						<div class="form-group">
 							<label>Adresse</label>
 							<input [(ngModel)]="Saisie.champ.Adresse" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-12">
 						<div class="form-group">
 							<label>Agence/Société d'origine</label>
 							<input [(ngModel)]="Saisie.champ.nomSociete" type="text" class="form-control">
 						</div>
-					</div>
-					<div class="col-md-12">
 						<div class="form-group">
 							<label>Photo</label>
 							<label for="pj-photo-sec" class="form-control" style="cursor: pointer;">Choisir une photo</label>
 							<input (change)="pieceChange($event)" name="piecePhoto" id="pj-photo-sec" type="file" accept="image/*" style="display: none;" />
 							<img *ngIf="Saisie.photo != null" src="{{Saisie.photo}}" class="photo">
+						</div>
+					</div>
+					<div *ngIf="Saisie.type != 'Modif'" class="col-md-6">
+						<h5>Information sur son Contrat</h5>
+						<div class="form-group">
+							<label>Type</label>
+							<select [(ngModel)]="Saisie.contrat.type_contrat" class="form-control custom-select">
+								<option value="CDI">CDI</option>
+								<option value="CDD">CDD</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Date début</label>
+							<input [(ngModel)]="Saisie.contrat.date_debut" type="date" class="form-control">
+						</div>
+						<div *ngIf="Saisie.contrat.type_contrat == 'CDD'" class="form-group">
+							<label>Date fin</label>
+							<input [(ngModel)]="Saisie.contrat.date_fin" type="date" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Référence</label>
+							<input [(ngModel)]="Saisie.contrat.reference" type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Salaire</label>
+							<input [(ngModel)]="Saisie.contrat.salaire_fixe" type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Matricule de l'employeur</label>
+							<input [(ngModel)]="Saisie.contrat.employeurmatricule" type="text" class="form-control">
 						</div>
 					</div>
 					<div *ngIf="Saisie.type == 'Modif'" class="col-md-12">

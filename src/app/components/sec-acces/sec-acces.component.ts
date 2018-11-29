@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { ImmoService } from '../../services/immo/immo.service';
+import { InfoService } from '../../services/info/info.service';
 
 declare var $: any;
 
@@ -33,7 +34,7 @@ export class SecAccesComponent implements OnInit {
 	};
 
 	Ldmd = {
-		estVue: true,
+		estVue: false,
 		liste: [],
 		indice: -1,
 		page: 1,
@@ -42,7 +43,7 @@ export class SecAccesComponent implements OnInit {
 			dateAccesEntree: null,
 			dateDmdAcces: null,
 			refIndividu: "",
-			idEtat: ""
+			idEtat: 0
 		},
 		ligneMax: 25,
 		nouveauEtat: "",
@@ -52,7 +53,7 @@ export class SecAccesComponent implements OnInit {
 	};
 
 	Lacces = {
-		estVue: true,
+		estVue: false,
 		liste: [],
 		page: 1,
 		charge: false,
@@ -66,17 +67,19 @@ export class SecAccesComponent implements OnInit {
 	constructor(
 		private router: Router, 
 		private toast: ToastrService,
-		private immoService: ImmoService) { 
+		private immoService: ImmoService,
+		private infoService: InfoService) { 
+	}
+
+	ngOnInit() {
 		let that = this;
-		let observ = this.immoService.immoTopic("listeEtatDmdAcces", "", false).subscribe(obs=>{
+		let observ = this.immoService.immoTopic("listeEtatDmdAccesSecInt", 0, false).subscribe(obs=>{
+			console.log("listeEtatDmdAccesSecInt", obs);
 			if(obs.success){
 				that.listeEtatDmd = obs.msg;
 			}
 			observ.unsubscribe();
 		});
-	}
-
-	ngOnInit() {
 	}
 
 	clickInMenu1(lien){
@@ -92,7 +95,7 @@ export class SecAccesComponent implements OnInit {
 	        prestation: "302",
 	        dr: "42"
 	      };
-				let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+				let observ = this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
 					if(obs.success){
 						that.Fdmd.champ.reference = obs.msg;
 					}
@@ -109,6 +112,12 @@ export class SecAccesComponent implements OnInit {
 				this.listeDmdAcces();
 			}
 		}
+		else if(nom == "liste_acces"){
+			if(!this.Lacces.estVue){
+				this.Lacces.estVue = true;
+				this.listeAcces();
+			}
+		}
 	}
 
 	validerDmdAcces(){
@@ -117,14 +126,17 @@ export class SecAccesComponent implements OnInit {
 		}
 		else{
 			this.Fdmd.charge = true;
+			this.Fdmd.champ.refIndividu = "143252465172621";
+			this.Fdmd.champ.refService = "5040";
 			let that = this;
-			let observ = this.immoService.immoTopic("", this.Fdmd.champ, true).subscribe(obs=>{
+			let observ = this.immoService.immoTopic("ajoutDmdAccesSecInt", this.Fdmd.champ, true).subscribe(obs=>{
 				if(obs.success){
 					that.toast.success("Demande enregistré");
 				}
 				else{
 					that.toast.error(obs.msg);
 				}
+				that.Fdmd.champ.reference = "";
 				that.Fdmd.champ.dateAccesEntree = null;
 				that.Fdmd.champ.refMotif = "";
 				that.Fdmd.charge = false;
@@ -136,11 +148,12 @@ export class SecAccesComponent implements OnInit {
 	listeDmdAcces(){
 		this.Ldmd.charge = true;
 		let argument = {
-			page: this.Ldmd.page,
+			pagination: this.Ldmd.page,
 			filtre: this.Ldmd.filtre
 		};
 		let that = this;
-		let observ = this.immoService.immoTopic("", argument, true).subscribe(obs=>{
+		let observ = this.immoService.immoTopic("listeDmdAccesSecInt", argument, true).subscribe(obs=>{
+			console.log("listeDmdAccesSecInt",obs);
 			if(obs.success){
 				that.Ldmd.liste = obs.msg;
 			}
@@ -177,7 +190,9 @@ export class SecAccesComponent implements OnInit {
 
   ouvreDetailDmd(index){
   	$(this.modalDetailDmd.nativeElement).modal("show");
-  	this.Ldmd.indice = index;
+		this.Ldmd.indice = index;
+		this.Ldmd.nouveauEtat = this.Ldmd.liste[index].idEtat;
+		this.Ldmd.motifRejet = this.Ldmd.liste[index].motifRejet;
   }
 
   etatDmdChange(){
@@ -195,12 +210,13 @@ export class SecAccesComponent implements OnInit {
       let that = this;
       let argument = {
         idDmdAcc: this.Ldmd.liste[this.Ldmd.indice].idDmdAcc,
-        idEtat: this.Ldmd.nouveauEtat,
+        idEtat: parseInt(this.Ldmd.nouveauEtat),
         motifRejet: this.Ldmd.motifRejet
       };
-      let observ = this.immoService.immoTopic("modifierEtatDmdAccesInt", argument, true).subscribe(obs=>{
-        if(obs.success){
-          that.Ldmd.chargeStatutChange = false;
+      let observ = this.immoService.immoTopic("modifierEtatDmdAccesSecInt", argument, true).subscribe(obs=>{
+				console.log("modifierEtatDmdAccesSecInt",obs);
+				that.Ldmd.chargeStatutChange = false;
+				if(obs.success){
           that.Ldmd.etatAchange = false;
           that.Ldmd.liste[that.Ldmd.indice].idEtat = that.Ldmd.nouveauEtat;
           that.Ldmd.liste[that.Ldmd.indice].motifRejet = that.Ldmd.motifRejet;
@@ -232,11 +248,21 @@ export class SecAccesComponent implements OnInit {
   	let that = this;
 		let argument = {
 			filtre: this.Lacces.filtre,
-			page: this.Lacces.page
+			pagination: this.Lacces.page
 		};
-		let observ = this.immoService.immoTopic("listeAccesInt", argument, true).subscribe(obs=>{
+		let observ = this.immoService.immoTopic("listeVisiteurAgentCnapsInt", argument, true).subscribe(obs=>{
+			console.log("listeVisiteurAgentCnapsInt",obs);
 			if(obs.success){
 				that.Lacces.liste = obs.msg;
+				for(let i=0; i<that.Lacces.liste.length; i++){
+					let indice = i;
+					let observ0 = this.infoService.infoIndiv(that.Lacces.liste[i].refIndividuCnaps).subscribe(obs0=>{
+						if(obs0.success){
+							that.Lacces.liste[indice].refIndividuCnaps = that.Lacces.liste[indice].refIndividuCnaps + " - " + obs0.msg.nom + " " + obs0.msg.prenoms;
+						}
+						observ0.unsubscribe();
+					});
+				}
 			}
 			that.Lacces.charge = false;
 			observ.unsubscribe();

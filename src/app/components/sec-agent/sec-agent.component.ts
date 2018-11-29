@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { CalendarComponent } from 'ng-fullcalendar';
-import { Options, EventObject } from 'fullcalendar';
+import { Options } from 'fullcalendar';
 import { FileModel } from '../../models/file-model';
 import { ImmoService } from '../../services/immo/immo.service';
 import { FileService } from '../../services/file/file.service';
@@ -57,6 +57,14 @@ export class SecAgentComponent implements OnInit {
 			telephone: "",
 			adresse: "",
 			statut: ""
+		},
+		contrat: {
+			type_contrat: "CDI",
+			date_debut: null,
+			date_fin: null,
+			reference: "",
+			salaire_fixe: 0,
+			employeurmatricule: ""
 		},
 		photo: null,
 		charge: false
@@ -340,7 +348,7 @@ export class SecAgentComponent implements OnInit {
   			this.validerNouvAgent();
   		}
   		else{
-
+			this.validerModifAgent();
   		}
   	}
   	else{
@@ -368,24 +376,48 @@ export class SecAgentComponent implements OnInit {
       echelon: ['', Validators.required],
       classe: ['', Validators.required],
       fonction: ['', Validators.required],
-      drcode: ['42', Validators.required] */
-	//this.mouvementService.newAgent().subscribe(obs=>{});
-  	let observ = this.immoService.immoTopic("ajoutAgentSecInt", this.Saisie.champ, true).subscribe(obs=>{
-  		if(obs.success){
-  			for(let attr in that.Saisie.champ){
-  				that.Saisie.champ[attr] = "";
-  			}
-  			let dataUrl = that.Saisie.photo;
-  			that.enregistrePhoto(dataUrl, obs.msg.idAgentSec);
-  			that.Saisie.photo = null;
-  			that.toast.success("Enregistrement terminé");
-  		}
-  		else{
-  			that.toast.error(obs.msg);
-  		}
-  		that.Saisie.charge = false;
-  		observ.unsubscribe();
-  	});
+	  drcode: ['42', Validators.required] */
+	let travailleurContrat = {
+		individu: {
+			nom: this.Saisie.champ.nom,
+			prenoms: this.Saisie.champ.prenom,
+			cin: this.Saisie.champ.cin
+		},
+		contrat: this.Saisie.contrat
+	};
+	let observ0 = this.immoService.ajouttravailleur(travailleurContrat).subscribe(obs0=>{
+		console.log("ajouttravailleur",obs0);
+		if(obs0.success && obs0.msg != null){
+			this.Saisie.champ["idAgentSec"] = obs0.msg;
+			let observ = this.immoService.immoTopic("ajoutAgentSecInt", this.Saisie.champ, true).subscribe(obs=>{
+				console.log("ajoutAgentSecInt",obs);
+				if(obs.success){
+					for(let attr in that.Saisie.champ){
+						that.Saisie.champ[attr] = "";
+					}
+					let dataUrl = that.Saisie.photo;
+					that.enregistrePhoto(dataUrl, obs.msg.idAgentSec);
+					that.Saisie.photo = null;
+					that.toast.success("Enregistrement terminé");
+				}
+				else{
+					that.toast.error(obs.msg);
+				}
+				that.Saisie.charge = false;
+				observ.unsubscribe();
+			});
+		}
+		else{
+			that.Saisie.charge = false;
+			if(obs0.msg == null){
+				that.toast.error("Une erreur de connexion a interrompu l'opération");
+			}
+			else{
+				that.toast.error(obs0.msg);
+			}
+		}
+		observ0.unsubscribe();
+	});
   }
 
   validerModifAgent(){

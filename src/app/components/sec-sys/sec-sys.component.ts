@@ -22,14 +22,15 @@ export class SecSysComponent implements OnInit {
 	    sousMenu: ""
 	};
 
-	listeService = [];
+  listeService = [];
+  ngxServices = [];
 	listeEtatDmd = [];
 
 	Saisie = {
 		champ:{
 			reference: "",
 			refService: "",
-			refMotif: ""
+			motif: ""
 		},
 		charge: false,
     pieceNom: "Parcourir mon ordinateur",
@@ -72,7 +73,7 @@ export class SecSysComponent implements OnInit {
 		charge: false,
 		filtre: {
 			dateRonde: null,
-			redacteur: ""
+			idAgentSec: ""
 		}
 	};
 	
@@ -81,6 +82,9 @@ export class SecSysComponent implements OnInit {
 		private toast: ToastrService,
     private fileService: FileService,
 		private immoService: ImmoService) { 
+	}
+
+	ngOnInit() {
 		let that = this;
 		let observ = this.immoService.getAllRefDrhService().subscribe(obs=>{
 			if(obs.success){
@@ -93,19 +97,25 @@ export class SecSysComponent implements OnInit {
           }
           return 0;
         });
-				that.listeService = obs.msg;
+        that.listeService = obs.msg;
+        let liste = [];
+				for(let i=0; i<that.listeService.length; i++){
+					liste.push({
+						id: that.listeService[i].code_service, 
+						text: that.listeService[i].libelle + " " + that.listeService[i].code_service
+					});
+				}
+				that.ngxServices = liste;
 			}
 			observ.unsubscribe();
 		});
-		let observ1 = this.immoService.immoTopic("listeEtatDmdSecRepInt", "", false).subscribe(obs=>{
-			if(obs.success){
+		let observ1 = this.immoService.immoTopic("listeEtatDmdAccesSecInt", "", false).subscribe(obs=>{
+      console.log("listeEtatDmdAccesSecInt",obs);
+      if(obs.success){
 				that.listeEtatDmd = obs.msg;
 			}
-			observ.unsubscribe();
+			observ1.unsubscribe();
 		});
-	}
-
-	ngOnInit() {
 	}
 
 	clickInMenu1(lien){
@@ -126,6 +136,25 @@ export class SecSysComponent implements OnInit {
 	      this.listeRonde();
 	    }
 	  }
+		else if(nom == "saisie"){
+			if(this.Saisie.champ.reference == ""){
+				let that = this;
+	      let argument = {
+	        prestation: "4050",
+	        dr: "42"
+	      };
+				let observ = this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
+          console.log("referenceDmdArticleInt",obs);
+          if(obs.success){
+						that.Saisie.champ.reference = obs.msg;
+					}
+					else{
+						that.toast.error(obs.msg);
+					}
+					observ.unsubscribe();
+				});
+			}
+		}
 	}
 
   pieceChange(event, nomAttr){
@@ -162,8 +191,9 @@ export class SecSysComponent implements OnInit {
         };
         let observ = that.fileService.save(fichier).subscribe(obs=>{
           if(!obs.success){
-            that.toast.error("L'enregistrement du fichier "+fichier.name+" a échoué");
+            that.toast.error("L'enregistrement du fichier "+fichiers[index].name+" a échoué");
           }
+          console.log(obs);
           observ.unsubscribe();
         });
       };
@@ -177,12 +207,13 @@ export class SecSysComponent implements OnInit {
       if(this.Saisie.champ.refService != ""){
         let that = this;
         let reference = that.Saisie.champ.reference;
-        let observ = this.immoService.immoTopic("ajoutDmdRepSecInt", this.Saisie.champ, true).subscribe(obs=>{
+        let observ = this.immoService.immoTopic("ajoutDmdReparationSecInt", this.Saisie.champ, true).subscribe(obs=>{
+          console.log("ajoutDmdReparationSecInt",obs);
           if(obs.success){
             that.toast.success("L'enregistrement de la demande est terminé");
             that.Saisie.champ.reference = "";
             that.Saisie.champ.refService = "";
-            that.Saisie.champ.refMotif = "";
+            that.Saisie.champ.motif = "";
             that.Saisie.pieceNom = "Parcourir mon ordinateur";
             that.enregistreFichiers(that.Saisie.pieceFichier, reference);
             that.Saisie.pieceFichier = [];
@@ -215,7 +246,8 @@ export class SecSysComponent implements OnInit {
       pagination: this.Liste.page,
       filtre: this.Liste.filtre
     };
-    let observ = this.immoService.immoTopic("listeDmdRepSecInt", argument, true).subscribe(obs=>{
+    let observ = this.immoService.immoTopic("listeDmdReparationSecInt", argument, true).subscribe(obs=>{
+      console.log("listeDmdReparationSecInt",obs);
       if(obs.success){
         that.Liste.liste = obs.msg;
       }
@@ -278,9 +310,10 @@ export class SecSysComponent implements OnInit {
         idEtat: this.Liste.nouveauEtat,
         idDmdRep: this.Liste.liste[this.Liste.indice].idDmdRep
       };
-      let observ = this.immoService.immoTopic("modifierEtatDmdSecRepInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("modifierEtatDmdReparationSecInt", argument, true).subscribe(obs=>{
+        console.log("modifierEtatDmdReparationSecInt", obs);
+        that.Liste.chargeStatutChange = false;
         if(obs.success){
-          that.Liste.chargeStatutChange = false;
           that.Liste.etatAchange = false;
           that.Liste.liste[that.Liste.indice].idEtat = that.Liste.nouveauEtat;
           that.toast.success("L'etat de la demande est parfaitement mis à jour");
@@ -304,10 +337,11 @@ export class SecSysComponent implements OnInit {
       this.Sronde.charge = true;
       let that = this;
       let argument = {
-      	idAgentSec: 112,
+      	idAgentSec: 1,
       	rapport: this.Sronde.champ.rapport
       };
-      let observ = this.immoService.immoTopic("ajoutRapportSecInt", argument, true).subscribe(obs=>{
+      let observ = this.immoService.immoTopic("ajoutRondeAgentSecInt", argument, true).subscribe(obs=>{
+        console.log("ajoutRondeAgentSecInt",obs);
         if(obs.success){
           that.toast.success("L'enregistrement du rapport est terminé");
           that.Sronde.champ.rapport = "";
@@ -340,7 +374,8 @@ export class SecSysComponent implements OnInit {
       pagination: this.Lronde.page,
       filtre: this.Lronde.filtre
     };
-    let observ = this.immoService.immoTopic("listeRapportSecInt", argument, true).subscribe(obs=>{
+    let observ = this.immoService.immoTopic("listeRondeAgentSecInt", argument, true).subscribe(obs=>{
+      console.log("listeRondeAgentSecInt",obs);
       if(obs.success){
         that.Lronde.liste = obs.msg;
       }
@@ -368,16 +403,14 @@ export class SecSysComponent implements OnInit {
   }
 
   ouvreDetailRap(indice){
-    $(this.modalDetailRep.nativeElement).modal('show');
-    this.Liste.indice = indice;
-    this.Liste.etatAchange = false;
-    this.Liste.nouveauEtat = this.Liste.liste[indice].idEtat;
+    $(this.modalDetailRap.nativeElement).modal('show');
+    this.Lronde.indice = indice;
     let that = this;
     let fileQuery = new FileModel();
-    fileQuery.id_files = this.Liste.liste[this.Liste.indice].reference;
+    fileQuery.id_files = "sec-ronde-"+this.Lronde.liste[indice].idRonde;
     let observ = this.fileService.readQuery(fileQuery).subscribe(data => {
       if (data.success) {
-        that.Liste.pieces = data.msg;
+        that.Lronde.pieces = data.msg;
       }
       else{
         that.toast.error(data.msg);
@@ -387,8 +420,17 @@ export class SecSysComponent implements OnInit {
   }
 
   fermeDetailRap(){
-  	$(this.modalDetailRep.nativeElement).modal('hide');
+  	$(this.modalDetailRap.nativeElement).modal('hide');
   	this.Lronde.pieces = [];
+  }
+
+  avoirEtatDmd(idEtat){
+    for(let i=0; i<this.listeEtatDmd.length; i++){
+      if(idEtat == this.listeEtatDmd[i].idEtat){
+        return this.listeEtatDmd[i].libelle;
+      }
+    }
+    return "";
   }
 
   /* date: aaaa-mm-jj */

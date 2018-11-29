@@ -76,3 +76,14 @@
     height: auto;
     margin-bottom: 5px;
 }
+
+.dmd-modal-date{
+    float: right;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.dmd-rap-obs{
+    height: 80px;
+    overflow: hidden;
+}

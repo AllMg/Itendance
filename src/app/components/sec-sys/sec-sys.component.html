@@ -37,13 +37,11 @@
 				</div>
 				<div class="form-group">
 					<label>Localisation</label>
-					<select [(ngModel)]="Saisie.champ.refService" class="form-control custom-select">
-						<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
-					</select>
+					<ngx-select [(ngModel)]="Saisie.champ.refService" [items]="ngxServices"></ngx-select>
 				</div>
 				<div class="form-group">
 					<label>Observation</label>
-					<textarea [(ngModel)]="Saisie.champ.refMotif" rows="7" class="form-control"></textarea>
+					<textarea [(ngModel)]="Saisie.champ.motif" rows="7" class="form-control"></textarea>
 				</div>
 				<div class="form-group">
 					<label>Pieces justificatives (facultative)</label>
@@ -67,9 +65,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Localisation</label>
-							<select [(ngModel)]="Liste.filtre.refService" (change)="filtreChange()" class="form-control custom-select">
-								<option *ngFor="let s of listeService" value="{{s.code_service}}">{{s.code_service+" "+s.libelle}}</option>
-							</select>
+							<ngx-select [(ngModel)]="Liste.filtre.refService" (ngModelChange)="filtreChange()" [items]="ngxServices"></ngx-select>
 						</div>
 					</div>
 				</div>
@@ -119,7 +115,7 @@
 				<button *ngIf="!Sronde.charge" (click)="clickEnregRapport()" class="btn btn-info">Valider</button>
 				<div *ngIf="Sronde.charge" class="loader"></div>
 			</div>
-			<!-- LISTE DEMANDE REPARATION MATERIEL -->
+			<!-- LISTE RAPPORT DE RONDE -->
 			<div *ngIf="Menu.sousMenu == 'lronde'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des rapports de ronde</h6>
 				<hr>
@@ -133,7 +129,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Rédacteur</label>
-							<input [(ngModel)]="Lronde.filtre.redacteur" (ngModelChange)="filtreRapChange()" type="text" class="form-control" />
+							<input [(ngModel)]="Lronde.filtre.idAgentSec" (ngModelChange)="filtreRapChange()" type="text" class="form-control" />
 						</div>
 					</div>
 				</div>
@@ -142,7 +138,7 @@
 					<div *ngFor="let rap of Lronde.liste; let index = index" class="col-md-6" style="margin-bottom: 10px;">
 						<div class="liste-dmd-item">
 							<p><span class="dmd-l-date">{{avoirDate(rap.dateRonde)}}</span></p>
-							<div class="dmd-l-obs"><u>Rapport</u> : {{rap.rapport}}</div>
+							<div class="dmd-rap-obs"><u>Rapport</u> : {{rap.rapport}}</div>
 							<div class="dmd-l-btn">
 								<button (click)="ouvreDetailRap(index)" class="btn btn-info">Voir</button>
 							</div>
@@ -191,7 +187,10 @@
 					<option *ngFor="let etat of listeEtatDmd" value="{{etat.idEtat}}">{{etat.libelle}}</option>
 				</select>
 			</div>
-			<p>{{Liste.liste[Liste.indice].refMotif}}</p>
+			<div class="form-group">
+				<label>Observation</label>
+				<textarea class="form-control" rows="5" readonly>{{Liste.liste[Liste.indice].motif}}</textarea>
+			</div>
 	        <img *ngFor="let piece of Liste.pieces" class="pj-dans-modal" src="{{piece.file}}">
 	      </div>
 	      <div class="modal-footer">
@@ -214,20 +213,23 @@
 	      <div class="modal-body">
 	      	<div class="form-group">
 					<label>Rédacteur</label>
-					<input type="text" value="{{Lronde.liste[Lronde.indice].redacteur}}" class="form-control" readonly="true">
+					<input type="text" value="{{Lronde.liste[Lronde.indice].idAgentSec}}" class="form-control" readonly="true">
 				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label>Date</label>
-						<input value="{{avoirDate(Lronde.liste[Lronde.indice].dateRonde)}}" type="text" class="form-control" readonly="true">
+						<input value="{{avoirDateSlash(Lronde.liste[Lronde.indice].dateRonde)}}" type="text" class="form-control" readonly="true">
 					</div>
 					<div class="form-group col-md-6">
-						<label></label>
+						<label>Heure</label>
 						<input value="{{Lronde.liste[Lronde.indice].heureRonde}}" type="text" class="form-control" readonly="true">
 					</div>
 				</div>
-			<p>{{Lronde.liste[Lronde.indice].rapport}}</p>
-	        <img *ngFor="let piece of Lronde.pieces" class="pj-dans-modal" src="{{piece.file}}">
+				<div class="form-group">
+					<label>Rapport</label>
+					<textarea class="form-control" rows="7" readonly>{{Lronde.liste[Lronde.indice].rapport}}</textarea>
+				</div>
+				<img *ngFor="let piece of Lronde.pieces" class="pj-dans-modal" src="{{piece.file}}">
 	      </div>
 	      <div class="modal-footer">
 	        <button (click)="fermeDetailRap()" class="btn btn-info">Fermer</button>

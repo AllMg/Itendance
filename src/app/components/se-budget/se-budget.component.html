@@ -18,8 +18,8 @@
 
     <div class="conteneur-de-menu2">
     <ul class="menu1">
-      <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}"><span>AXES</span></li>
-      <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}"><span>OBJECTIFS STARTEGIQUES</span></li>
+      <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}"><span>AXES STRATEGIQUES</span></li>
+      <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}"><span>OBJECTIFS STRATEGIQUES</span></li>
       <li (click)="clickSousMenu('projets')" [ngClass]="{'menu1-active': Menu.sousMenu == 'projets'}"><span>PROJETS</span></li>
     </ul>
   </div>
@@ -31,17 +31,82 @@
       <div *ngIf="Menu.sousMenu == 'axes'" class="col-md-12">
         <div class="form-group">
           <label>Quinquennat</label>
-          <ngx-select [items]="Axes.quinquennat" ></ngx-select>
+          <ngx-select [(ngModel)]="Axes.champ.quinquennat" [items]="quinquennat" ></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Programme</label>
+          <ngx-select [(ngModel)]="Axes.champ.idProgr" [items]="Axes.ngxProgr"></ngx-select>
         </div>
         <div class="form-group">
           <label>Code de l'axe</label>
-          <input type="text" class="form-control">
+          <input [(ngModel)]="Axes.champ.codeAxe" type="text" class="form-control">
         </div>
         <div class="form-group">
           <label>Libellé de l'axe</label>
-          <input type="text" class="form-control">
+          <input [(ngModel)]="Axes.champ.libelle" type="text" class="form-control">
         </div>
-        <button class="btn btn-info">Enregistrer</button>
+        <button *ngIf="!Axes.charge" (click)="enregistrerAxe()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Axes.charge" class="loader"></div>
+      </div>
+      <!-- OBJECTIFS -->
+      <div *ngIf="Menu.sousMenu == 'objectifs'" class="col-md-12">
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [(ngModel)]="Objectifs.quinquennat" (ngModelChange)="quiquennatChange('Objectifs')" [items]="quinquennat" ></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Axe stratégique</label>
+          <ngx-select [(ngModel)]="Objectifs.champ.idAxe" [items]="Objectifs.ngxAxes"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Code de l'objectif</label>
+          <input [(ngModel)]="Objectifs.champ.codeObj" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé de l'objectif</label>
+          <input [(ngModel)]="Objectifs.champ.libelleObj" type="text" class="form-control">
+        </div>
+        <button *ngIf="!Objectifs.charge" (click)="verifChampObjectif()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Objectifs.charge" class="loader"></div>
+      </div>
+      <!-- PROJETS -->
+      <div *ngIf="Menu.sousMenu == 'projets'" class="col-md-12">
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [(ngModel)]="Projets.quinquennat" (ngModelChange)="quiquennatChange('Projets')" [items]="quinquennat" ></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Axe stratégique</label>
+          <ngx-select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeChange()" [items]="ngxAxes"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Objectif stratégique</label>
+          <ngx-select [(ngModel)]="Projet.champ.idObjectifStrategique" [items]="Projets.ngxObjectifs"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Code projet</label>
+          <input [(ngModel)]="Projet.champ.codeProjet" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé du projet</label>
+          <input [(ngModel)]="Projet.champ.libelleProjet" type="text" class="form-control">
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date début</label>
+              <input [(ngModel)]="Projet.champ.dateDebut" type="date" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date fin</label>
+              <input [(ngModel)]="Projet.champ.dateFin" type="date" class="form-control">
+            </div>
+          </div>
+        </div>
+        <button *ngIf="!Projet.charge" (click)="enregistrerProjet()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Projet.charge" class="loader"></div>
       </div>
     </div>
     
