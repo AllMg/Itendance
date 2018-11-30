@@ -33,7 +33,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Nom/Prénom</label>
-							<input [(ngModel)]="Liste.filtre.nomPrenom" (ngModelChange)="filtreChange()" type="text" class="form-control">
+							<input [(ngModel)]="Liste.filtre.nomPrenom" (ngModelChange)="nomPrenomChange()" type="text" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -45,14 +45,14 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Agence/Société</label>
-							<input [(ngModel)]="Liste.filtre.nomSociete" (ngModelChange)="filtreChange()" type="text" class="form-control">
+							<input [(ngModel)]="Liste.filtre.nomSociete" (ngModelChange)="nomSocieteChange()" type="text" class="form-control">
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Statut</label>
 							<select [(ngModel)]="Liste.filtre.statut" (ngModelChange)="filtreChange()" class="form-control custom-select">
-								<option></option>
+								<option value="-1"></option>
 								<option value="1">ACTIVE</option>
 								<option value="0">NON ACTIVE</option>
 							</select>
@@ -80,7 +80,7 @@
 							<td>{{a.matricule}}</td>
 							<td>{{a.telephone}}</td>
 							<td>{{a.nomSociete}}</td>
-							<td>{{a.statut}}</td>
+							<td>{{avoirStatut(a.statut)}}</td>
 							<td>
 								<button (click)="clickInfoAgent(index)" class="btn btn-info"><i class="fa fa-info"></i></button>
 							</td>
@@ -110,33 +110,62 @@
 				<div class="row">
 					<div class="col-md-6">
 						<h5>Information de l'Individu</h5>
-						<div class="form-group">
-							<label>Nom</label>
-							<input [(ngModel)]="Saisie.champ.nom" type="text" class="form-control">
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Nom</label>
+								<input [(ngModel)]="Saisie.champ.nom" type="text" class="form-control">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Prénom</label>
+								<input [(ngModel)]="Saisie.champ.prenom" type="text" class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label>Prénom</label>
-							<input [(ngModel)]="Saisie.champ.prenom" type="text" class="form-control">
+						<div *ngIf="Saisie.type != 'Modif'" class="row">
+							<div class="col-md-6 form-group">
+								<label>CIN</label>
+								<input [(ngModel)]="Saisie.champ.cin" type="text" class="form-control">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Sexe</label>
+								<select [(ngModel)]="Saisie.individu.id_sexe.id_sexe" class="form-control custom-select">
+									<option value="M">HOMME</option>
+									<option value="F">FEMME</option>
+								</select>
+							</div>
 						</div>
-						<div class="form-group">
-							<label>CIN</label>
-							<input [(ngModel)]="Saisie.champ.cin" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>Matricule</label>
-							<input [(ngModel)]="Saisie.champ.matricule" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>Téléphone</label>
-							<input [(ngModel)]="Saisie.champ.telephone" type="text" class="form-control">
+						<div *ngIf="Saisie.type != 'Modif'" class="row">
+							<div class="col-md-6 form-group">
+								<label>Date de naissance</label>
+								<input [(ngModel)]="Saisie.individu.date_naissance" type="date" class="form-control">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Firaisana de naissance</label>
+								<ngx-select [(ngModel)]="Saisie.individu.id_firaisana_rel_fkt_naiss" [items]="ngxFiraisana" (typed)="chercheFiraisana($event)"></ngx-select>
+							</div>
 						</div>
 						<div class="form-group">
 							<label>Adresse</label>
-							<input [(ngModel)]="Saisie.champ.Adresse" type="text" class="form-control">
+							<input [(ngModel)]="Saisie.champ.adresse" type="text" class="form-control">
 						</div>
-						<div class="form-group">
-							<label>Agence/Société d'origine</label>
-							<input [(ngModel)]="Saisie.champ.nomSociete" type="text" class="form-control">
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Matricule (depuis l'employeur)</label>
+								<input [(ngModel)]="Saisie.champ.matricule" type="text" class="form-control">
+							</div>
+							<div *ngIf="Saisie.type != 'Modif'" class="col-md-6 form-group">
+								<label>Code DR</label>
+								<input [(ngModel)]="Saisie.individu.code_dr" type="text" class="form-control">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Téléphone</label>
+								<input [(ngModel)]="Saisie.champ.telephone" type="text" class="form-control">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Agence/Société d'origine</label>
+								<input [(ngModel)]="Saisie.champ.nomSociete" type="text" class="form-control">
+							</div>
 						</div>
 						<div class="form-group">
 							<label>Photo</label>
@@ -168,11 +197,7 @@
 						</div>
 						<div class="form-group">
 							<label>Salaire</label>
-							<input [(ngModel)]="Saisie.contrat.salaire_fixe" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>Matricule de l'employeur</label>
-							<input [(ngModel)]="Saisie.contrat.employeurmatricule" type="text" class="form-control">
+							<input [(ngModel)]="Saisie.contrat.salaire_fixe" type="number" class="form-control">
 						</div>
 					</div>
 					<div *ngIf="Saisie.type == 'Modif'" class="col-md-12">
@@ -186,7 +211,10 @@
 					</div>
 					<div class="col-sm-12">
 						<button *ngIf="!Saisie.charge" (click)="retourALaListe()" class="btn">Retour à la liste</button>
-						<button *ngIf="!Saisie.charge" (click)="validerSaisie()" class="btn btn-info" style="margin-left: 50px;">Valider</button>
+						<button *ngIf="!Saisie.charge && Saisie.type != 'Modif'" (click)="validerSaisie()" class="btn btn-info" style="margin-left: 50px;">Valider</button>
+						<button *ngIf="!Saisie.charge && Saisie.type == 'Modif'" (click)="validerSaisie()" class="btn btn-info" style="margin-left: 50px;">Modifier</button>
+					</div>
+					<div class="col-md-6">
 						<div *ngIf="Saisie.charge" class="loader"></div>
 					</div>
 				</div>

@@ -22,7 +22,7 @@ export class SeBudgetComponent implements OnInit {
   listeObjectifs = [];
 
   Axes = {
-    ngxProgr: [],
+    listeProgr: [],
     champ: {
       quinquennat: "",
       idProgr: -1,
@@ -34,7 +34,7 @@ export class SeBudgetComponent implements OnInit {
 
   Objectifs = {
     quinquennat: "",
-    ngxAxes: [],
+    listeAxes: [],
     champ: {
       idAxe: -1,
       codeObj: "",
@@ -45,7 +45,7 @@ export class SeBudgetComponent implements OnInit {
 
   Projets = {
     quinquennat: "",
-    ngxAxes: [],
+    listeAxes: [],
     idAxe: -1,
     ngxObjectifs: [],
     champ: {
@@ -88,11 +88,7 @@ export class SeBudgetComponent implements OnInit {
     if(nom == "axes"){
       let observ = this.budgetService.budgetTopic("listeProgrammeBP","",false).subscribe(obs=>{
         if(obs.success){
-          let liste = [];
-          for(let i=0; i<obs.msg.length; i++){
-            liste.push({id: obs.msg[i].idProgr, text: obs.msg[i].libelle});
-          }
-          that.Axes.ngxProgr = liste;
+          that.Axes.listeProgr = obs.msg;
         }
         else{
           that.toast.error(obs.msg);
@@ -106,17 +102,15 @@ export class SeBudgetComponent implements OnInit {
     let that = this;
     let observ = this.budgetService.budgetTopic("listeAxeBP",this[attr].quinquennat,false).subscribe(obs=>{
       if(obs.success){
-        let liste = [];
-        for(let i=0; i<obs.msg.length; i++){
-          liste.push({id: obs.msg[i].idAxe, text: obs.msg[i].libelle});
-        }
-        that[attr].ngxAxes = liste;
+        that[attr].listeAxes = obs.msg;
       }
       observ.unsubscribe();
     });
   }
 
   axeChange(){
+    this.Projets.champ.idObjectifStrategique = -1;
+    this.Projets.ngxObjectifs = [];
     let that = this;
     let observ = this.budgetService.budgetTopic("listeObjectifBP",this.Projets.idAxe,false).subscribe(obs=>{
       if(obs.success){

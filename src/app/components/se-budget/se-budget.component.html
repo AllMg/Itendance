@@ -35,7 +35,9 @@
         </div>
         <div class="form-group">
           <label>Programme</label>
-          <ngx-select [(ngModel)]="Axes.champ.idProgr" [items]="Axes.ngxProgr"></ngx-select>
+          <select [(ngModel)]="Axes.champ.idProgr" class="form-control custom-select">
+            <option *ngFor="let pr of Axes.listeProgr" value="{{pr.idProgr}}">{{pr.libelle}}</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Code de l'axe</label>
@@ -56,7 +58,9 @@
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
-          <ngx-select [(ngModel)]="Objectifs.champ.idAxe" [items]="Objectifs.ngxAxes"></ngx-select>
+          <select [(ngModel)]="Objectifs.champ.idAxe" class="form-control custom-select">
+            <option *ngFor="let ax of Objectifs.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Code de l'objectif</label>
@@ -77,36 +81,38 @@
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
-          <ngx-select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeChange()" [items]="ngxAxes"></ngx-select>
+          <select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeChange()" class="form-control custom-select">
+            <option *ngFor="let ax of Projets.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Objectif stratégique</label>
-          <ngx-select [(ngModel)]="Projet.champ.idObjectifStrategique" [items]="Projets.ngxObjectifs"></ngx-select>
+          <ngx-select [(ngModel)]="Projets.champ.idObjectifStrategique" [items]="Projets.ngxObjectifs"></ngx-select>
         </div>
         <div class="form-group">
           <label>Code projet</label>
-          <input [(ngModel)]="Projet.champ.codeProjet" type="text" class="form-control">
+          <input [(ngModel)]="Projets.champ.codeProjet" type="text" class="form-control">
         </div>
         <div class="form-group">
           <label>Libellé du projet</label>
-          <input [(ngModel)]="Projet.champ.libelleProjet" type="text" class="form-control">
+          <input [(ngModel)]="Projets.champ.libelleProjet" type="text" class="form-control">
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label>Date début</label>
-              <input [(ngModel)]="Projet.champ.dateDebut" type="date" class="form-control">
+              <input [(ngModel)]="Projets.champ.dateDebut" type="date" class="form-control">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label>Date fin</label>
-              <input [(ngModel)]="Projet.champ.dateFin" type="date" class="form-control">
+              <input [(ngModel)]="Projets.champ.dateFin" type="date" class="form-control">
             </div>
           </div>
         </div>
-        <button *ngIf="!Projet.charge" (click)="enregistrerProjet()" class="btn btn-info">Enregistrer</button>
-        <div *ngIf="Projet.charge" class="loader"></div>
+        <button *ngIf="!Projets.charge" (click)="enregistrerProjet()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Projets.charge" class="loader"></div>
       </div>
     </div>
     
