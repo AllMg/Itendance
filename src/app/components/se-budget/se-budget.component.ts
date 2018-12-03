@@ -17,7 +17,7 @@ export class SeBudgetComponent implements OnInit {
     sousMenu: ""
   };
 
-  quinquennat = [];
+  listeQuinquennat = [];
   listeAxes = [];
   listeObjectifs = [];
 
@@ -58,6 +58,13 @@ export class SeBudgetComponent implements OnInit {
     charge: false
   };
 
+  Verif = {
+    quinquennat: "",
+    modifAxe: false,
+    modifObjectif: false,
+    modifProjet: false
+  };
+
   constructor(
 		private router: Router, 
     private toast: ToastrService,
@@ -75,7 +82,7 @@ export class SeBudgetComponent implements OnInit {
     for(let avant=refFin; avant<anneeCourant+5; avant=avant+5){
       liste.unshift({id: (avant+1)+"-"+(avant+5), text: (avant+1)+" au "+(avant+5)});
     }
-    this.quinquennat = liste;
+    this.listeQuinquennat = liste;
   }
 
 	clickInMenu1(lien:string){
@@ -252,6 +259,30 @@ export class SeBudgetComponent implements OnInit {
     else{
       this.toast.error(verif.msg);
     }
+  }
+
+  clickAxeItem(){
+    this.Verif.modifAxe = true;
+  }
+
+  inputAxePerdu(){
+    this.Verif.modifAxe = false;
+  }
+
+  clickObjItem(){
+    this.Verif.modifObjectif = true;
+  }
+
+  inputObjPerdu(){
+    this.Verif.modifObjectif = false;
+  }
+
+  clickProItem(){
+    this.Verif.modifProjet = true;
+  }
+
+  inputProPerdu(){
+    this.Verif.modifProjet = false;
   }
 
   /**

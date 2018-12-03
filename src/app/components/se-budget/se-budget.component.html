@@ -2,36 +2,53 @@
 <app-info-agents></app-info-agents>
 
 <div class="container-fluid">
-	<div class="col-sm-12 content_page">
-		<div class="row titre_page">
-	      <h4>BUDGET DE PROGRAMME</h4>
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>BUDGET DE PROGRAMME</h4>
     </div>
-		
-		<!-- MENU -->
-		<div class="conteneur-de-menu">
-			<ul class="menu1">
-				<li class="menu1-active"><span>SAISIE</span></li>
-				<li (click)="clickInMenu1('se-elab')"><span>ELABORATION</span></li>
-				<li (click)="clickInMenu1('se-hist')"><span>HISTORIQUE</span></li>
-			</ul>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li class="menu1-active">
+          <span>SAISIE</span>
+        </li>
+        <li (click)="clickInMenu1('se-elab')">
+          <span>ELABORATION</span>
+        </li>
+        <li (click)="clickInMenu1('se-hist')">
+          <span>HISTORIQUE</span>
+        </li>
+      </ul>
     </div>
 
     <div class="conteneur-de-menu2">
-    <ul class="menu1">
-      <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}"><span>AXES STRATEGIQUES</span></li>
-      <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}"><span>OBJECTIFS STRATEGIQUES</span></li>
-      <li (click)="clickSousMenu('projets')" [ngClass]="{'menu1-active': Menu.sousMenu == 'projets'}"><span>PROJETS</span></li>
-    </ul>
-  </div>
-  <!-- FIN MENU -->
+      <ul class="menu1">
+        <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}">
+          <span>AXES STRATEGIQUES</span>
+        </li>
+        <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}">
+          <span>OBJECTIFS STRATEGIQUES</span>
+        </li>
+        <li (click)="clickSousMenu('projets')" [ngClass]="{'menu1-active': Menu.sousMenu == 'projets'}">
+          <span>PROJETS</span>
+        </li>
+        <li (click)="clickSousMenu('verif')" [ngClass]="{'menu1-active': Menu.sousMenu == 'verif'}">
+          <span>VERIFICATION</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
 
-		<!-- CONTENU -->
-		<div class="row" style="padding: 10px;">
-			<!-- AXES -->
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+      <!-- AXES -->
       <div *ngIf="Menu.sousMenu == 'axes'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie d'axe stratégique</h6>
+        <hr>
         <div class="form-group">
           <label>Quinquennat</label>
-          <ngx-select [(ngModel)]="Axes.champ.quinquennat" [items]="quinquennat" ></ngx-select>
+          <ngx-select [(ngModel)]="Axes.champ.quinquennat" [items]="listeQuinquennat"></ngx-select>
         </div>
         <div class="form-group">
           <label>Programme</label>
@@ -52,9 +69,11 @@
       </div>
       <!-- OBJECTIFS -->
       <div *ngIf="Menu.sousMenu == 'objectifs'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie d'objectif stratégique</h6>
+				<hr>
         <div class="form-group">
           <label>Quinquennat</label>
-          <ngx-select [(ngModel)]="Objectifs.quinquennat" (ngModelChange)="quiquennatChange('Objectifs')" [items]="quinquennat" ></ngx-select>
+          <ngx-select [(ngModel)]="Objectifs.quinquennat" (ngModelChange)="quiquennatChange('Objectifs')" [items]="listeQuinquennat"></ngx-select>
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
@@ -75,9 +94,11 @@
       </div>
       <!-- PROJETS -->
       <div *ngIf="Menu.sousMenu == 'projets'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie de Projet</h6>
+        <hr>
         <div class="form-group">
           <label>Quinquennat</label>
-          <ngx-select [(ngModel)]="Projets.quinquennat" (ngModelChange)="quiquennatChange('Projets')" [items]="quinquennat" ></ngx-select>
+          <ngx-select [(ngModel)]="Projets.quinquennat" (ngModelChange)="quiquennatChange('Projets')" [items]="listeQuinquennat"></ngx-select>
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
@@ -114,8 +135,101 @@
         <button *ngIf="!Projets.charge" (click)="enregistrerProjet()" class="btn btn-info">Enregistrer</button>
         <div *ngIf="Projets.charge" class="loader"></div>
       </div>
+      <!-- VERIFICATION -->
+      <div *ngIf="Menu.sousMenu == 'verif'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Liste structurelle</h6>
+        <hr>
+        <div class="form-group">
+          
+        </div>
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <div class="input-group mb-3">
+            <ngx-select [items]="listeQuinquennat" style="width: 400px;"></ngx-select>
+            <div class="input-group-append">
+              <button class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="progr-text">Programme 0</div>
+                <div class="progr-item progr-item-0">
+                  <div class="row">
+                    <div class="col-2" style="text-align: center;">1</div>
+                    <div class="col-9">
+                      <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem()" class="progr-item-text">Axe</span>
+                      <input *ngIf="Verif.modifAxe" (focusout)="inputAxePerdu()" type="text" value="Axe" class="form-control">
+                    </div>
+                    <div class="col-1"></div>
+                  </div>
+                </div>
+                <div class="progr-item progr-item-1">
+                  <div class="row">
+                    <div class="col-2" style="text-align: center;">1.1</div>
+                    <div class="col-9">
+                      <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem()" class="progr-item-text">Objectif</span>
+                      <input *ngIf="Verif.modifObjectif" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                    </div>
+                    <div class="col-1"></div>
+                  </div>
+                </div>
+                <div class="progr-item progr-item-2">
+                  <div class="row">
+                    <div class="col-2" style="text-align: center;">1.1.1</div>
+                    <div class="col-9">
+                      <span *ngIf="!Verif.modifProjet" (click)="clickProItem()" class="progr-item-text">Projet</span>
+                      <input *ngIf="Verif.modifProjet" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                    </div>
+                    <div class="col-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                  <div class="progr-text">Programme 1</div>
+                  <div class="progr-item progr-item-0">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem()" class="progr-item-text">Axe</span>
+                        <input *ngIf="Verif.modifAxe" (focusout)="inputAxePerdu()" type="text" value="Axe" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div class="progr-item progr-item-1">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1.1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem()" class="progr-item-text">Objectif</span>
+                        <input *ngIf="Verif.modifObjectif" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div class="progr-item progr-item-2">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1.1.1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifProjet" (click)="clickProItem()" class="progr-item-text">Projet</span>
+                        <input *ngIf="Verif.modifProjet" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    
+
   </div>
 </div>
 
