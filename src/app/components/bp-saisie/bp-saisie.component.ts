@@ -65,9 +65,7 @@ export class BpSaisieComponent implements OnInit {
     modifAxe: false,
     modifObjectif: false,
     modifProjet: false,
-    arbre: {
-      listeAxe: []
-    },
+    arbre: null,
     modif: {
       libelleAxe: "",
       libelleObj: "",
@@ -341,8 +339,8 @@ export class BpSaisieComponent implements OnInit {
       };
       console.log("argument",argument);
       let that = this;
-      let observ = this.budgetService.budgetTopic("listeArbreProgrammeBPSE",argument,true).subscribe(obs=>{
-        console.log("listeArbreProgrammeBPSE",obs);
+      let observ = this.budgetService.budgetTopic("listeArbreProgrBPSE",argument,true).subscribe(obs=>{
+        console.log("listeArbreProgrBPSE",obs);
         if(obs.success){
           that.Verif.arbre = obs.msg;
         }
@@ -352,9 +350,9 @@ export class BpSaisieComponent implements OnInit {
     }
   }
 
-  clickAxeItem(indexA) {
+  clickAxeItem(indexA,progr) {
     this.Verif.modif.indexA = indexA;
-    this.Verif.modif.libelleAxe = this.Verif.arbre.listeAxe[indexA].libelle;
+    this.Verif.modif.libelleAxe = this.Verif.arbre[progr].axe[indexA].axe.libelle;
     this.Verif.modifAxe = true;
   }
 
@@ -362,10 +360,10 @@ export class BpSaisieComponent implements OnInit {
     this.Verif.modifAxe = false;
   }
 
-  clickObjItem(indexA,indexO) {
+  clickObjItem(indexA,indexO,progr) {
     this.Verif.modif.indexA = indexA;
     this.Verif.modif.indexO = indexO;
-    this.Verif.modif.libelleObj = this.Verif.arbre.listeAxe[indexA].listeObj[indexO].libelleObj;
+    this.Verif.modif.libelleObj = this.Verif.arbre[progr].axe[indexA].axe.objectif[indexO].objectif.libelleObj;
     this.Verif.modifObjectif = true;
   }
 
@@ -373,11 +371,11 @@ export class BpSaisieComponent implements OnInit {
     this.Verif.modifObjectif = false;
   }
 
-  clickProItem(indexA,indexO,indexP) {
+  clickProItem(indexA,indexO,indexP,progr) {
     this.Verif.modif.indexA = indexA;
     this.Verif.modif.indexO = indexO;
     this.Verif.modif.indexP = indexP;
-    this.Verif.modif.libellePro = this.Verif.arbre.listeAxe[indexA].listeObjectif[indexO].listeProjet[indexP].libelleProjet;
+    this.Verif.modif.libellePro = this.Verif.arbre[progr].axe[indexA].axe.objectif[indexO].projet[indexP].libelleProjet;
     this.Verif.modifProjet = true;
   }
 
