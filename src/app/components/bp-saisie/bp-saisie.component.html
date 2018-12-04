@@ -1,0 +1,247 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>BUDGET DE PROGRAMME</h4>
+    </div>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li class="menu1-active">
+          <span>SAISIE</span>
+        </li>
+        <li (click)="clickInMenu1('bp-elaboration')">
+          <span>ELABORATION</span>
+        </li>
+        <li (click)="clickInMenu1('se-hist')">
+          <span>HISTORIQUE</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+      <ul class="menu1">
+        <li (click)="clickSousMenu('axes')" [ngClass]="{'menu1-active': Menu.sousMenu == 'axes'}">
+          <span>AXES STRATEGIQUES</span>
+        </li>
+        <li (click)="clickSousMenu('objectifs')" [ngClass]="{'menu1-active': Menu.sousMenu == 'objectifs'}">
+          <span>OBJECTIFS STRATEGIQUES</span>
+        </li>
+        <li (click)="clickSousMenu('projets')" [ngClass]="{'menu1-active': Menu.sousMenu == 'projets'}">
+          <span>PROJETS</span>
+        </li>
+        <li (click)="clickSousMenu('verif')" [ngClass]="{'menu1-active': Menu.sousMenu == 'verif'}">
+          <span>VERIFICATION</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
+
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+      <!-- AXES -->
+      <div *ngIf="Menu.sousMenu == 'axes'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie d'axe stratégique</h6>
+        <hr>
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [(ngModel)]="Axes.champ.quinquennat" [items]="listeQuinquennat"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Programme</label>
+          <select [(ngModel)]="Axes.champ.idProgr" class="form-control custom-select">
+            <option *ngFor="let pr of Axes.listeProgr" value="{{pr.idProgr}}">{{pr.libelle}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Code de l'axe</label>
+          <input [(ngModel)]="Axes.champ.codeAxe" type="number" max="9" min="1" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé de l'axe</label>
+          <input [(ngModel)]="Axes.champ.libelle" type="text" class="form-control">
+        </div>
+        <button *ngIf="!Axes.charge" (click)="enregistrerAxe()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Axes.charge" class="loader"></div>
+      </div>
+      <!-- OBJECTIFS -->
+      <div *ngIf="Menu.sousMenu == 'objectifs'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie d'objectif stratégique</h6>
+				<hr>
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [(ngModel)]="Objectifs.quinquennat" (ngModelChange)="quiquennatChange('Objectifs')" [items]="listeQuinquennat"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Axe stratégique</label>
+          <select [(ngModel)]="Objectifs.champ.idAxe" class="form-control custom-select">
+            <option *ngFor="let ax of Objectifs.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Code de l'objectif</label>
+          <input [(ngModel)]="Objectifs.champ.codeObj" type="number" max="9" min="1" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé de l'objectif</label>
+          <input [(ngModel)]="Objectifs.champ.libelleObj" type="text" class="form-control">
+        </div>
+        <button *ngIf="!Objectifs.charge" (click)="enregistrerObjectif()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Objectifs.charge" class="loader"></div>
+      </div>
+      <!-- PROJETS -->
+      <div *ngIf="Menu.sousMenu == 'projets'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Formulaire de saisie de Projet</h6>
+        <hr>
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <ngx-select [(ngModel)]="Projets.quinquennat" (ngModelChange)="quiquennatChange('Projets')" [items]="listeQuinquennat"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Axe stratégique</label>
+          <select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeChange()" class="form-control custom-select">
+            <option *ngFor="let ax of Projets.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Objectif stratégique</label>
+          <ngx-select [(ngModel)]="Projets.champ.idObjStrategique" [items]="Projets.ngxObjectifs"></ngx-select>
+        </div>
+        <div class="form-group">
+          <label>Code projet</label>
+          <input [(ngModel)]="Projets.champ.codeProjet" type="number" max="9" min="1" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Libellé du projet</label>
+          <input [(ngModel)]="Projets.champ.libelleProjet" type="text" class="form-control">
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date début</label>
+              <input [(ngModel)]="Projets.champ.dateDebut" type="date" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date fin</label>
+              <input [(ngModel)]="Projets.champ.dateFin" type="date" class="form-control">
+            </div>
+          </div>
+        </div>
+        <button *ngIf="!Projets.charge" (click)="enregistrerProjet()" class="btn btn-info">Enregistrer</button>
+        <div *ngIf="Projets.charge" class="loader"></div>
+      </div>
+      <!-- VERIFICATION -->
+      <div *ngIf="Menu.sousMenu == 'verif'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Liste structurelle</h6>
+        <hr>
+        <div class="form-group">
+          <label>Quinquennat</label>
+          <div class="input-group mb-3">
+            <ngx-select [(ngModel)]="Verif.quinquennat" [items]="listeQuinquennat" style="width: 400px;"></ngx-select>
+            <div class="input-group-append">
+              <button (click)="chargerArbreProgramme()" class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="progr-text">Programme 0</div>
+                <div *ngFor="let Axe of Verif.arbre.listeAxe; let indexA = index" style="width: 100%;">
+                  <div class="progr-item progr-item-0">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">{{Axe.axe.codeAxe}}</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem(indexA)" class="progr-item-text">{{Axe.axe.libelle}}</span>
+                        <input *ngIf="Verif.modifAxe" [(ngModel)]="Verif.modif.libelleAxe" name="libelleA{{indexA}}" (focusout)="inputAxePerdu()" type="text" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div *ngFor="let Obj of Axe.listeObjectif; let indexO = index" style="width: 100%">
+                    <div class="progr-item progr-item-1">
+                      <div class="row">
+                        <div class="col-2" style="text-align: center;">{{Axe.axe.codeAxe+"."+Obj.obj.codeObj}}</div>
+                        <div class="col-9">
+                          <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem(indexA,indexO)" class="progr-item-text">{{Obj.obj.libelleObj}}</span>
+                          <input *ngIf="Verif.modifObjectif" [(ngModel)]="Verif.modif.libelleObj" name="libelleA{{indexA}}" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                        </div>
+                        <div class="col-1"></div>
+                      </div>
+                    </div>
+                    <div *ngFor="let pro of Obj.listeProjet; let indexP = index" class="progr-item progr-item-2">
+                      <div class="row">
+                        <div class="col-2" style="text-align: center;">{{Axe.axe.codeAxe+"."+Obj.obj.codeObj+"."+pro.codeProjet}}</div>
+                        <div class="col-9">
+                          <span *ngIf="!Verif.modifProjet" (click)="clickProItem(indexA,indexO,indexP)" class="progr-item-text">{{pro.libelleProjet}}</span>
+                          <input *ngIf="Verif.modifProjet" [(ngModel)]="Verif.modif.libellePrO" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                        </div>
+                        <div class="col-1"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                  <div class="progr-text">Programme 1</div>
+                  <div class="progr-item progr-item-0">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem()" class="progr-item-text">Axe</span>
+                        <input *ngIf="Verif.modifAxe" (focusout)="inputAxePerdu()" type="text" value="Axe" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div class="progr-item progr-item-1">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1.1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem()" class="progr-item-text">Objectif</span>
+                        <input *ngIf="Verif.modifObjectif" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div class="progr-item progr-item-2">
+                    <div class="row">
+                      <div class="col-2" style="text-align: center;">1.1.1</div>
+                      <div class="col-9">
+                        <span *ngIf="!Verif.modifProjet" (click)="clickProItem()" class="progr-item-text">Projet</span>
+                        <input *ngIf="Verif.modifProjet" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MODAL -->
+    <!-- MODAL CHARGEMENT -->
+    <div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="loader">
+      </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

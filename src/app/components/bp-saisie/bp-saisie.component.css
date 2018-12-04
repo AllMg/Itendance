@@ -1,0 +1,100 @@
+.conteneur-de-menu{
+    width: 100%;
+}
+
+.conteneur-de-menu2{
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.menu1 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-color: rgb(208, 224, 233);
+}
+
+.menu1 li {
+    float: left;
+}
+
+.menu1 li span {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.menu1 li span:hover {
+    color: white;
+    cursor: pointer;
+    background-color: rgb(23, 153, 180);
+}
+
+.menu1-active span{
+    color: white;
+    background-color: rgb(23, 153, 180);
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid rgb(92, 92, 226); /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+.progr-text{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.div-obj-item{
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.div-projet-item{
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.progr-item{
+    padding-top: 15px; 
+    padding-bottom: 15px; 
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+
+.progr-item-0{
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.progr-item-1{
+    width: 96%;
+    margin-left: 2%;
+    margin-bottom: 5px;
+}
+
+.progr-item-2{
+    width: 92%;
+    margin-left: 4%;
+    margin-bottom: 5px;
+}
+
+.progr-item-text:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.btn-check-modif:hover{
+    cursor: pointer;
+}

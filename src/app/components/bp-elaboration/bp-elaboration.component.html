@@ -1,0 +1,99 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>BUDGET DE PROGRAMME</h4>
+    </div>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li (click)="clickInMenu1('bp-saisie')">
+          <span>SAISIE</span>
+        </li>
+        <li class="menu1-active">
+          <span>ELABORATION</span>
+        </li>
+        <li (click)="clickInMenu1('se-hist')">
+          <span>HISTORIQUE</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+      <ul class="menu1">
+        <li (click)="clickSousMenu('service')" [ngClass]="{'menu1-active': Menu.sousMenu == 'service'}">
+          <span>PAR SERVICE</span>
+        </li>
+        <li (click)="clickSousMenu('se')" [ngClass]="{'menu1-active': Menu.sousMenu == 'se'}">
+          <span>SERVICE SE</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
+
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+      <!-- AXES -->
+      <div *ngIf="Menu.sousMenu == 'service'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Le budget que vous élaborez maintenant sera pour l'exercice {{exerciceBudget}}</h6>
+        <hr>
+        <div class="form-group">
+          <label>Veuillez choisir les projets qui entre dans votre plan budgétaire</label>
+          <div class="input-group mb-3">
+            <select class="form-control custom-select"></select>
+            <div class="input-group-append">
+              <button class="btn btn-info">Ajouter pour l'élaboration</button>
+            </div>
+          </div>
+        </div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'fct'}" (click)="clickCategorie('fct')">FONCTIONNEMENTS</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'inv'}" (click)="clickCategorie('inv')">INVESTISSEMENTS</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'rec'}" (click)="clickCategorie('rec')">RECETTES TECHNIQUES</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'dep'}" (click)="clickCategorie('dep')">DEPENSES TECHNIQUES</span>
+          </li>
+        </ul>
+        <div *ngIf="Service.categorie == 'fct'" style="width: 100%;">
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr>
+                <td colspan="2">RUBRIQUE</td>
+                <td *ngIf="Service.listeProjet.length > 0" [attr.colspan]="Service.listeProjet.length">CREDIT {{exerciceBudget}}</td>
+                <td>PRECISION</td>
+              </tr>
+              <tr>
+                <td>N° Compte</td>
+                <td>Intitulé de Compte</td>
+                <td *ngFor="let pr of Service.listeProjet">pr.codeProjet</td>
+                <td></td>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MODAL -->
+    <!-- MODAL CHARGEMENT -->
+    <div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="loader">
+      </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>
