@@ -56,3 +56,19 @@
 .cat-active{
     font-weight: bold;
 }
+
+.parent-compte{
+    font-weight: bold;
+}
+.parent-compte:hover{
+    cursor: pointer;
+}
+
+.invisible{
+    display: none;
+}
+
+.bare-separateur{
+    background: #cccccc;
+    height: 1px;
+}

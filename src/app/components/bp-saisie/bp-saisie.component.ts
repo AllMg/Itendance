@@ -119,6 +119,22 @@ export class BpSaisieComponent implements OnInit {
     }
   }
 
+  quinqAxeChange(){
+    let dates = this.prendDateQuinq(this.Axes.champ.quinquennat);
+    let argument = {
+      dateDebut: dates[0],
+      dateFin: dates[1]
+    };
+    let that = this;
+    let observ = this.budgetService.budgetTopic("codeAxeSuivantBPSE",argument,true).subscribe(obs=>{
+      console.log("codeAxeSuivantBPSE",obs);
+      if(obs.success){
+        that.Axes.champ.codeAxe = obs.msg;
+      }
+      observ.unsubscribe();
+    });
+  }
+
   quiquennatChange(attr) {
     let that = this;
     let dates = this.prendDateQuinq(this[attr].quinquennat);
@@ -138,7 +154,17 @@ export class BpSaisieComponent implements OnInit {
     });
   }
 
-  axeChange() {
+  axeObjectifChange(){
+    let that = this;
+    let observ = this.budgetService.budgetTopic("codeObjectifSuivantBPSE",this.Objectifs.champ.idAxe,false).subscribe(obs=>{
+      if(obs.success){
+        that.Objectifs.champ.codeObj = obs.msg;
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  axeProjetChange() {
     this.Projets.champ.idObjStrategique = -1;
     this.Projets.ngxObjectifs = [];
     let that = this;
@@ -150,6 +176,17 @@ export class BpSaisieComponent implements OnInit {
           liste.push({ id: obs.msg[i].idObjStrategique, text: obs.msg[i].libelleObj });
         }
         that.Projets.ngxObjectifs = liste;
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  objectifProjetChange(){
+    let that = this;
+    let observ = this.budgetService.budgetTopic("codeProjetSuivantBPSE",this.Projets.champ.idObjStrategique,false).subscribe(obs=>{
+      console.log("codeProjetSuivantBPSE", obs);
+      if(obs.success){
+        that.Projets.champ.codeProjet = obs.msg;
       }
       observ.unsubscribe();
     });
@@ -189,13 +226,15 @@ export class BpSaisieComponent implements OnInit {
       let observ = this.budgetService.budgetTopic("ajoutAxeBPSE", argument, true).subscribe(obs => {
         console.log("ajoutAxeBPSE", obs);
         that.Axes.charge = false;
-        if (obs.success) {
+        if (obs.success && obs.msg != null) {
           that.toast.success("Enregistrement de l'axe terminé");
-          that.Axes.champ.codeAxe = "";
+          that.Axes.champ.codeAxe = (parseInt(that.Axes.champ.codeAxe) + 1).toString();
           that.Axes.champ.libelle = "";
         }
         else {
-          that.toast.error(obs.msg);
+          if(obs.msg == null){
+            that.toast.error("Cette axe est déjà dans la base");
+          }
         }
         observ.unsubscribe();
       });
@@ -228,13 +267,15 @@ export class BpSaisieComponent implements OnInit {
       let observ = this.budgetService.budgetTopic("ajoutObjectifStratBPSE", this.Objectifs.champ, true).subscribe(obs => {
         console.log("ajoutObjectifStratBPSE", obs);
         that.Objectifs.charge = false;
-        if (obs.success) {
+        if (obs.success && obs.msg != null) {
           that.toast.success("Enregistrement de l'objectif stratégique terminé");
-          that.Objectifs.champ.codeObj = "";
+          that.Objectifs.champ.codeObj = (parseInt(that.Objectifs.champ.codeObj) + 1).toString();
           that.Objectifs.champ.libelleObj = "";
         }
         else {
-          that.toast.error(obs.msg);
+          if(obs.msg == null){
+            that.toast.error("Ce code d'objectif est déjà présent dans la base de données");
+          }
         }
         observ.unsubscribe();
       });
@@ -267,19 +308,20 @@ export class BpSaisieComponent implements OnInit {
     if (verif.estBon) {
       this.Projets.charge = true;
       let that = this;
-      console.log("this.Projets.champ",this.Projets.champ);
       let observ = this.budgetService.budgetTopic("ajoutProjetBPSE", this.Projets.champ, true).subscribe(obs => {
         console.log("ajoutProjetBPSE",obs);
         that.Projets.charge = false;
-        if (obs.success) {
+        if (obs.success && obs.msg != null) {
           that.toast.success("Enregistrement du projet terminé");
-          that.Projets.champ.codeProjet = "";
+          that.Projets.champ.codeProjet = (parseInt(that.Projets.champ.codeProjet) + 1).toString();
           that.Projets.champ.libelleProjet = "";
           that.Projets.champ.dateDebut = null;
           that.Projets.champ.dateFin = null;
         }
         else {
-          that.toast.error(obs.msg);
+          if(obs.msg == null){
+            that.toast.error("Ce code projet est déjà présent dans la base de données");
+          }
         }
         observ.unsubscribe();
       });

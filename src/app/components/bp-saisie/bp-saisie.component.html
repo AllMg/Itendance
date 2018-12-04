@@ -48,7 +48,7 @@
         <hr>
         <div class="form-group">
           <label>Quinquennat</label>
-          <ngx-select [(ngModel)]="Axes.champ.quinquennat" [items]="listeQuinquennat"></ngx-select>
+          <ngx-select [(ngModel)]="Axes.champ.quinquennat" (ngModelChange)="quinqAxeChange()" [items]="listeQuinquennat"></ngx-select>
         </div>
         <div class="form-group">
           <label>Programme</label>
@@ -58,7 +58,7 @@
         </div>
         <div class="form-group">
           <label>Code de l'axe</label>
-          <input [(ngModel)]="Axes.champ.codeAxe" type="number" max="9" min="1" class="form-control">
+          <input [value]="Axes.champ.codeAxe" type="text" class="form-control" readonly>
         </div>
         <div class="form-group">
           <label>Libellé de l'axe</label>
@@ -77,13 +77,13 @@
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
-          <select [(ngModel)]="Objectifs.champ.idAxe" class="form-control custom-select">
+          <select [(ngModel)]="Objectifs.champ.idAxe" (change)="axeObjectifChange()" class="form-control custom-select">
             <option *ngFor="let ax of Objectifs.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
           </select>
         </div>
         <div class="form-group">
           <label>Code de l'objectif</label>
-          <input [(ngModel)]="Objectifs.champ.codeObj" type="number" max="9" min="1" class="form-control">
+          <input [value]="Objectifs.champ.codeObj" type="text" class="form-control" readonly>
         </div>
         <div class="form-group">
           <label>Libellé de l'objectif</label>
@@ -102,17 +102,17 @@
         </div>
         <div class="form-group">
           <label>Axe stratégique</label>
-          <select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeChange()" class="form-control custom-select">
+          <select [(ngModel)]="Projets.idAxe" (ngModelChange)="axeProjetChange()" class="form-control custom-select">
             <option *ngFor="let ax of Projets.listeAxes" value="{{ax.idAxe}}">{{ax.libelle}}</option>
           </select>
         </div>
         <div class="form-group">
           <label>Objectif stratégique</label>
-          <ngx-select [(ngModel)]="Projets.champ.idObjStrategique" [items]="Projets.ngxObjectifs"></ngx-select>
+          <ngx-select [(ngModel)]="Projets.champ.idObjStrategique" (ngModelChange)="objectifProjetChange()" [items]="Projets.ngxObjectifs"></ngx-select>
         </div>
         <div class="form-group">
           <label>Code projet</label>
-          <input [(ngModel)]="Projets.champ.codeProjet" type="number" max="9" min="1" class="form-control">
+          <input [value]="Projets.champ.codeProjet" type="text" class="form-control" readonly>
         </div>
         <div class="form-group">
           <label>Libellé du projet</label>
