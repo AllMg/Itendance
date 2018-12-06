@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import { ImmoService } from '../../services/immo/immo.service';
 import { FileService } from '../../services/file/file.service';
+import { BudgetService } from '../../services/budget/budget.service';
 
 declare var $: any;
 
@@ -22,6 +23,11 @@ export class ImmoDmdComponent implements OnInit {
   Menu = {
     menu: "demande",
     sousMenu: ""
+  };
+
+  Individu = {
+    idIndividu: null,
+    codeService: null
   };
 
   DmdMob = {
@@ -75,48 +81,39 @@ export class ImmoDmdComponent implements OnInit {
 
   constructor(
     private router: Router, 
-    private renderer2: Renderer2, 
     private toastr: ToastrService, 
     private fileService: FileService,
+    private budgetService: BudgetService,
     private immoService: ImmoService) {
 
     let that = this;
-    /*this.immoService.immoTopic("avoirListeSite", "", false).subscribe(obs=>{
-      if(obs.success){
-        that.DmdEntrBat.listeSite = obs.msg;
+    let observ = this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs1=>{
+      if(obs1.success){
+        that.trieParLibelle(obs1.msg);
+        that.DmdEntrBat.listeType = obs1.msg;
       }
-    });*/
-    let obs1 = this.immoService.immoTopic("listeTypeEntrBatInt", "", false).subscribe(obs=>{
-    //let obs1 = this.immoService.listeTypeEntrBatInt().subscribe(obs=>{
-      if(obs.success){
-        that.trieParLibelle(obs.msg);
-        that.DmdEntrBat.listeType = obs.msg;
-      }
-      console.log("listeTypeEntrBatInt", obs);
-      obs1.unsubscribe();
-    });
-    let obs2 = this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs=>{
-    //let obs2 = this.immoService.listeCaractEntrBatInt().subscribe(obs=>{
-      if(obs.success){
-        that.trieParLibelle(obs.msg);
-        that.DmdEntrBat.listeCaract = obs.msg;
-      }
-      console.log("listeCaractEntrBatInt", obs);
-      obs2.unsubscribe();
-    });
-    let obs3 = this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs=>{
-    //let obs3 = this.immoService.listeEnumEntrBatInt().subscribe(obs=>{
-      if(obs.success){
-        that.trieParLibelle(obs.msg);
-        that.DmdEntrBat.listeEnum = obs.msg;
-      }
-      console.log("listeEnumEntrBatInt", obs);
-      obs3.unsubscribe();
+      console.log("listeTypeEntrBatInt", obs1);
+      observ.unsubscribe();
+      observ = this.immoService.immoTopic("listeCaractEntrBatInt", "", false).subscribe(obs2=>{
+        if(obs2.success){
+          that.trieParLibelle(obs2.msg);
+          that.DmdEntrBat.listeCaract = obs2.msg;
+        }
+        console.log("listeCaractEntrBatInt", obs2);
+        observ.unsubscribe();
+        observ = this.immoService.immoTopic("listeEnumEntrBatInt", "", false).subscribe(obs3=>{
+          if(obs3.success){
+            that.trieParLibelle(obs3.msg);
+            that.DmdEntrBat.listeEnum = obs3.msg;
+          }
+          console.log("listeEnumEntrBatInt", obs3);
+          observ.unsubscribe();
+        });
+      });
     });
   }
 
   ngOnInit() {
-    console.log("INIT IMMO DMD");
     let that = this;
     this.DmdMob.articleControls[0].valueChanges.subscribe(term => {
       term = term.toString().trim();
@@ -146,9 +143,19 @@ export class ImmoDmdComponent implements OnInit {
         that.DmdRepMob.articleOptions = [];
       }
     });
-    /*this.Utilisateur = JSON.parse(localStorage.getItem('user'));
-    console.log("Utilisateur");
-    console.log(this.Utilisateur);*/
+  }
+
+  initIndividu(){
+    let utilisateur = JSON.parse(localStorage.getItem('user'));
+    let that = this;
+    let observ = this.budgetService.getServiceDirection(utilisateur.id_acces).subscribe(obs=>{
+      console.log("Utilisateur", obs);
+      if(obs.success && obs.msg.length > 0){
+        that.Individu.idIndividu = utilisateur.id_acces;
+        that.Individu.codeService = obs.msg[0].code_service.code_service;
+      }
+      observ.unsubscribe();
+    });
   }
 
   ngOnDestroy(){
@@ -180,7 +187,7 @@ export class ImmoDmdComponent implements OnInit {
     if(this[nomAttr].reference == ""){
       let that = this;
       let argument = {
-        prestation: "302",
+        prestation: this.Individu.codeService,
         dr: "42"
       };
       let observ = this.immoService.immoTopic("referenceDmdArticleInt", argument, true).subscribe(obs=>{
@@ -273,8 +280,8 @@ export class ImmoDmdComponent implements OnInit {
               that.DmdMob.articles[i].refArticle = obs.msg[i];
             }
             let argument = {
-              refIndividu: "0000",
-              refService: "1111",
+              refIndividu: this.Individu.idIndividu,
+              refService: this.Individu.codeService,
               reference: that.DmdMob.reference,
               article: that.DmdMob.articles,
               observation: that.DmdMob.observation
@@ -355,8 +362,8 @@ export class ImmoDmdComponent implements OnInit {
     if(this.DmdRepMob.reference){
       this.DmdRepMob.loader = true;
       let argument = {
-        refIndividu: "0000",
-        refService: "1111",
+        refIndividu: this.Individu.idIndividu,
+        refService: this.Individu.codeService,
         reference: this.DmdRepMob.reference,
         nomArticle: this.DmdRepMob.article.toUpperCase().trim(),
         motif: this.DmdRepMob.motif.trim()
@@ -442,8 +449,8 @@ export class ImmoDmdComponent implements OnInit {
     if(this.DmdEntrBat.reference != ""){
       this.DmdEntrBat.loader = true;
       let argument = {
-        refIndividu: "0000",
-        refService: "1111",
+        refIndividu: this.Individu.idIndividu,
+        refService: this.Individu.codeService,
         reference: this.DmdEntrBat.reference,
         refSite: 22, //refSite: this.DmdEntrBat.site,
         idTypeEntrBat: this.DmdEntrBat.type,

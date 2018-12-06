@@ -149,7 +149,7 @@
           </div>
         </div>
         <div *ngIf="Verif.arbre != null" class="row">
-          <div class="col-md-6">
+          <div *ngIf="Verif.arbre.programme0 != null" class="col-md-6">
             <div class="card">
               <div class="card-body">
                 <div class="progr-text">Programme 0</div>
@@ -158,8 +158,8 @@
                     <div class="row">
                       <div class="col-2" style="text-align: center;">{{Axe.axe.codeAxe}}</div>
                       <div class="col-9">
-                        <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem(indexA,'programme0')" class="progr-item-text">{{Axe.axe.libelle}}</span>
-                        <input *ngIf="Verif.modifAxe" [(ngModel)]="Verif.modif.libelleAxe" name="libelleA{{indexA}}" (focusout)="inputAxePerdu()" type="text" class="form-control">
+                        <span *ngIf="!Verif.arbre.programme0.axe[indexA].modif" (click)="clickAxeItem(indexA,'programme0')" class="progr-item-text">{{Axe.axe.libelle}}</span>
+                        <input id="{{'programme0_axe_'+Verif.arbre.programme0.axe[indexA].axe.idAxe}}" *ngIf="Verif.arbre.programme0.axe[indexA].modif" [(ngModel)]="Verif.modif.libelleAxe" name="libelleA{{indexA}}" (focusout)="inputAxePerdu()" type="text" class="form-control">
                       </div>
                       <div class="col-1"></div>
                     </div>
@@ -169,8 +169,8 @@
                       <div class="row">
                         <div class="col-2" style="text-align: center;">{{Obj.objectif.codeObj}}</div>
                         <div class="col-9">
-                          <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem(indexA,indexO,'programme0')" class="progr-item-text">{{Obj.objectif.libelleObj}}</span>
-                          <input *ngIf="Verif.modifObjectif" [(ngModel)]="Verif.modif.libelleObj" name="libelleA{{indexA}}" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                          <span *ngIf="!Verif.arbre.programme0.axe[indexA].objectif[indexO].modif" (click)="clickObjItem(indexA,indexO,'programme0')" class="progr-item-text">{{Obj.objectif.libelleObj}}</span>
+                          <input id="{{'programme0_obj_'+Verif.arbre.programme0.axe[indexA].objectif[indexO].objectif.idObjStrategique}}" *ngIf="Verif.arbre.programme0.axe[indexA].objectif[indexO].modif" [(ngModel)]="Verif.modif.libelleObj" name="libelleA{{indexA}}" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
                         </div>
                         <div class="col-1"></div>
                       </div>
@@ -179,8 +179,7 @@
                       <div class="row">
                         <div class="col-2" style="text-align: center;">{{pro.codeProjet}}</div>
                         <div class="col-9">
-                          <span *ngIf="!Verif.modifProjet" (click)="clickProItem(indexA,indexO,indexP,'programme0')" class="progr-item-text">{{pro.libelleProjet}}</span>
-                          <input *ngIf="Verif.modifProjet" [(ngModel)]="Verif.modif.libellePrO" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                          <span (click)="clickProItem(indexA,indexO,indexP,'programme0')" class="progr-item-text">{{pro.libelleProjet}}</span>
                         </div>
                         <div class="col-1"></div>
                       </div>
@@ -190,7 +189,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div *ngIf="Verif.arbre.programme1 != null" class="col-md-6">
             <div class="card">
               <div class="card-body">
                 <div class="progr-text">Programme 1</div>
@@ -199,8 +198,8 @@
                     <div class="row">
                       <div class="col-2" style="text-align: center;">{{Axe.axe.codeAxe}}</div>
                       <div class="col-9">
-                        <span *ngIf="!Verif.modifAxe" (click)="clickAxeItem(indexA,'programme1')" class="progr-item-text">{{Axe.axe.libelle}}</span>
-                        <input *ngIf="Verif.modifAxe" [(ngModel)]="Verif.modif.libelleAxe" name="libelleA{{indexA}}" (focusout)="inputAxePerdu()" type="text" class="form-control">
+                        <span *ngIf="!Verif.arbre.programme1.axe[indexA].modif" (click)="clickAxeItem(indexA,'programme1')" class="progr-item-text">{{Axe.axe.libelle}}</span>
+                        <input id="{{'programme1_axe_'+Verif.arbre.programme1.axe[indexA].axe.idAxe}}" *ngIf="Verif.arbre.programme1.axe[indexA].modif" [(ngModel)]="Verif.modif.libelleAxe" name="libelleA{{indexA}}" (focusout)="inputAxePerdu()" type="text" class="form-control">
                       </div>
                       <div class="col-1"></div>
                     </div>
@@ -210,8 +209,8 @@
                       <div class="row">
                         <div class="col-2" style="text-align: center;">{{Obj.objectif.codeObj}}</div>
                         <div class="col-9">
-                          <span *ngIf="!Verif.modifObjectif" (click)="clickObjItem(indexA,indexO,'programme1')" class="progr-item-text">{{Obj.objectif.libelleObj}}</span>
-                          <input *ngIf="Verif.modifObjectif" [(ngModel)]="Verif.modif.libelleObj" name="libelleA{{indexA}}" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
+                          <span *ngIf="!Verif.arbre.programme1.axe[indexA].objectif[indexO].modif" (click)="clickObjItem(indexA,indexO,'programme1')" class="progr-item-text">{{Obj.objectif.libelleObj}}</span>
+                          <input id="{{'programme1_obj_'+Verif.arbre.programme1.axe[indexA].objectif[indexO].objectif.idObjStrategique}}" *ngIf="Verif.arbre.programme1.axe[indexA].objectif[indexO].modif" [(ngModel)]="Verif.modif.libelleObj" name="libelleA{{indexA}}" (focusout)="inputObjPerdu()" type="text" value="Objectif" class="form-control">
                         </div>
                         <div class="col-1"></div>
                       </div>
@@ -220,8 +219,7 @@
                       <div class="row">
                         <div class="col-2" style="text-align: center;">{{pro.codeProjet}}</div>
                         <div class="col-9">
-                          <span *ngIf="!Verif.modifProjet" (click)="clickProItem(indexA,indexO,indexP,'programme1')" class="progr-item-text">{{pro.libelleProjet}}</span>
-                          <input *ngIf="Verif.modifProjet" [(ngModel)]="Verif.modif.libellePrO" (focusout)="inputProPerdu()" type="text" value="Projet" class="form-control">
+                          <span (click)="clickProItem(indexA,indexO,indexP,'programme1')" class="progr-item-text">{{pro.libelleProjet}}</span>
                         </div>
                         <div class="col-1"></div>
                       </div>
@@ -241,6 +239,54 @@
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
       <div class="loader">
       </div>
+      </div>
+    </div>
+    <!-- MODAL MODIF PROJET (LIBELLE/DATE) -->
+    <div #modalModifProjet class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div *ngIf="Verif.modif.indexP > -1" class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title">Modification du projet</h6>
+            <button type="button" class="close" (click)="fermeModifProjet()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Axe stratégique</label>
+              <input [value]="Verif.arbre[Verif.modifProgr].axe[Verif.modif.indexA].axe.libelle" type="text" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label>Objectif stratégique</label>
+              <input [value]="Verif.arbre[Verif.modifProgr].axe[Verif.modif.indexA].objectif[Verif.modif.indexO].objectif.libelleObj" type="text" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label>Code projet</label>
+              <input [value]="Verif.arbre[Verif.modifProgr].axe[Verif.modif.indexA].objectif[Verif.modif.indexO].projet[Verif.modif.indexP].codeProjet" type="text" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label>Libellé</label>
+              <input [(ngModel)]="Verif.modif.projet.libelleProjet" type="text" class="form-control input-upper">
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label>Date début</label>
+                  <input [(ngModel)]="Verif.modif.projet.dateDebut" type="date" class="form-control">
+                </div>
+              </div>
+              <div class="col-6">
+                  <div class="form-group">
+                    <label>Date fin</label>
+                    <input [(ngModel)]="Verif.modif.projet.dateFin" type="date" class="form-control">
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="modifierProjet()" type="button" class="btn btn-primary">Modifier</button>
+          </div>
+        </div>
       </div>
     </div>
 

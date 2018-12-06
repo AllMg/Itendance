@@ -13,6 +13,7 @@ declare var $: any;
 export class BpSaisieComponent implements OnInit {
 
   @ViewChild('modalChargement') modalChargement;
+  @ViewChild('modalModifProjet') modalModifProjet;
 
   Menu = {
     menu: "inventaire",
@@ -62,14 +63,17 @@ export class BpSaisieComponent implements OnInit {
 
   Verif = {
     quinquennat: "",
-    modifAxe: false,
-    modifObjectif: false,
-    modifProjet: false,
     arbre: null,
+    modifProgr: null,
     modif: {
       libelleAxe: "",
       libelleObj: "",
-      libellePro: "",
+      projet: {
+        idProjet: -1,
+        libelleProjet: "",
+        dateDebut: null,
+        dateFin: null
+      },
       indexA: -1,
       indexO: -1,
       indexP: -1
@@ -342,7 +346,16 @@ export class BpSaisieComponent implements OnInit {
       let observ = this.budgetService.budgetTopic("listeArbreProgrBPSE",argument,true).subscribe(obs=>{
         console.log("listeArbreProgrBPSE",obs);
         if(obs.success){
-          that.Verif.arbre = obs.msg;
+          let arbre = obs.msg;
+          for(let progr in arbre){
+            for(let axe of arbre[progr].axe){
+              axe.modif = false;
+              for(let obj of axe.objectif){
+                obj.modif = false;
+              }
+            }
+          }
+          that.Verif.arbre = arbre;
         }
         observ.unsubscribe();
         that.fermeChargement();
@@ -351,36 +364,102 @@ export class BpSaisieComponent implements OnInit {
   }
 
   clickAxeItem(indexA,progr) {
+    this.Verif.modifProgr = progr;
     this.Verif.modif.indexA = indexA;
     this.Verif.modif.libelleAxe = this.Verif.arbre[progr].axe[indexA].axe.libelle;
-    this.Verif.modifAxe = true;
+    this.Verif.arbre[progr].axe[indexA].modif = true;
+    setTimeout(()=>{
+      $("#"+progr+"_axe_"+this.Verif.arbre[progr].axe[indexA].axe.idAxe).focus();
+    }, 300);
   }
 
   inputAxePerdu() {
-    this.Verif.modifAxe = false;
+    let indexA = this.Verif.modif.indexA;
+    let progr = this.Verif.modifProgr;
+    let libelle = this.Verif.modif.libelleAxe.trim();
+    if(libelle != ""){
+      let argument = {
+        idAxe: this.Verif.arbre[progr].axe[indexA].axe.idAxe,
+        libelle: libelle
+      };
+      let observ = this.budgetService.budgetTopic("modifierAxeLibelleBPSE",argument,true).subscribe(obs=>{
+        console.log("modifierAxeLibelleBPSE",obs);
+        observ.unsubscribe();
+      });
+      this.Verif.arbre[progr].axe[indexA].axe.libelle = libelle;
+    }
+    this.Verif.arbre[progr].axe[indexA].modif = false;
   }
 
   clickObjItem(indexA,indexO,progr) {
+    this.Verif.modifProgr = progr;
     this.Verif.modif.indexA = indexA;
     this.Verif.modif.indexO = indexO;
-    this.Verif.modif.libelleObj = this.Verif.arbre[progr].axe[indexA].axe.objectif[indexO].objectif.libelleObj;
-    this.Verif.modifObjectif = true;
+    this.Verif.modif.libelleObj = this.Verif.arbre[progr].axe[indexA].objectif[indexO].objectif.libelleObj;
+    this.Verif.arbre[progr].axe[indexA].objectif[indexO].modif = true;
+    setTimeout(()=>{
+      $("#"+progr+"_obj_"+this.Verif.arbre[progr].axe[indexA].objectif[indexO].objectif.idObjStrategique).focus();
+    }, 300);
   }
 
   inputObjPerdu() {
-    this.Verif.modifObjectif = false;
+    let progr = this.Verif.modifProgr;
+    let indexA = this.Verif.modif.indexA;
+    let indexO = this.Verif.modif.indexO;
+    let libelleObj = this.Verif.modif.libelleObj.trim();
+    if(libelleObj != ""){
+      let argument = {
+        idObjStrategique: this.Verif.arbre[progr].axe[indexA].objectif[indexO].objectif.idObjStrategique,
+        libelleObj: libelleObj
+      };
+      let observ = this.budgetService.budgetTopic("modifierObjectifLibelleBPSE",argument,true).subscribe(obs=>{
+        console.log("modifierObjectifLibelleBPSE",obs);
+        observ.unsubscribe();
+      });
+      this.Verif.arbre[progr].axe[indexA].objectif[indexO].objectif.libelleObj = libelleObj;
+    }
+    this.Verif.arbre[progr].axe[indexA].objectif[indexO].modif = false;
   }
 
   clickProItem(indexA,indexO,indexP,progr) {
+    this.Verif.modifProgr = progr;
     this.Verif.modif.indexA = indexA;
     this.Verif.modif.indexO = indexO;
     this.Verif.modif.indexP = indexP;
-    this.Verif.modif.libellePro = this.Verif.arbre[progr].axe[indexA].axe.objectif[indexO].projet[indexP].libelleProjet;
-    this.Verif.modifProjet = true;
+    this.Verif.modif.projet.idProjet = this.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].idProjet;
+    this.Verif.modif.projet.libelleProjet = this.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].libelleProjet;
+    this.Verif.modif.projet.dateDebut = this.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].dateDebut;
+    this.Verif.modif.projet.dateFin = this.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].dateFin;
+    this.ouvreModifProjet();
+  }
+  
+  modifierProjet(){
+    this.Verif.modif.projet.libelleProjet = this.Verif.modif.projet.libelleProjet.trim();
+    if(this.Verif.modif.projet.libelleProjet != ""){
+      let that = this;
+      let observ = this.budgetService.budgetTopic("modifierProjetBPSE",this.Verif.modif.projet,true).subscribe(obs=>{
+        console.log("modifierProjetBPSE",obs);
+        if(obs.success){
+          let progr = that.Verif.modifProgr;
+          let indexA = that.Verif.modif.indexA;
+          let indexO = that.Verif.modif.indexO;
+          let indexP = that.Verif.modif.indexP;
+          that.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].libelleProjet = that.Verif.modif.projet.libelleProjet;
+          that.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].dateDebut = that.Verif.modif.projet.dateDebut;
+          that.Verif.arbre[progr].axe[indexA].objectif[indexO].projet[indexP].dateFin = that.Verif.modif.projet.dateFin;
+        }
+        observ.unsubscribe();
+      });
+    }
+    this.fermeModifProjet();
   }
 
-  inputProPerdu() {
-    this.Verif.modifProjet = false;
+  ouvreModifProjet(){
+    $(this.modalModifProjet.nativeElement).modal('show');
+  }
+
+  fermeModifProjet(){
+    $(this.modalModifProjet.nativeElement).modal('hide');
   }
 
 	afficheChargement(){
