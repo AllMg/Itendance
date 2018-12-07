@@ -190,7 +190,7 @@
           </table>
         </div>
         <!-- FIN DEPENSES TECHNIQUES -->
-        <button (click)="enregistrerBudget()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info">Enregistrer le plan budgétaire</button>
+        <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info float-btn"><i class="fa fa-save"></i></button>
         <button (click)="validerBudget()" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info">Valider le plan budgétaire</button>
       </div>
 
@@ -344,7 +344,7 @@
           </table>
         </div>
         <!-- FIN DEPENSES TECHNIQUES -->
-        <button (click)="enregistrerBudgetParSE()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info">Enregistrer</button>
+        <button *ngIf="SE.projetsChoisis.length > 0" (click)="enregistrerBudgetParSE()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info float-btn"><i class="fa fa-save"></i></button>
       </div>
 
       <!-- VALIDATION DE BUDGET DE SERVIVE -->

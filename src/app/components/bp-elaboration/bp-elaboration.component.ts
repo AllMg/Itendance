@@ -91,16 +91,11 @@ export class BpElaborationComponent implements OnInit {
 
   clickSousMenu(nom) {
     this.Menu.sousMenu = nom;
+    let comptes = ["60451", "60452", "60453", "6048"];
     if (nom == "service" && !this.Service.estVue) {
       this.Service.estVue = true;
-      let comptes = ["60451", "60452", "60453", "6048"];
       for (let compte of comptes) {
         this.Service.listeDEP.push({
-          numeroCompte: compte,
-          libelleCompte: "",
-          projets: {}
-        });
-        this.SE.listeDEP.push({
           numeroCompte: compte,
           libelleCompte: "",
           projets: {}
@@ -109,6 +104,16 @@ export class BpElaborationComponent implements OnInit {
       this.chargerListeProjet();
     }
     if(nom == "se" || nom == "val"){
+      if(nom == "se"){
+        this.SE.estVue = true;
+        for (let compte of comptes) {
+          this.SE.listeDEP.push({
+            numeroCompte: compte,
+            libelleCompte: "",
+            projets: {}
+          });
+        }
+      }
       this.chargeListeService();
     }
   }
@@ -362,7 +367,7 @@ export class BpElaborationComponent implements OnInit {
           setTimeout(() => {
             for (let changer of htmlAChanger) {
               $("#sv_cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
-              $("#sv_prec_" + changer.id).html(changer.prec);
+              $("#sv_prec_" + changer.numeroCompte).html(changer.prec);
             }
           }, 2000);
         }
@@ -615,25 +620,25 @@ export class BpElaborationComponent implements OnInit {
   }
 
   chargerBudgetServiceOuSe(){
+    this.SE.projetsChoisis = [];
     let that = this;
     let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", "5050", false).subscribe(obs => {
       console.log("prendBudgetEnregistreSEOuServiceBPSE", obs);
       if (obs.success) {
-        let listeIdProjet = [];
         let htmlAChanger = [];
         let attributs = ["listeFCT", "listeINV", "listeREC"];
         for (let parent of obs.msg) {
-          listeIdProjet.push(parent.idProjet);
+          that.SE.projetsChoisis.push(parent.projet);
           for(let attr of attributs){
             for (let rubriqueP of that.SE[attr]) {
               for (let rubriqueE of rubriqueP.enfants) {
-                rubriqueE.projets[parent.idProjet] = 0;
-                for (let enfant of parent.servRubrValeur) {
+                rubriqueE.projets[parent.projet.idProjet] = 0;
+                for (let enfant of parent.rubrique) {
                   if (rubriqueE.numeroCompte == enfant.numeroCompte) {
-                    rubriqueE.projets[parent.idProjet] = enfant.creditPrev;
+                    rubriqueE.projets[parent.projet.idProjet] = enfant.creditPrev;
                     rubriqueE.precision = enfant.precisionServ;
                     htmlAChanger.push({
-                      idProjet: parent.idProjet,
+                      idProjet: parent.projet.idProjet,
                       numeroCompte: enfant.numeroCompte,
                       cred: that.separeMillier(enfant.creditPrev.toString()),
                       prec: enfant.precisionServ
@@ -644,27 +649,20 @@ export class BpElaborationComponent implements OnInit {
             }
           }
         }
+        that.trieProjetChoisis('SE');
 
-        let observ2 = that.budgetService.budgetTopic("prendListeProjet",listeIdProjet,true).subscribe(obs2=>{
-          if(obs2.success){
-            that.SE.projetsChoisis = obs2.msg;
-            that.trieProjetChoisis('SE');
-
-            if (htmlAChanger.length > 0) {
-              /**
-               * en retarde le placement des valeurs dans la page car il faut attendre que les éléments
-               * html soit affiché complètement
-               */
-              setTimeout(() => {
-                for (let changer of htmlAChanger) {
-                  $("#se_cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
-                  $("#se_prec_" + changer.id).html(changer.prec);
-                }
-              }, 2000);
+        if (htmlAChanger.length > 0) {
+          /**
+           * en retarde le placement des valeurs dans la page car il faut attendre que les éléments
+           * html soit affiché complètement
+           */
+          setTimeout(() => {
+            for (let changer of htmlAChanger) {
+              $("#se_cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
+              $("#se_prec_" + changer.numeroCompte).html(changer.prec);
             }
-          }
-          observ2.unsubscribe();
-        });
+          }, 2000);
+        }
       }
       observ.unsubscribe();
     });

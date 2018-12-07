@@ -76,3 +76,14 @@
 .ligne-gris{
     background-color: #f8f8f8;
 }
+
+.float-btn{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+    border-radius:50px;
+    font-size: 20px;
+	box-shadow: 3px 3px 3px 3px #cccccc;
+}
