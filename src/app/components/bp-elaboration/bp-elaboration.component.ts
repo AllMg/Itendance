@@ -44,7 +44,14 @@ export class BpElaborationComponent implements OnInit {
   };
 
   SE = {
-    refService: null
+    estVue: false,
+    categorie: "fct",
+    refService: null,
+    projetsChoisis: [],
+    listeFCT: [],
+    listeINV: [],
+    listeREC: [],
+    listeDEP: []
   };
 
   Validation = {
@@ -89,6 +96,11 @@ export class BpElaborationComponent implements OnInit {
       let comptes = ["60451", "60452", "60453", "6048"];
       for (let compte of comptes) {
         this.Service.listeDEP.push({
+          numeroCompte: compte,
+          libelleCompte: "",
+          projets: {}
+        });
+        this.SE.listeDEP.push({
           numeroCompte: compte,
           libelleCompte: "",
           projets: {}
@@ -144,15 +156,17 @@ export class BpElaborationComponent implements OnInit {
         that.Service.ngxProjet = liste;
       }
       observ.unsubscribe();
-      that.chargeListeRubriqueFCT();
+      that.chargeListeRubriqueFCT('Service', false);
     });
   }
 
   /**
    * charge la liste des comptes 6
    * puis appelle la fonction qui charge la liste des comptes 2
+   * @param obj l'objet de la class qui possède l'attribut à initialisé
+   * @param chargeSE un boolean qui précise si on doit charger les données enregistré par SE ou Service
    */
-  chargeListeRubriqueFCT() {
+  chargeListeRubriqueFCT(obj, chargeSE:boolean) {
     this.afficheChargement();
     let that = this;
     let observ = this.budgetService.getCptbyGroupe("6").subscribe(obs => {
@@ -186,15 +200,15 @@ export class BpElaborationComponent implements OnInit {
             }
           }
         }
-        for (let compte of this.Service.listeDEP) {
+        for (let compte of this[obj].listeDEP) {
           for (let rubrique of obs.msg) {
             if (rubrique.idpcg == compte.numeroCompte) {
               compte.libelleCompte = rubrique.libelcpt;
             }
           }
         }
-        that.Service.listeFCT = liste;
-        that.chargeListeRubriqueINV();
+        that[obj].listeFCT = liste;
+        that.chargeListeRubriqueINV(obj, chargeSE);
       }
       else {
         that.fermeChargement();
@@ -206,8 +220,10 @@ export class BpElaborationComponent implements OnInit {
   /**
    * charge la liste des comptes 2
    * puis appelle la fonction qui charge la liste des comptes 7
+   * @param obj l'objet de la class qui possède l'attribut à initialisé
+   * @param chargeSE un boolean qui précise si on doit charger les données enregistré par SE ou Service
    */
-  chargeListeRubriqueINV() {
+  chargeListeRubriqueINV(obj, chargeSE:boolean) {
     this.afficheChargement();
     let that = this;
     let observ = this.budgetService.getCptbyGroupe("2").subscribe(obs => {
@@ -237,8 +253,8 @@ export class BpElaborationComponent implements OnInit {
             });
           }
         }
-        that.Service.listeINV = liste;
-        that.chargeListeRubriqueREC();
+        that[obj].listeINV = liste;
+        that.chargeListeRubriqueREC(obj, chargeSE);
       }
       else {
         that.fermeChargement();
@@ -250,8 +266,10 @@ export class BpElaborationComponent implements OnInit {
   /**
    * charge la liste des comptes 7
    * puis appelle la fonction qui charge la liste rubrique déjà enregistrer
+   * @param obj l'objet de la class qui possède l'attribut à initialisé
+   * @param chargeSE un boolean qui précise si on doit charger les données enregistré par SE ou Service
    */
-  chargeListeRubriqueREC() {
+  chargeListeRubriqueREC(obj, chargeSE:boolean) {
     this.afficheChargement();
     let that = this;
     let observ = this.budgetService.getCptbyGroupe("7").subscribe(obs => {
@@ -281,11 +299,16 @@ export class BpElaborationComponent implements OnInit {
             });
           }
         }
-        that.Service.listeREC = liste;
+        that[obj].listeREC = liste;
       }
       that.fermeChargement();
       observ.unsubscribe();
-      that.chargeRubriqueEnregistrer();
+      if(!chargeSE){
+        that.chargeRubriqueEnregistrer();
+      }
+      else{
+        that.chargerBudgetServiceOuSe();
+      }
     });
   }
 
@@ -294,7 +317,7 @@ export class BpElaborationComponent implements OnInit {
    */
   chargeRubriqueEnregistrer() {
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", "4050", false).subscribe(obs => {
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", "5050", false).subscribe(obs => {
       console.log("prendBudgetEnregistrerBPSE", obs);
       if (obs.success) {
         let listeProjet = [];
@@ -330,6 +353,7 @@ export class BpElaborationComponent implements OnInit {
           }
         }
         that.Service.projetsChoisis = listeProjet;
+        that.trieProjetChoisis("Service");
         if (htmlAChanger.length > 0) {
           /**
            * en retarde le placement des valeurs dans la page car il faut attendre que les éléments
@@ -337,8 +361,8 @@ export class BpElaborationComponent implements OnInit {
            */
           setTimeout(() => {
             for (let changer of htmlAChanger) {
-              $("#cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
-              $("#prec_" + changer.id).html(changer.prec);
+              $("#sv_cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
+              $("#sv_prec_" + changer.id).html(changer.prec);
             }
           }, 2000);
         }
@@ -347,9 +371,15 @@ export class BpElaborationComponent implements OnInit {
     });
   }
 
-  sommeDEP(compteDebut, idProjet) {
+  /**
+   * 
+   * @param obj l'objet qui possède l'attribut à traiter
+   * @param compteDebut le numero de compte parent
+   * @param idProjet l'ID du projet
+   */
+  sommeDEP(obj, compteDebut, idProjet) {
     let somme = 0;
-    for(let rubrique of this.Service.listeFCT[0].enfants){
+    for(let rubrique of this[obj].listeFCT[0].enfants){
       if(rubrique.numeroCompte.startsWith(compteDebut)){
         somme += rubrique.projets[idProjet];
       }
@@ -360,22 +390,35 @@ export class BpElaborationComponent implements OnInit {
     return "";
   }
 
-  clickParentFCT(index) {
-    this.Service.listeFCT[index].visible = !this.Service.listeFCT[index].visible;
+  /**
+   * 
+   * @param obj Service ou SE l'objet qui possède l'attribut à modifier
+   * @param index l'indice du rubrique parent des comptes 6
+   */
+  clickParentFCT(obj, index) {
+    this[obj].listeFCT[index].visible = !this[obj].listeFCT[index].visible;
   }
 
-  clickParentINV(index) {
-    this.Service.listeINV[index].visible = !this.Service.listeINV[index].visible;
+  clickParentINV(obj, index) {
+    this[obj].listeINV[index].visible = !this[obj].listeINV[index].visible;
   }
 
-  clickParentREC(index) {
-    this.Service.listeREC[index].visible = !this.Service.listeREC[index].visible;
+  clickParentREC(obj, index) {
+    this[obj].listeREC[index].visible = !this[obj].listeREC[index].visible;
   }
 
-  clickCategorie(cat) {
-    this.Service.categorie = cat;
+  /**
+   * 
+   * @param obj Service ou SE l'objet qui possède l'attribut à modifier
+   * @param cat la valeur du catégorie à afficher
+   */
+  clickCategorie(obj,cat) {
+    this[obj].categorie = cat;
   }
 
+  /**
+   * fonction qui ajoute un projet dans le tableau pour l'élaboration du budget
+   */
   ajouterProjetPourElaboration() {
     for (let projet of this.Service.projetsChoisis) {
       if (projet.idProjet == this.Service.idProjet) {
@@ -400,15 +443,20 @@ export class BpElaborationComponent implements OnInit {
           }
         }
         this.Service.projetsChoisis.push(projet);
-        this.trieProjetChoisis();
+        this.trieProjetChoisis('Service');
         break;
       }
     }
     console.log("ajouterProjetPourElaboration", this.Service.listeREC);
   }
 
-  trieProjetChoisis() {
-    this.Service.projetsChoisis.sort((a, b) => {
+  /**
+   * 
+   * @param obj l'objet possédant l'attribut (la liste) à trié
+   * met en ordre croissant les projets dans le tableau
+   */
+  trieProjetChoisis(obj:string) {
+    this[obj].projetsChoisis.sort((a, b) => {
       if (a.codeProjet > b.codeProjet) {
         return 1;
       }
@@ -419,58 +467,103 @@ export class BpElaborationComponent implements OnInit {
     });
   }
 
-  creditDansCelluleFCT(indexP, indexE, idProjet, td) {
-    let sansEspace = td.textContent.replace(/ /g, "");;
+  /**
+   * fonction appelé lors d'un appuye sur une touche du clavier dans la cellule où l'on précise
+   * le crédit voulu pour les comptes de fonctionnment
+   * 
+   * @param obj l'objet qui possède l'attribut de traitement
+   * @param indexP l'indice du compte parent
+   * @param indexE l'indice du sous compte (compte enfant)
+   * @param idProjet l'ID du projet où la valeur est entrée
+   * @param td l'element html (colonne) où la valeur est entrée
+   */
+  creditDansCelluleFCT(obj, indexP, indexE, idProjet, td) {
+    let sansEspace = td.textContent.replace(/ /g, "");
     let avecEspace = this.separeMillier(sansEspace);
-    let chiffre = parseInt(sansEspace);
-    if (chiffre != NaN) {
-      this.Service.listeFCT[indexP].enfants[indexE].projets[idProjet] = chiffre;
+    let chiffre = Number(sansEspace);
+    if (isNaN(chiffre) != true) {
+      this[obj].listeFCT[indexP].enfants[indexE].projets[idProjet] = chiffre;
+      td.textContent = avecEspace;
     }
-    td.textContent = avecEspace;
+    else{
+      if(this[obj].listeFCT[indexP].enfants[indexE].projets[idProjet] > 0){
+        td.textContent = this.separeMillier(this[obj].listeFCT[indexP].enfants[indexE].projets[idProjet].toString());
+      }
+      else{
+        td.textContent = "";
+      }
+    }
     this.curseurALaFin(td);
   }
 
-  precisionDansCelluleFCT(indexP, indexE, td) {
-    this.Service.listeFCT[indexP].enfants[indexE].precision = td.textContent;
+  precisionDansCelluleFCT(obj, indexP, indexE, td) {
+    this[obj].listeFCT[indexP].enfants[indexE].precision = td.textContent;
   }
 
-  creditDansCelluleINV(indexP, indexE, idProjet, td) {
+  /**
+   * fonction appelé lors d'un appuye sur une touche du clavier dans la cellule où l'on précise
+   * le crédit voulu pour les comptes d'investissement
+   */
+  creditDansCelluleINV(obj, indexP, indexE, idProjet, td) {
     let sansEspace = td.textContent.replace(/ /g, "");;
     let avecEspace = this.separeMillier(sansEspace);
-    let chiffre = parseInt(sansEspace);
-    if (chiffre != NaN) {
-      this.Service.listeINV[indexP].enfants[indexE].projets[idProjet] = chiffre;
+    let chiffre = Number(sansEspace);
+    if (isNaN(chiffre) != true) {
+      this[obj].listeINV[indexP].enfants[indexE].projets[idProjet] = chiffre;
+      td.textContent = avecEspace;
     }
-    td.textContent = avecEspace;
+    else{
+      if(this[obj].listeINV[indexP].enfants[indexE].projets[idProjet] > 0){
+        td.textContent = this.separeMillier(this[obj].listeINV[indexP].enfants[indexE].projets[idProjet].toString());
+      }
+      else{
+        td.textContent = "";
+      }
+    }
     this.curseurALaFin(td);
   }
 
-  precisionDansCelluleINV(indexP, indexE, td) {
-    this.Service.listeINV[indexP].enfants[indexE].precision = td.textContent;
+  precisionDansCelluleINV(obj, indexP, indexE, td) {
+    this[obj].listeINV[indexP].enfants[indexE].precision = td.textContent;
   }
 
-  creditDansCelluleREC(indexP, indexE, idProjet, td) {
+  /**
+   * fonction appelé lors d'un appuye sur une touche du clavier dans la cellule où l'on précise
+   * le crédit voulu pour les comptes de recette
+   */
+  creditDansCelluleREC(obj, indexP, indexE, idProjet, td) {
     let sansEspace = td.textContent.replace(/ /g, "");;
     let avecEspace = this.separeMillier(sansEspace);
-    let chiffre = parseInt(sansEspace);
-    if (chiffre != NaN) {
-      this.Service.listeREC[indexP].enfants[indexE].projets[idProjet] = chiffre;
+    let chiffre = Number(sansEspace);
+    if (isNaN(chiffre) != true) {
+      this[obj].listeREC[indexP].enfants[indexE].projets[idProjet] = chiffre;
+      td.textContent = avecEspace;
     }
-    td.textContent = avecEspace;
+    else{
+      if(this[obj].listeREC[indexP].enfants[indexE].projets[idProjet] > 0){
+        td.textContent = this.separeMillier(this[obj].listeREC[indexP].enfants[indexE].projets[idProjet].toString());
+      }
+      else{
+        td.textContent = "";
+      }
+    }
     this.curseurALaFin(td);
   }
 
-  precisionDansCelluleREC(indexP, indexE, td) {
-    this.Service.listeREC[indexP].enfants[indexE].precision = td.textContent;
+  precisionDansCelluleREC(obj, indexP, indexE, td) {
+    this[obj].listeREC[indexP].enfants[indexE].precision = td.textContent;
   }
 
+  /**
+   * enregistre le plan budgétaire actuel pour pouvoir l'éditer plus tard
+   */
   enregistrerBudget() {
     this.afficheChargement();
     let attributs = ["listeFCT", "listeINV", "listeREC"];
     let argument = [];
     for (let projet of this.Service.projetsChoisis) {
       let servRubr = {
-        refService: "4050",
+        refService: "5050",
         idProjet: projet.idProjet,
         servRubrValeur: []
       }
@@ -506,10 +599,13 @@ export class BpElaborationComponent implements OnInit {
     });
   }
 
+  /**
+   * Marque que le plan budgetétaire du service peut être maintenant être traité par le service SE
+   */
   validerBudget(){
     this.afficheChargement();
     let that = this;
-    let observ = this.budgetService.budgetTopic("validerBudgetBPSE","4050",false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE","5050",false).subscribe(obs=>{
       that.fermeChargement();
       if(obs.success){
         that.toast.success("Vous avez marqué votre plan budgétaire comme étant valide");
@@ -519,9 +615,107 @@ export class BpElaborationComponent implements OnInit {
   }
 
   chargerBudgetServiceOuSe(){
+    let that = this;
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", "5050", false).subscribe(obs => {
+      console.log("prendBudgetEnregistreSEOuServiceBPSE", obs);
+      if (obs.success) {
+        let listeIdProjet = [];
+        let htmlAChanger = [];
+        let attributs = ["listeFCT", "listeINV", "listeREC"];
+        for (let parent of obs.msg) {
+          listeIdProjet.push(parent.idProjet);
+          for(let attr of attributs){
+            for (let rubriqueP of that.SE[attr]) {
+              for (let rubriqueE of rubriqueP.enfants) {
+                rubriqueE.projets[parent.idProjet] = 0;
+                for (let enfant of parent.servRubrValeur) {
+                  if (rubriqueE.numeroCompte == enfant.numeroCompte) {
+                    rubriqueE.projets[parent.idProjet] = enfant.creditPrev;
+                    rubriqueE.precision = enfant.precisionServ;
+                    htmlAChanger.push({
+                      idProjet: parent.idProjet,
+                      numeroCompte: enfant.numeroCompte,
+                      cred: that.separeMillier(enfant.creditPrev.toString()),
+                      prec: enfant.precisionServ
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
 
+        let observ2 = that.budgetService.budgetTopic("prendListeProjet",listeIdProjet,true).subscribe(obs2=>{
+          if(obs2.success){
+            that.SE.projetsChoisis = obs2.msg;
+            that.trieProjetChoisis('SE');
+
+            if (htmlAChanger.length > 0) {
+              /**
+               * en retarde le placement des valeurs dans la page car il faut attendre que les éléments
+               * html soit affiché complètement
+               */
+              setTimeout(() => {
+                for (let changer of htmlAChanger) {
+                  $("#se_cred_" + changer.numeroCompte+changer.idProjet).html(changer.cred);
+                  $("#se_prec_" + changer.id).html(changer.prec);
+                }
+              }, 2000);
+            }
+          }
+          observ2.unsubscribe();
+        });
+      }
+      observ.unsubscribe();
+    });
   }
 
+  enregistrerBudgetParSE(){
+    this.afficheChargement();
+    let attributs = ["listeFCT", "listeINV", "listeREC"];
+    let argument = [];
+    for (let projet of this.SE.projetsChoisis) {
+      let servRubr = {
+        refService: "5050",
+        idProjet: projet.idProjet,
+        servRubrValeur: []
+      }
+      for (let attr of attributs) {
+        for (let parent of this.SE[attr]) {
+          for (let enfant of parent.enfants) {
+            if (enfant.projets[projet.idProjet] > 0) {
+              servRubr.servRubrValeur.push({
+                numeroCompte: enfant.numeroCompte,
+                creditPrev: enfant.projets[projet.idProjet],
+                precisionServ: enfant.precision
+              });
+            }
+          }
+        }
+      }
+      if (servRubr.servRubrValeur.length > 0) {
+        argument.push(servRubr);
+      }
+    }
+    console.log("argument", argument);
+    let that = this;
+    let observ = this.budgetService.budgetTopic("ajoutParSERubriquePrevisionBPSE", argument, true).subscribe(obs => {
+      console.log("ajoutParSERubriquePrevisionBPSE", obs);
+      that.fermeChargement();
+      if (obs.success) {
+        that.toast.success("Enregistrement terminé");
+      }
+      else {
+        that.toast.error("Une erreur vous empêche d'enregistrer ce plan budgétaire");
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  /**
+   * charge la somme des crédits de chaque projet que le Service et le SE ont enrégistré
+   * pour voir la différence lors de la validation de l'un ou l'autre
+   */
   chargerBudgetServiceEtSe() {
     /*this.afficheChargement();
     let that = this;

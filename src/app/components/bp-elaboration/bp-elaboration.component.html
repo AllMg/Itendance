@@ -39,6 +39,7 @@
 
     <!-- CONTENU -->
     <div class="row" style="padding: 10px;">
+
       <!-- SERVICE -->
       <div [ngClass]="{'invisible': Menu.sousMenu != 'service'}" class="col-md-12">
         <h6 style="text-transform: uppercase;">Le budget que vous élaborez maintenant sera pour l'exercice {{exerciceBudget}}</h6>
@@ -54,16 +55,16 @@
         </div>
         <ul class="nav nav-tabs">
           <li class="nav-item nav-cat">
-            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'fct'}" (click)="clickCategorie('fct')">FONCTIONNEMENTS</span>
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'fct'}" (click)="clickCategorie('Service','fct')">FONCTIONNEMENTS</span>
           </li>
           <li class="nav-item nav-cat">
-            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'inv'}" (click)="clickCategorie('inv')">INVESTISSEMENTS</span>
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'inv'}" (click)="clickCategorie('Service','inv')">INVESTISSEMENTS</span>
           </li>
           <li class="nav-item nav-cat">
-            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'rec'}" (click)="clickCategorie('rec')">RECETTES TECHNIQUES</span>
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'rec'}" (click)="clickCategorie('Service','rec')">RECETTES TECHNIQUES</span>
           </li>
           <li class="nav-item nav-cat">
-            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'dep'}" (click)="clickCategorie('dep')">DEPENSES TECHNIQUES</span>
+            <span class="nav-link" [ngClass]="{'active cat-active': Service.categorie == 'dep'}" (click)="clickCategorie('Service','dep')">DEPENSES TECHNIQUES</span>
           </li>
         </ul>
         <!-- LISTE FONCTIONNEMENT -->
@@ -84,15 +85,15 @@
             </thead>
             <tbody *ngFor="let parent of Service.listeFCT; let indexP = index">
               <tr>
-                <td (click)="clickParentFCT(indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td (click)="clickParentFCT('Service',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
                 <td *ngFor="let pr of Service.projetsChoisis"></td>
                 <td></td>
               </tr>
-              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false}" >
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}" >
                 <td>{{enf.numeroCompte}}</td>
                 <td>{{enf.libelleCompte}}</td>
-                <td *ngFor="let pr of Service.projetsChoisis" id="cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleFCT(indexP,indexE,pr.idProjet,$event.target)" contenteditable="true"  style="text-align: right;"></td>
-                <td id="prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleFCT(indexP,indexE,$event.target)" contenteditable="true" ></td>
+                <td *ngFor="let pr of Service.projetsChoisis" id="sv_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleFCT('Service',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true"  style="text-align: right;"></td>
+                <td id="sv_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleFCT('Service',indexP,indexE,$event.target)" contenteditable="true" ></td>
               </tr>
             </tbody>
           </table>
@@ -116,15 +117,15 @@
             </thead>
             <tbody *ngFor="let parent of Service.listeINV; let indexP = index">
               <tr>
-                <td (click)="clickParentINV(indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td (click)="clickParentINV('Service',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
                 <td *ngFor="let pr of Service.projetsChoisis"></td>
                 <td></td>
               </tr>
-              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false}">
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
                 <td>{{enf.numeroCompte}}</td>
                 <td>{{enf.libelleCompte}}</td>
-                <td *ngFor="let pr of Service.projetsChoisis" id="cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleINV(indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
-                <td id="prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleINV(indexP,indexE,$event.target)" contenteditable="true"></td>
+                <td *ngFor="let pr of Service.projetsChoisis" id="sv_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleINV('Service',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
+                <td id="sv_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleINV('Service',indexP,indexE,$event.target)" contenteditable="true"></td>
               </tr>
             </tbody>
           </table>
@@ -148,15 +149,15 @@
             </thead>
             <tbody *ngFor="let parent of Service.listeREC; let indexP = index">
               <tr>
-                <td (click)="clickParentREC(indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td (click)="clickParentREC('Service',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
                 <td *ngFor="let pr of Service.projetsChoisis"></td>
                 <td></td>
               </tr>
-              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false}">
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
                 <td>{{enf.numeroCompte}}</td>
                 <td>{{enf.libelleCompte}}</td>
-                <td *ngFor="let pr of Service.projetsChoisis" id="cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleREC(indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
-                <td id="prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleREC(indexP,indexE,$event.target)" contenteditable="true"></td>
+                <td *ngFor="let pr of Service.projetsChoisis" id="sv_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleREC('Service',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
+                <td id="sv_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleREC('Service',indexP,indexE,$event.target)" contenteditable="true"></td>
               </tr>
             </tbody>
           </table>
@@ -182,15 +183,15 @@
               <tr *ngFor="let compte of Service.listeDEP">
                 <td>{{compte.numeroCompte}}</td>
                 <td>{{compte.libelleCompte}}</td>
-                <td *ngFor="let pr of Service.projetsChoisis">{{sommeDEP(compte.numeroCompte,pr.idProjet)}}</td>
+                <td *ngFor="let pr of Service.projetsChoisis">{{sommeDEP('Service',compte.numeroCompte,pr.idProjet)}}</td>
                 <td></td>
               </tr>
             </tbody>
           </table>
         </div>
         <!-- FIN DEPENSES TECHNIQUES -->
-        <button (click)="enregistrerBudget()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info">Enregistrer</button>
-        <button (click)="validerBudget()" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info" style="margin-left: 200px;">Valider</button>
+        <button (click)="enregistrerBudget()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info">Enregistrer le plan budgétaire</button>
+        <button (click)="validerBudget()" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info">Valider le plan budgétaire</button>
       </div>
 
       <!-- SERVICE SE -->
@@ -202,10 +203,148 @@
           <div class="input-group mb-3">
             <ngx-select [(ngModel)]="SE.refService" [items]="ngxServices" style="width: 500px;"></ngx-select>
             <div class="input-group-append">
-              <button (click)="chargerBudgetServiceOuSe()" class="btn btn-info">Charger</button>
+              <button (click)="chargeListeRubriqueFCT('SE',true)" class="btn btn-info">Charger</button>
             </div>
           </div>
         </div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': SE.categorie == 'fct'}" (click)="clickCategorie('SE','fct')">FONCTIONNEMENTS</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': SE.categorie == 'inv'}" (click)="clickCategorie('SE','inv')">INVESTISSEMENTS</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': SE.categorie == 'rec'}" (click)="clickCategorie('SE','rec')">RECETTES TECHNIQUES</span>
+          </li>
+          <li class="nav-item nav-cat">
+            <span class="nav-link" [ngClass]="{'active cat-active': SE.categorie == 'dep'}" (click)="clickCategorie('SE','dep')">DEPENSES TECHNIQUES</span>
+          </li>
+        </ul>
+        <!-- LISTE FONCTIONNEMENT -->
+        <div [ngClass]="{'invisible': SE.categorie != 'fct'}" style="width: 100%;">
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr>
+                <td colspan="2">RUBRIQUE</td>
+                <td *ngIf="SE.projetsChoisis.length > 0" [attr.colspan]="SE.projetsChoisis.length">CREDIT {{exerciceBudget}}</td>
+                <td>PRECISION</td>
+              </tr>
+              <tr>
+                <td>N° Compte</td>
+                <td>Intitulé de Compte</td>
+                <td *ngFor="let pr of SE.projetsChoisis">Projet N° {{pr.codeProjet}}</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody *ngFor="let parent of SE.listeFCT; let indexP = index">
+              <tr>
+                <td (click)="clickParentFCT('SE',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis"></td>
+                <td></td>
+              </tr>
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}" >
+                <td>{{enf.numeroCompte}}</td>
+                <td>{{enf.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis" id="se_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleFCT('SE',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true"  style="text-align: right;"></td>
+                <td id="se_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleFCT('SE',indexP,indexE,$event.target)" contenteditable="true" ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- FIN LISTE FONCTIONNEMENT -->
+        <!-- LISTE INVESTISSEMENT -->
+        <div [ngClass]="{'invisible': SE.categorie != 'inv'}" style="width: 100%;">
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr>
+                <td colspan="2">RUBRIQUE</td>
+                <td *ngIf="SE.projetsChoisis.length > 0" [attr.colspan]="SE.projetsChoisis.length">CREDIT {{exerciceBudget}}</td>
+                <td>PRECISION</td>
+              </tr>
+              <tr>
+                <td>N° Compte</td>
+                <td>Intitulé de Compte</td>
+                <td *ngFor="let pr of SE.projetsChoisis">Projet N° {{pr.codeProjet}}</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody *ngFor="let parent of SE.listeINV; let indexP = index">
+              <tr>
+                <td (click)="clickParentINV('SE',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis"></td>
+                <td></td>
+              </tr>
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
+                <td>{{enf.numeroCompte}}</td>
+                <td>{{enf.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis" id="se_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleINV('SE',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
+                <td id="se_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleINV('SE',indexP,indexE,$event.target)" contenteditable="true"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- FIN LISTE INVESTISSEMENT -->
+        <!-- LISTE RECETTTES TECHNIQUES -->
+        <div [ngClass]="{'invisible': SE.categorie != 'rec'}" style="width: 100%;">
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr>
+                <td colspan="2">RUBRIQUE</td>
+                <td *ngIf="SE.projetsChoisis.length > 0" [attr.colspan]="SE.projetsChoisis.length">CREDIT {{exerciceBudget}}</td>
+                <td>PRECISION</td>
+              </tr>
+              <tr>
+                <td>N° Compte</td>
+                <td>Intitulé de Compte</td>
+                <td *ngFor="let pr of SE.projetsChoisis">Projet N° {{pr.codeProjet}}</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody *ngFor="let parent of SE.listeREC; let indexP = index">
+              <tr>
+                <td (click)="clickParentREC('SE',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis"></td>
+                <td></td>
+              </tr>
+              <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
+                <td>{{enf.numeroCompte}}</td>
+                <td>{{enf.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis" id="se_cred_{{enf.numeroCompte+pr.idProjet}}" (input)="creditDansCelluleREC('SE',indexP,indexE,pr.idProjet,$event.target)" contenteditable="true" style="text-align: right;"></td>
+                <td id="se_prec_{{enf.numeroCompte}}" (input)="precisionDansCelluleREC('SE',indexP,indexE,$event.target)" contenteditable="true"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- FIN RECETTTES TECHNIQUES -->
+        <!-- LISTE DEPENSES TECHNIQUES -->
+        <div [ngClass]="{'invisible': SE.categorie != 'dep'}" style="width: 100%;">
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr>
+                <td colspan="2">RUBRIQUE</td>
+                <td *ngIf="SE.projetsChoisis.length > 0" [attr.colspan]="SE.projetsChoisis.length">CREDIT {{exerciceBudget}}</td>
+                <td>PRECISION</td>
+              </tr>
+              <tr>
+                <td>N° Compte</td>
+                <td>Intitulé de Compte</td>
+                <td *ngFor="let pr of SE.projetsChoisis">Projet N° {{pr.codeProjet}}</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let compte of SE.listeDEP">
+                <td>{{compte.numeroCompte}}</td>
+                <td>{{compte.libelleCompte}}</td>
+                <td *ngFor="let pr of SE.projetsChoisis">{{sommeDEP('SE',compte.numeroCompte,pr.idProjet)}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- FIN DEPENSES TECHNIQUES -->
+        <button (click)="enregistrerBudgetParSE()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info">Enregistrer</button>
       </div>
 
       <!-- VALIDATION DE BUDGET DE SERVIVE -->
@@ -238,6 +377,7 @@
           </tr>
         </table>
       </div>
+
     </div>
     
     <!-- MODAL -->
