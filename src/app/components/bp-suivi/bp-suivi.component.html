@@ -1,0 +1,95 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>BUDGET DE PROGRAMME</h4>
+    </div>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li (click)="clickInMenu1('bp-saisie')">
+          <span>SAISIE</span>
+        </li>
+        <li>
+          <span (click)="clickInMenu1('bp-elaboration')">ELABORATION</span>
+        </li>
+        <li class="menu1-active">
+          <span>SUIVI</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+      <ul class="menu1">
+        <li (click)="clickSousMenu('general')" [ngClass]="{'menu1-active': Menu.sousMenu == 'general'}">
+          <span>BUDGET ANNUEL GENERAL</span>
+        </li>
+        <li (click)="clickSousMenu('service')" [ngClass]="{'menu1-active': Menu.sousMenu == 'service'}">
+          <span>BUDGET ANNUEL PAR SERVICE</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
+
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+
+      <!-- GENERAL -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'general'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Suivi du budget annuel tout service compris</h6>
+        <hr>
+        <div class="form-group">
+          <label>Exercice</label>
+          <div class="input-group mb-3">
+            <input type="number" min="1940" class="form-control" >
+            <div class="input-group-append">
+              <button (click)="chargerBudgetAnnuelGeneral()" class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead style="text-align: center; vertical-align: middle;">
+            <tr>
+              <td colspan="2">RUBRIQUES</td>
+              <td>PROJETS</td>
+            </tr>
+            <tr>
+              <td>N° Compte</td>
+              <td>Intitulé de Compte</td>
+              <td>
+                <select class="pr-select">
+                  <option>111</option>
+                  <option>1121</option>
+                  <option>1"11</option>
+                </select>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <!-- SERVICE -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'service'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Suivi du budget annuel par service</h6>
+        <hr>
+      </div>
+
+    </div>
+    
+    <!-- MODAL -->
+    <!-- MODAL CHARGEMENT -->
+    <div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="loader">
+      </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

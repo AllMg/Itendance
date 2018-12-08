@@ -16,8 +16,8 @@
         <li class="menu1-active">
           <span>ELABORATION</span>
         </li>
-        <li (click)="clickInMenu1('se-hist')">
-          <span>HISTORIQUE</span>
+        <li (click)="clickInMenu1('bp-suivi')">
+          <span>SUIVI</span>
         </li>
       </ul>
     </div>
@@ -190,8 +190,8 @@
           </table>
         </div>
         <!-- FIN DEPENSES TECHNIQUES -->
-        <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget()" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info float-btn"><i class="fa fa-save"></i></button>
-        <button (click)="validerBudget()" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info">Valider le plan budgétaire</button>
+        <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget(false)" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info float-btn"><i class="fa fa-save"></i></button>
+        <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget(true)" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info">Valider le plan budgétaire</button>
       </div>
 
       <!-- SERVICE SE -->
@@ -361,21 +361,29 @@
           </div>
         </div>
         <table class="table table-bordered">
-          <tr>
+          <tr style="font-weight: bold;">
             <td #tdSepare>
               <div style="text-align: right;">Projets</div>
               <div class="bare-separateur"></div>
-              <div>Service</div>
+              <div>Services</div>
             </td>
-            <td *ngFor="let pro of Validation.listeProjet">{{pro}}</td>
+            <td *ngFor="let pro of Validation.listeProjet" class="td-valid">{{pro.codeProjet}}</td>
           </tr>
           <tr>
             <td>Service Cible</td>
+            <td *ngFor="let pro of Validation.listeProjet" style="text-align: right;">{{pro.affService}}</td>
           </tr>
           <tr>
             <td>Suivi et Evaluation</td>
+            <td *ngFor="let pro of Validation.listeProjet" style="text-align: right;">{{pro.affSe}}</td>
+          </tr>
+          <tr *ngIf="sommeSuggSE() > 0">
+            <td></td>
+            <td *ngFor="let pro of Validation.listeProjet" style="text-align: right;">{{pro.diff}}</td>
           </tr>
         </table>
+        <button *ngIf="Validation.listeProjet.length > 0" class="btn btn-info">Valider celui du Service</button>
+        <button *ngIf="Validation.listeProjet.length > 0 && sommeSuggSE() > 0" class="btn btn-info">Valider celui du Suivi-Evaluation</button>
       </div>
 
     </div>

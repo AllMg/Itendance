@@ -560,9 +560,11 @@ export class BpElaborationComponent implements OnInit {
   }
 
   /**
+   * 
+   * @param validerBudget boolean - si true alors la validation se suit sinon s'arrête à l'enregistrement
    * enregistre le plan budgétaire actuel pour pouvoir l'éditer plus tard
    */
-  enregistrerBudget() {
+  enregistrerBudget(validerBudget) {
     this.afficheChargement();
     let attributs = ["listeFCT", "listeINV", "listeREC"];
     let argument = [];
@@ -593,9 +595,13 @@ export class BpElaborationComponent implements OnInit {
     let that = this;
     let observ = this.budgetService.budgetTopic("ajoutRubriquePrevisionServBPSE", argument, true).subscribe(obs => {
       console.log("ajoutRubriquePrevisionServBPSE", obs);
-      that.fermeChargement();
       if (obs.success) {
-        that.toast.success("Enregistrement terminé");
+        if(validerBudget){
+          that.validerBudget();
+        }
+        else{
+          that.toast.success("Enregistrement terminé");
+        }
       }
       else {
         that.toast.error("Une erreur vous empêche d'enregistrer ce plan budgétaire");
@@ -608,7 +614,6 @@ export class BpElaborationComponent implements OnInit {
    * Marque que le plan budgetétaire du service peut être maintenant être traité par le service SE
    */
   validerBudget(){
-    this.afficheChargement();
     let that = this;
     let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE","5050",false).subscribe(obs=>{
       that.fermeChargement();
@@ -715,14 +720,53 @@ export class BpElaborationComponent implements OnInit {
    * pour voir la différence lors de la validation de l'un ou l'autre
    */
   chargerBudgetServiceEtSe() {
-    /*this.afficheChargement();
+    this.afficheChargement();
     let that = this;
-    let observ = this.budgetService.budgetTopic("",this.Validation.refService,false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("prendBudgetServiceEtSEBPSE","4050",false).subscribe(obs=>{
+      console.log("prendBudgetServiceEtSEBPSE",obs);
       if(obs.success){
-
+        let liste = [];
+        for(let projet of obs.msg){
+          let data = {
+            codeProjet: projet.projet.codeProjet,
+            affSe: "",
+            affService: that.separeMillier(projet.sommeService.toString()),
+            sommeSe: projet.sommeSe,
+            sommeService: projet.sommeService,
+            diff: ""
+          };
+          liste.push(data);
+          if(projet.sommeSe > 0){
+            data.diff = that.separeMillier(Math.abs(projet.sommeSe - projet.sommeService).toString());
+            data.affSe = that.separeMillier(projet.sommeSe.toString());
+          }
+        }
+        liste.sort((a,b)=>{
+          if(a.codeProjet > b.codeProjet){
+            return 1;
+          }
+          else if(a.codeProjet < b.codeProjet){
+            return -1
+          }
+          return 0;
+        });
+        that.Validation.listeProjet = liste;
       }
+      else{
+        that.Validation.listeProjet = [];
+      }
+      that.fermeChargement();
+      setTimeout(()=>{ that.calculAngleSepare(); }, 500);
       observ.unsubscribe();
-    });*/
+    });
+  }
+
+  sommeSuggSE(){
+    let som = 0;
+    for(let pro of this.Validation.listeProjet){
+      som += pro.sommeSe;
+    }
+    return som;
   }
 
   calculAngleSepare() {
