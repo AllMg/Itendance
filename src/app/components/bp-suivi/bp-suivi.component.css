@@ -67,6 +67,12 @@
     display: none;
 }
 
+.thead-budget{
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
 .pr-select{
     border: none;
     text-align: center;
@@ -75,5 +81,37 @@
     -moz-appearance: none;
     appearance: none;
     width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.g-parent-compte{
+    font-weight: bold;
+}
+.g-parent-compte:hover{
+    cursor: pointer;
+}
+
+.parent-compte{
+    font-weight: bold;
+    padding-left: 25px;
+}
+.parent-compte:hover{
+    cursor: pointer;
+}
+
+.enfant-compte{
+    padding-left: 45px;
+}
+
+.ligne-gris{
+    background-color: #f8f8f8;
+}
+
+.icon-btn{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.icon-btn:hover{
     cursor: pointer;
 }

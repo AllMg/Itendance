@@ -382,8 +382,8 @@
             <td *ngFor="let pro of Validation.listeProjet" style="text-align: right;">{{pro.diff}}</td>
           </tr>
         </table>
-        <button *ngIf="Validation.listeProjet.length > 0" class="btn btn-info">Valider celui du Service</button>
-        <button *ngIf="Validation.listeProjet.length > 0 && sommeSuggSE() > 0" class="btn btn-info">Valider celui du Suivi-Evaluation</button>
+        <button *ngIf="Validation.listeProjet.length > 0" (click)="clickValiderBudgetService()" class="btn btn-info">Valider celui du Service</button>
+        <button *ngIf="Validation.listeProjet.length > 0 && sommeSuggSE() > 0" (click)="clickValiderBudgetSE()" class="btn btn-info">Valider celui du Suivi-Evaluation</button>
       </div>
 
     </div>
@@ -394,6 +394,27 @@
       <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
       <div class="loader">
       </div>
+      </div>
+    </div>
+    <!-- MODAL CONFIRMATION VALIDATION -->
+    <div #modalConfirmeValidation class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title">Confirmation</h6>
+            <button type="button" class="close" (click)="fermeConfirme()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label *ngIf="Validation.budgetChoisi == 'se'">Après avoir constater la différence entre les 2 plans budgétaires, vous avez choisi de valider celui du Service SE</label>
+            <label *ngIf="Validation.budgetChoisi == 'service'">Après avoir constater la différence entre les 2 plans budgétaires, vous avez choisi de valider celui du Service Cible</label>
+          </div>
+          <div class="modal-footer">
+            <button (click)="fermeConfirme()" type="button" class="btn">Annuler</button>
+            <button (click)="confirmer()" type="button" class="btn btn-info">Confirmer</button>
+          </div>
+        </div>
       </div>
     </div>
 

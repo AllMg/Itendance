@@ -39,7 +39,7 @@
 
       <!-- GENERAL -->
       <div [ngClass]="{'invisible': Menu.sousMenu != 'general'}" class="col-md-12">
-        <h6 style="text-transform: uppercase;">Suivi du budget annuel tout service compris</h6>
+        <h6 style="text-transform: uppercase;">Suivi du budget annuel tout service cofondu</h6>
         <hr>
         <div class="form-group">
           <label>Exercice</label>
@@ -51,7 +51,7 @@
           </div>
         </div>
         <table class="table table-bordered">
-          <thead style="text-align: center; vertical-align: middle;">
+          <thead class="thead-budget">
             <tr>
               <td colspan="2">RUBRIQUES</td>
               <td>PROJETS</td>
@@ -59,15 +59,81 @@
             <tr>
               <td>N° Compte</td>
               <td>Intitulé de Compte</td>
-              <td>
-                <select class="pr-select">
-                  <option>111</option>
-                  <option>1121</option>
-                  <option>1"11</option>
-                </select>
+              <td class="td-projet">
+                <span class="icon-btn"><i class="fa fa-caret-left"></i></span>
+                <span>121</span>
+                <span class="icon-btn"><i class="fa fa-caret-right"></i></span>
               </td>
             </tr>
           </thead>
+          <!-- FONCTIONNEMENTS -->
+          <tbody>
+            <tr>
+              <td (click)="clickCategorieFCT()" class="g-parent-compte" colspan="3">FONCTIONNEMENTS</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let parent of General.listeFCT; let indexP = index" [ngClass]="{'invisible': !General.visibleFCT}">
+            <tr>
+              <td (click)="clickParentFCT('General',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
+              <td class="enfant-compte">{{enf.numeroCompte}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <!-- FIN FONCTIONNEMENTS -->
+          <!-- INVESTISSEMENT -->
+          <tbody>
+            <tr>
+              <td (click)="clickCategorieINV()" class="g-parent-compte" colspan="3">INVESTISSEMENT</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let parent of General.listeINV; let indexP = index" [ngClass]="{'invisible': !General.visibleINV}">
+            <tr>
+              <td (click)="clickParentINV('General',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
+              <td class="enfant-compte">{{enf.numeroCompte}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <!-- FIN INVESTISSEMENT -->
+          <!-- RECETTES -->
+          <tbody>
+            <tr>
+              <td (click)="clickCategorieREC()" class="g-parent-compte" colspan="3">RECETTES</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let parent of General.listeREC; let indexP = index" [ngClass]="{'invisible': !General.visibleREC}">
+            <tr>
+              <td (click)="clickParentREC('General',indexP)" class="parent-compte" colspan="2">{{parent.numeroCompte+" - "+parent.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of parent.enfants; let indexE = index" [ngClass]="{'invisible': parent.visible == false, 'ligne-gris': indexE%2 == 0}">
+              <td class="enfant-compte">{{enf.numeroCompte}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <!-- FIN RECETTES -->
+          <!-- DEPENSES -->
+          <tbody>
+            <tr>
+              <td (click)="clickCategorieDEP()" class="g-parent-compte" colspan="3">DEPENSES</td>
+            </tr>
+          </tbody>
+          <tbody [ngClass]="{'invisible': !General.visibleDEP}">
+            <tr *ngFor="let dep of General.listeDEP; let index = index" [ngClass]="{'ligne-gris': index%2 == 0}">
+              <td class="enfant-compte">{{dep.numeroCompte}}</td>
+              <td>{{dep.libelleCompte}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+          <!-- FIN DEPENSES -->
         </table>
       </div>
 

@@ -14,6 +14,7 @@ declare var $: any;
 export class BpElaborationComponent implements OnInit {
 
   @ViewChild('modalChargement') modalChargement;
+  @ViewChild('modalConfirmeValidation') modalConfirmeValidation;
   @ViewChild('tdSepare') tdSepare: ElementRef;
 
   Menu = {
@@ -56,7 +57,8 @@ export class BpElaborationComponent implements OnInit {
 
   Validation = {
     refService: null,
-    listeProjet: []
+    listeProjet: [],
+    budgetChoisi: ""
   };
 
   constructor(
@@ -322,7 +324,7 @@ export class BpElaborationComponent implements OnInit {
    */
   chargeRubriqueEnregistrer() {
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", "5050", false).subscribe(obs => {
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", "6000", false).subscribe(obs => {
       console.log("prendBudgetEnregistrerBPSE", obs);
       if (obs.success) {
         let listeProjet = [];
@@ -570,7 +572,7 @@ export class BpElaborationComponent implements OnInit {
     let argument = [];
     for (let projet of this.Service.projetsChoisis) {
       let servRubr = {
-        refService: "5050",
+        refService: "6000",
         idProjet: projet.idProjet,
         servRubrValeur: []
       }
@@ -597,7 +599,7 @@ export class BpElaborationComponent implements OnInit {
       console.log("ajoutRubriquePrevisionServBPSE", obs);
       if (obs.success) {
         if(validerBudget){
-          that.validerBudget();
+          that.marqueFinitionBudget();
         }
         else{
           that.toast.success("Enregistrement terminé");
@@ -613,9 +615,9 @@ export class BpElaborationComponent implements OnInit {
   /**
    * Marque que le plan budgetétaire du service peut être maintenant être traité par le service SE
    */
-  validerBudget(){
+  marqueFinitionBudget(){
     let that = this;
-    let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE","5050",false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE","6000",false).subscribe(obs=>{
       that.fermeChargement();
       if(obs.success){
         that.toast.success("Vous avez marqué votre plan budgétaire comme étant valide");
@@ -627,7 +629,7 @@ export class BpElaborationComponent implements OnInit {
   chargerBudgetServiceOuSe(){
     this.SE.projetsChoisis = [];
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", "5050", false).subscribe(obs => {
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", "6000", false).subscribe(obs => {
       console.log("prendBudgetEnregistreSEOuServiceBPSE", obs);
       if (obs.success) {
         let htmlAChanger = [];
@@ -679,7 +681,7 @@ export class BpElaborationComponent implements OnInit {
     let argument = [];
     for (let projet of this.SE.projetsChoisis) {
       let servRubr = {
-        refService: "5050",
+        refService: "6000",
         idProjet: projet.idProjet,
         servRubrValeur: []
       }
@@ -722,7 +724,7 @@ export class BpElaborationComponent implements OnInit {
   chargerBudgetServiceEtSe() {
     this.afficheChargement();
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetServiceEtSEBPSE","4050",false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("prendBudgetServiceEtSEBPSE","6000",false).subscribe(obs=>{
       console.log("prendBudgetServiceEtSEBPSE",obs);
       if(obs.success){
         let liste = [];
@@ -769,6 +771,44 @@ export class BpElaborationComponent implements OnInit {
     return som;
   }
 
+  clickValiderBudgetService(){
+    this.Validation.budgetChoisi = "service";
+    this.afficheConfirme();
+  }
+
+  clickValiderBudgetSE(){
+    this.Validation.budgetChoisi = "se";
+    this.afficheConfirme();
+  }
+
+  confirmer(){
+    this.fermeConfirme();
+    this.validerBudgetServiceOuSE();
+  }
+
+  validerBudgetServiceOuSE(){
+    this.afficheChargement();
+    let argument = {
+      refService: "6000",
+      seEstValide: 0
+    };
+    if(this.Validation.budgetChoisi == "se"){
+      argument.seEstValide = 1;
+    }
+    let that = this;
+    let observ = this.budgetService.budgetTopic("validerBudgetServiceOuSEBPSE",argument,true).subscribe(obs=>{
+      console.log("validerBudgetServiceOuSEBPSE",obs);
+      this.Validation.listeProjet = [];
+      this.Validation.refService = "";
+      setTimeout(()=>{ that.calculAngleSepare(); }, 500);
+      this.fermeChargement();
+      if(obs.success){
+        that.toast.success("Validation terminé");
+      }
+      observ.unsubscribe();
+    });
+  }
+
   calculAngleSepare() {
     let ele = this.tdSepare.nativeElement;
 
@@ -787,6 +827,14 @@ export class BpElaborationComponent implements OnInit {
 
   fermeChargement() {
     $(this.modalChargement.nativeElement).modal('hide');
+  }
+
+  afficheConfirme() {
+    $(this.modalConfirmeValidation.nativeElement).modal("show");
+  }
+
+  fermeConfirme(){
+    $(this.modalConfirmeValidation.nativeElement).modal('hide');
   }
 
   separeMillier(valeur: string) {
