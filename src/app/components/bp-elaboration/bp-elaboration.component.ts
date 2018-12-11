@@ -353,6 +353,7 @@ export class BpElaborationComponent implements OnInit {
                       cred: that.separeMillier(enfant.creditPrev.toString()),
                       prec: enfant.precisionServ
                     });
+                    break;
                   }
                 }
               }
@@ -650,6 +651,7 @@ export class BpElaborationComponent implements OnInit {
                       cred: that.separeMillier(enfant.creditPrev.toString()),
                       prec: enfant.precisionServ
                     });
+                    break;
                   }
                 }
               }
