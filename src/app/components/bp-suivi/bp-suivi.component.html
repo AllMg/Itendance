@@ -329,19 +329,21 @@
         <hr>
         <div class="form-group">
           <label>Projet</label>
-          <select [(ngModel)]="RSaisie.champ.idProjet" (change)="projetChange()" class="form-control custom-select"></select>
+          <select [(ngModel)]="RSaisie.champ.idProjet" (change)="projetChange()" class="form-control custom-select">
+            <option *ngFor="let pr of RSaisie.listeProjetCourant" value="{{pr.idProjet}}">{{pr.codeProjet}}</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Service demandeur</label>
-          <ngx-select [(ngModel)]="RSaisie.champ.refServiceDest" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
+          <ngx-select [(ngModel)]="RSaisie.champ.refServiceDest" (ngModelChange)="serviceDemandeurChange()" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
         </div>
         <div class="row">
           <div class="col-md-4 form-group">
             <label>Rubrique en manque de budget</label>
-            <input [(ngModel)]="RSaisie.champ.rubriqueDest" (ngModelChange)="rubriqueDestChange()" type="text" name="rubrManque" matInput [formControl]="RSaisie.rubrControl" [matAutocomplete]="rubrManque" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
+            <input [(ngModel)]="RSaisie.champ.rubriqueDest" (ngModelChange)="rubriqueDestChange()" type="text" name="rubrManque" matInput [formControl]="RSaisie.rubrDestControl" [matAutocomplete]="rubrManque" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
 
 						<mat-autocomplete #rubrManque="matAutocomplete">
-						  <mat-option *ngFor="let option of RSaisie.rubrOptions" [value]="option">{{option}}</mat-option>
+						  <mat-option *ngFor="let option of RSaisie.rubrDestOptions" [value]="option">{{option}}</mat-option>
 						</mat-autocomplete>
           </div>
           <div class="col-md-4 form-group">
@@ -356,31 +358,37 @@
         <hr>
         <div class="form-group">
           <label>Valeur à remanier</label>
-          <input [(ngModel)]="RSaisie.champ.valeurRemanier" (ngModelChange)="valeurRemanierChange()" type="text" class="form-control">
+          <input id="valeurRemanier" [(ngModel)]="RSaisie.champ.valeurRemanier" (ngModelChange)="valeurRemanierChange()" type="text" class="form-control">
         </div>
         <hr>
         <div class="row">
-          <div class="col-md-4 form-group">
+          <div class="col-md-10 form-group">
             <label>Service source</label>
-            <ngx-select [(ngModel)]="RSaisie.champ.refServiceSource" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
-          </div>
-          <div class="col-md-3 form-group">
-            <label>Rubrique source</label>
-            <input [(ngModel)]="RSaisie.champ.rubriqueSource" (ngModelChange)="rubriqueSourceChange()" type="text" name="rubrSource" matInput [formControl]="RSaisie.rubrControl" [matAutocomplete]="rubrSource" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
-
-						<mat-autocomplete #rubrSource="matAutocomplete">
-						  <mat-option *ngFor="let option of RSaisie.rubrOptions" [value]="option">{{option}}</mat-option>
-						</mat-autocomplete>
-          </div>
-          <div class="col-md-3 form-group">
-            <label>Budget disponible</label>
-            <input [(ngModel)]="RSaisie.champ.budgetCptSourceDisp" type="text" class="form-control" readonly>
+            <ngx-select [(ngModel)]="RSaisie.champ.refServiceSource" (ngModelChange)="serviceSourceChange()" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
           </div>
           <div class="col-md-2 form-group">
             <label style="font-size: 12px; opacity: 0.8;">(Système)</label>
-            <input type="submit" value="Suggérer" class="form-control btn btn-info">
+            <input *ngIf="!RSaisie.chargeSugg" (click)="suggererSource()" type="submit" value="Suggérer" class="form-control btn btn-info">
+            <div *ngIf="RSaisie.chargeSugg" class="mini-loader"></div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Rubrique source</label>
+            <input [(ngModel)]="RSaisie.champ.rubriqueSource" (ngModelChange)="rubriqueSourceChange()" type="text" name="rubrSource" matInput [formControl]="RSaisie.rubrSourceControl" [matAutocomplete]="rubrSource" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
+
+						<mat-autocomplete #rubrSource="matAutocomplete">
+						  <mat-option *ngFor="let option of RSaisie.rubrSourceOptions" [value]="option">{{option}}</mat-option>
+						</mat-autocomplete>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Budget disponible</label>
+            <input [(ngModel)]="RSaisie.champ.budgetCptSourceDisp" type="text" class="form-control" readonly>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Budget disponible après remaniement</label>
+            <input value="{{budgetDispApresRem()}}" type="text" class="form-control" readonly>
           </div>
         </div>
+        <label *ngIf="prendResteBudgetSource() != null && prendResteBudgetSource() < 0" class="text-erreur">Si le budget restant du rubrique source devient négative, le remaniement sera impossible</label>
         <hr>
         <button *ngIf="!RSaisie.charge" (click)="effectuerRemaniement()" class="btn btn-info">Effectuer l'opération</button>
         <div *ngIf="RSaisie.charge" class="loader"></div>

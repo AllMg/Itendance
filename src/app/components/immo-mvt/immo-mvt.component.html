@@ -36,9 +36,9 @@
 					<div class="form-group">
 						<label>N° TEF</label>
 						<div class="input-group mb-3">
-							<input type="text" class="form-control">
+							<input [(ngModel)]="Entree.numTef" type="text" class="form-control">
 							<div class="input-group-append">
-								<button class="btn btn-info">Charger</button>
+								<button (click)="chargerDepuisTEF()" class="btn btn-info">Charger</button>
 							</div>
 						</div>
 					</div>
@@ -47,27 +47,25 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>N° BE</label>
-							<input type="text" class="form-control">
+							<input [(ngModel)]="Entree.numBE" type="text" class="form-control" readonly>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Date BE</label>
-							<input type="date" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>N° BL</label>
-							<input type="text" class="form-control">
+							<input [(ngModel)]="Entree.dateEntree" type="text" class="form-control" readonly>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Magasin</label>
-							<select class="form-control custom-select">
-								<option>MAGASIN1</option>
-							</select>
+							<input [(ngModel)]="Entree.magasin" type="text" class="form-control" readonly>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Imputation</label>
+							<input [(ngModel)]="Entree.imputation" type="text" class="form-control" readonly>
 						</div>
 					</div>
 				</div>
@@ -75,19 +73,27 @@
 					<thead>
 						<tr>
 							<th>Désignation</th>
-							<th>Cmd</th>
-							<th>PU HT Prev</th>
+							<th>PU</th>
 							<th>Colisage</th>
-							<th>Livrée</th>
-							<th>PU TTC</th>
+							<th>Qtés</th>
 							<th>Amortissable</th>
 							<th>Cout Unitaire</th>
 						</tr>
 					</thead>
 					<tbody>
-						
+						<tr *ngFor="let art of Entree.listeArticle; let index = index">
+							<td>{{art.libelle}}</td>
+							<td style="text-align: right;">{{art.prixUnitaire | number:'1.2-2':'fr'}}</td>
+							<td>{{art.colisage}}</td>
+							<td style="text-align: right;">{{art.quantite}}</td>
+							<td style="text-align: center;">
+								<input [checked]="art.amortissable" (click)="clickAmortissable(index)" type="checkbox">
+							</td>
+							<td style="text-align: right;">{{art.coutUnitaire | number:'1.2-2':'fr'}}</td>
+						</tr>
 					</tbody>
 				</table>
+				<button (click)="validerEntree()" class="btn btn-info">Valider</button>
 			</div>
 			<!-- DETENTION -->
 			<div *ngIf="Menu.sousMenu == 'detention'" class="col-md-12">
