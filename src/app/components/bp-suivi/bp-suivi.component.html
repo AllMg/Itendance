@@ -30,6 +30,9 @@
         <li (click)="clickSousMenu('service')" [ngClass]="{'menu1-active': Menu.sousMenu == 'service'}">
           <span>BUDGET ANNUEL PAR SERVICE</span>
         </li>
+        <li (click)="clickSousMenu('rliste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'rliste'}">
+          <span>REMANIEMENTS</span>
+        </li>
       </ul>
     </div>
     <!-- FIN MENU -->
@@ -267,6 +270,120 @@
           </tbody>
           <!-- FIN DEPENSES -->
         </table>
+      </div>
+
+      <!-- LISTE DES REMANIEMENTS -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'rliste'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">LISTE DES REMANIEMENTS</h6>
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Date</label>
+              <input [(ngModel)]="RListe.filtre.date" type="date" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Code Projet</label>
+              <input [(ngModel)]="RListe.filtre.codeProjet" type="text" class="form-control" placeholder="Code Projet">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Compte</label>
+              <input [(ngModel)]="RListe.filtre.compte" type="text" class="form-control" placeholder="N° Compte">
+            </div>
+          </div>
+        </div>
+        <button (click)="saisieNouvRemaniement()" class="btn btn-info" style="margin-bottom: 5px;">Saisie d'un nouveau remaniement</button>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Projet</th>
+              <th>C. Source</th>
+              <th>C. Dest</th>
+              <th>Valeur</th>
+              <th>Service Source</th>
+              <th>Service Dest</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of RListe.liste">
+              <td>{{avoirDateSlash(r.dateOperation)}}</td>
+              <td>{{avoirDateSlash(r.codeProjet)}}</td>
+              <td>{{avoirDateSlash(r.rubriqueSource)}}</td>
+              <td>{{avoirDateSlash(r.rubriqueDest)}}</td>
+              <td>{{avoirDateSlash(r.valeurRemanier)}}</td>
+              <td>{{avoirDateSlash(r.refServiceSource)}}</td>
+              <td>{{avoirDateSlash(r.refServiceDest)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SAISIE REMANIEMENT -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'rsaisie'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">OPERATION DE REMANIEMENT</h6>
+        <hr>
+        <div class="form-group">
+          <label>Projet</label>
+          <select [(ngModel)]="RSaisie.champ.idProjet" (change)="projetChange()" class="form-control custom-select"></select>
+        </div>
+        <div class="form-group">
+          <label>Service demandeur</label>
+          <ngx-select [(ngModel)]="RSaisie.champ.refServiceDest" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label>Rubrique en manque de budget</label>
+            <input [(ngModel)]="RSaisie.champ.rubriqueDest" (ngModelChange)="rubriqueDestChange()" type="text" name="rubrManque" matInput [formControl]="RSaisie.rubrControl" [matAutocomplete]="rubrManque" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
+
+						<mat-autocomplete #rubrManque="matAutocomplete">
+						  <mat-option *ngFor="let option of RSaisie.rubrOptions" [value]="option">{{option}}</mat-option>
+						</mat-autocomplete>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Budget du rubrique</label>
+            <input [(ngModel)]="RSaisie.champ.budgetCptDest" type="text" class="form-control" readonly>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Budget disponible du rubrique</label>
+            <input [(ngModel)]="RSaisie.champ.budgetCptDestDisp" type="text" class="form-control" readonly>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label>Valeur à remanier</label>
+          <input [(ngModel)]="RSaisie.champ.valeurRemanier" (ngModelChange)="valeurRemanierChange()" type="text" class="form-control">
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label>Service source</label>
+            <ngx-select [(ngModel)]="RSaisie.champ.refServiceSource" [items]="RSaisie.listeServiceDansProjet" style="width: 100%;"></ngx-select>
+          </div>
+          <div class="col-md-3 form-group">
+            <label>Rubrique source</label>
+            <input [(ngModel)]="RSaisie.champ.rubriqueSource" (ngModelChange)="rubriqueSourceChange()" type="text" name="rubrSource" matInput [formControl]="RSaisie.rubrControl" [matAutocomplete]="rubrSource" class="form-control" [ngClass]="{'mat-input-element' : RSaisie.utiliseClass}">
+
+						<mat-autocomplete #rubrSource="matAutocomplete">
+						  <mat-option *ngFor="let option of RSaisie.rubrOptions" [value]="option">{{option}}</mat-option>
+						</mat-autocomplete>
+          </div>
+          <div class="col-md-3 form-group">
+            <label>Budget disponible</label>
+            <input [(ngModel)]="RSaisie.champ.budgetCptSourceDisp" type="text" class="form-control" readonly>
+          </div>
+          <div class="col-md-2 form-group">
+            <label style="font-size: 12px; opacity: 0.8;">(Système)</label>
+            <input type="submit" value="Suggérer" class="form-control btn btn-info">
+          </div>
+        </div>
+        <hr>
+        <button *ngIf="!RSaisie.charge" (click)="effectuerRemaniement()" class="btn btn-info">Effectuer l'opération</button>
+        <div *ngIf="RSaisie.charge" class="loader"></div>
       </div>
 
     </div>

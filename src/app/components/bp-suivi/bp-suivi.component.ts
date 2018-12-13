@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BudgetService } from '../../services/budget/budget.service';
@@ -54,14 +55,65 @@ export class BpSuiviComponent implements OnInit {
     indiceProjet: 0
   };
 
+  RListe = {
+    estVue: false,
+    ligneMax: 20,
+    liste: [],
+    page: 1,
+    filtre: {
+      date: null,
+      codeProjet: "",
+      compte: ""
+    }
+  };
+
+  RSaisie = {
+    utiliseClass: false,
+    rubrControl: new FormControl(),
+    rubrOptions: [],
+    listeServiceDansProjet: [],
+    champ: {
+      idProjet: -1,
+      refServiceDest: "",
+      rubriqueDest: "",
+      budgetCptDest: "",
+      budgetCptDestDisp: "",
+      valeurRemanier: "",
+      refServiceSource: "",
+      rubriqueSource: "",
+      budgetCptSourceDisp: ""
+    },
+    charge: false
+  };
+
   constructor(
     private router: Router,
     private toast: ToastrService,
     private budgetService: BudgetService,
     private immoService: ImmoService) {
       let annee = new Date(Date.now()).getFullYear();
+      let that = this;
       this.General.exercice = annee;
       this.Service.filtre.anneeProjet = annee;
+      this.RSaisie.rubrControl.valueChanges.subscribe(text=>{
+        text = text.toString().trim();
+        if (text.length > 0 && that.RSaisie.champ.idProjet > 0) {
+          let argument = {
+            idProjet: that.RSaisie.champ.idProjet,
+            numeroCompte: text
+          };
+          let observ = that.immoService.immoTopic("rechercheRubriqueDansProjetServiceBPSE", argument, true).subscribe(obs=>{
+            console.log("rechercheRubriqueDansProjetServiceBPSE",obs);
+            if(obs.success){
+              that.RSaisie.rubrOptions = obs.msg;
+            }
+            observ.unsubscribe();
+          });
+        }
+        else{
+          that.RSaisie.rubrOptions = [];
+        }
+      });
     }
 
   ngOnInit() {
@@ -97,14 +149,20 @@ export class BpSuiviComponent implements OnInit {
 
   clickSousMenu(nom: string) {
     this.Menu.sousMenu = nom;
-    if(nom=="general"){
+    if(nom == "general"){
       if(this.General.listeFCT.length == 0){
         this.chargeListeCompteFCT("General");
       }
     }
-    else if(nom=="service"){
+    else if(nom == "service"){
       if(this.Service.listeFCT.length == 0){
         this.chargeListeCompteFCT("Service");
+      }
+    }
+    else if(nom == "rliste"){
+      if(!this.RListe.estVue){
+        this.RListe.estVue = true;
+        this.listeRemaniement();
       }
     }
   }
@@ -416,6 +474,105 @@ export class BpSuiviComponent implements OnInit {
     }
   }
 
+  listeRemaniement(){
+    let that = this;
+    let observ = this.budgetService.budgetTopic("listeRemaniementBPSE",this.RListe.filtre,true).subscribe(obs=>{
+      console.log("listeRemaniementBPSE",obs);
+      if(obs.success){
+        that.RListe.liste = obs.msg;
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  saisieNouvRemaniement(){
+    this.Menu.sousMenu = "rsaisie";
+  }
+
+  projetChange(){
+    let that = this;
+    let observ = this.budgetService.budgetTopic("listeServiceDansProjetBPSE",this.RSaisie.champ.idProjet,false).subscribe(obs=>{
+      if(obs.success){
+        that.RSaisie.listeServiceDansProjet = obs.msg;
+      }
+      observ.unsubscribe();
+    });
+  }
+
+  rubriqueDestChange(){
+    this.RSaisie.champ.rubriqueDest = this.RSaisie.champ.rubriqueDest.trim();
+    if(this.RSaisie.champ.rubriqueDest.length > 5){
+      let that = this;
+      let argument = {
+        idProjet: this.RSaisie.champ.idProjet,
+        refService: this.RSaisie.champ.refServiceDest,
+        numeroCompte: this.RSaisie.champ.rubriqueDest
+      };
+      let observ = this.budgetService.budgetTopic("prendBudgetCptDestEtDispBPSE",argument,true).subscribe(obs=>{
+        console.log("prendBudgetCptDestEtDispBPSE",obs);
+        if(obs.success){
+          that.RSaisie.champ.budgetCptDest = that.separeMillierDouble(obs.msg.budgetCptDest);
+          that.RSaisie.champ.budgetCptDestDisp = that.separeMillierDouble(obs.msg.budgetCptDestDisp);
+        }
+        observ.unsubscribe();
+      });
+    }
+  }
+
+  valeurRemanierChange(){
+    this.RSaisie.champ.valeurRemanier = this.RSaisie.champ.valeurRemanier.trim().replace(/ /g, "");
+    let valeur = parseInt(this.RSaisie.champ.valeurRemanier);
+    let valeurN = Number(this.RSaisie.champ.valeurRemanier);
+    if(!isNaN(valeurN)){
+      this.RSaisie.champ.valeurRemanier = this.separeMillier(valeur.toString());
+    }
+    else{
+      this.RSaisie.champ.valeurRemanier = "";
+    }
+  }
+
+  rubriqueSourceChange(){
+    this.RSaisie.champ.rubriqueSource = this.RSaisie.champ.rubriqueSource.trim();
+    if(this.RSaisie.champ.rubriqueSource.length > 5){
+      let that = this;
+      let argument = {
+        idProjet: this.RSaisie.champ.idProjet,
+        refService: this.RSaisie.champ.refServiceSource,
+        numeroCompte: this.RSaisie.champ.rubriqueSource
+      };
+      let observ = this.budgetService.budgetTopic("prendBudgetDispCptSourceBPSE",argument,true).subscribe(obs=>{
+        console.log("prendBudgetDispCptSourceBPSE",obs);
+        if(obs.success){
+          that.RSaisie.champ.budgetCptSourceDisp = that.separeMillierDouble(obs.msg);
+        }
+        observ.unsubscribe();
+      });
+    }
+  }
+
+  effectuerRemaniement(){
+    this.RSaisie.charge = true;
+    let that = this;
+    let argument = {
+      refServiceSource: this.RSaisie.champ.refServiceSource,
+      rubriqueSource: this.RSaisie.champ.rubriqueSource,
+      refServiceDest: this.RSaisie.champ.refServiceDest,
+      rubriqueDest: this.RSaisie.champ.rubriqueDest,
+      valeurRemanier: this.RSaisie.champ.valeurRemanier,
+      projetId: this.RSaisie.champ.idProjet
+    };
+    let observ = this.budgetService.budgetTopic("effectuerRemaniementBPSE",argument,true).subscribe(obs=>{
+      console.log("effectuerRemaniementBPSE",obs);
+      if(obs.success){
+        for(let attr in that.RSaisie.champ){
+          that.RSaisie.champ[attr] = null;
+        }
+      }
+      that.RSaisie.charge = false;
+      observ.unsubscribe();
+    });
+  }
+
   afficheChargement() {
     $(this.modalChargement.nativeElement).modal("show");
   }
@@ -454,6 +611,21 @@ export class BpSuiviComponent implements OnInit {
       return valeur;
     }
     return resultat;
+  }
+
+  /* 
+  date: aaaa-mm-jj 
+  resultat: jj/mm/aaaa
+  */
+  avoirDateSlash(date){
+    if(date == "" || date == null || date == undefined){
+      return "";
+    }
+    else{
+      let strs = date.toString().split("-");
+      let resultat = strs[2]+"/"+strs[1]+"/"+strs[0];
+      return resultat;
+    }
   }
 
 }
