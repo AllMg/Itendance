@@ -19,6 +19,9 @@
         <li (click)="clickInMenu1('bp-suivi')">
           <span>SUIVI</span>
         </li>
+        <li>
+          <span (click)="clickInMenu1('bp-document')">DOCUMENT</span>
+        </li>
       </ul>
     </div>
 
@@ -152,7 +155,7 @@
           <div *ngIf="Verif.arbre.programme0 != null" class="col-md-6">
             <div class="card">
               <div class="card-body">
-                <div class="progr-text">Programme 0</div>
+                <div class="progr-text">Programme 041</div>
                 <div *ngFor="let Axe of Verif.arbre.programme0.axe; let indexA = index" style="width: 100%;">
                   <div class="progr-item progr-item-0">
                     <div class="row">
@@ -180,6 +183,7 @@
                         <div class="col-2" style="text-align: center;">{{pro.codeProjet}}</div>
                         <div class="col-9">
                           <span (click)="clickProItem(indexA,indexO,indexP,'programme0')" class="progr-item-text">{{pro.libelleProjet}}</span>
+                          <span class="pr-item-date">du {{avoirDateSlash(pro.dateDebut)}} au {{avoirDateSlash(pro.dateFin)}}</span>
                         </div>
                         <div class="col-1"></div>
                       </div>
@@ -192,7 +196,7 @@
           <div *ngIf="Verif.arbre.programme1 != null" class="col-md-6">
             <div class="card">
               <div class="card-body">
-                <div class="progr-text">Programme 1</div>
+                <div class="progr-text">Programme 804</div>
                 <div *ngFor="let Axe of Verif.arbre.programme1.axe; let indexA = index" style="width: 100%;">
                   <div class="progr-item progr-item-0">
                     <div class="row">
@@ -220,6 +224,7 @@
                         <div class="col-2" style="text-align: center;">{{pro.codeProjet}}</div>
                         <div class="col-9">
                           <span (click)="clickProItem(indexA,indexO,indexP,'programme1')" class="progr-item-text">{{pro.libelleProjet}}</span>
+                          <span class="pr-item-date">du {{avoirDateSlash(pro.dateDebut)}} au {{avoirDateSlash(pro.dateFin)}}</span>
                         </div>
                         <div class="col-1"></div>
                       </div>

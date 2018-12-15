@@ -1,0 +1,295 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>BUDGET DE PROGRAMME</h4>
+    </div>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li (click)="clickInMenu1('bp-saisie')">
+          <span>SAISIE</span>
+        </li>
+        <li (click)="clickInMenu1('bp-elaboration')">
+          <span>ELABORATION</span>
+        </li>
+        <li (click)="clickInMenu1('bp-suivi')">
+          <span>SUIVI</span>
+        </li>
+        <li class="menu1-active">
+          <span>DOCUMENT</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+      <ul class="menu1">
+        <li (click)="clickSousMenu('recette')" [ngClass]="{'menu1-active': Menu.sousMenu == 'recette'}">
+          <span>DOCUMENT DE RECETTES</span>
+        </li>
+        <li (click)="clickSousMenu('041')" [ngClass]="{'menu1-active': Menu.sousMenu == '041'}">
+          <span>DOCUMENT DE DEPENSES 041</span>
+        </li>
+        <li (click)="clickSousMenu('804')" [ngClass]="{'menu1-active': Menu.sousMenu == '804'}">
+          <span>DOCUMENT DE DEPENSES 804</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
+
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+
+      <!-- RECETTES -->
+      <div *ngIf="Menu.sousMenu == 'recette'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Documents de recettes </h6>
+        <hr>
+        <div class="form-group">
+          <label>Exercice</label>
+          <div class="input-group mb-3">
+            <input [(ngModel)]="Recette.annee" type="number" class="form-control">
+            <div class="input-group-append">
+              <button (click)="chargerRecettes()" class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="4">Rubriques</th>
+              <th style="text-align: center;">Exercice</th>
+            </tr>
+            <tr>
+              <th colspan="3">N° Comptes</th>
+              <th>Intitulés</th>
+              <th style="text-align: center;">{{Recette.exercice}}</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let cpt of Recette.liste">
+            <tr style="font-weight: bold;">
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(1)}}</td>
+              <td></td>
+              <td>{{cpt.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of cpt.enfants">
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(1)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(2)}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td style="text-align: right;">{{enf.valeur | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="4" style="text-align: right;">TOTAL</th>
+              <th style="text-align: right;">{{Recette.total | number:'1.2-2':'fr'}}</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- DEPENSES 041 -->
+      <div *ngIf="Menu.sousMenu == '041'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Documents de dépenses programme n° 041</h6>
+        <hr>
+        <div class="form-group">
+          <label>Exercice</label>
+          <div class="input-group mb-3">
+            <input [(ngModel)]="Dep041.annee" type="number" class="form-control">
+            <div class="input-group-append">
+              <button (click)="chargerDepenses041()" class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="4">Rubriques</th>
+              <th style="text-align: center;">Exercice</th>
+            </tr>
+            <tr>
+              <th colspan="3">N° Comptes</th>
+              <th>Intitulés</th>
+              <th style="text-align: center;">{{Dep041.exercice}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="font-weight: bold;">
+              <td colspan="5">Fonctionnement</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let cpt of Dep041.listeFCT">
+            <tr style="font-weight: bold;">
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(1)}}</td>
+              <td></td>
+              <td>{{cpt.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of cpt.enfants">
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(1)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(2)}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td style="text-align: right;">{{enf.valeur | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td colspan="4" style="text-align: center; font-weight: bold;">TOTAL DES DEPENSES DE FONCTIONNEMENT</td>
+              <td style="text-align: right;">{{Dep041.totalFCT | number:'1.2-2':'fr'}}</td>
+            </tr>
+            <tr>
+              <td colspan="5"></td>
+            </tr>
+            <tr style="font-weight: bold;">
+              <td colspan="5">Investissement</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let cpt of Dep041.listeINV">
+            <tr style="font-weight: bold;">
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(1)}}</td>
+              <td></td>
+              <td>{{cpt.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of cpt.enfants">
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(1)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(2)}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td style="text-align: right;">{{enf.valeur | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr style="text-align: center; font-weight: bold;">
+              <td colspan="4">TOTAL DES DEPENSES D'INVESTISSEMENT</td>
+              <td style="text-align: right;">{{Dep041.totalINV | number:'1.2-2':'fr'}}</td>
+            </tr>
+            <tr>
+              <td colspan="5"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="text-align: center;">
+              <th colspan="4" style="text-align: right;">TOTAL DES DEPENSES DU PROGRAMME</th>
+              <th style="text-align: right;">{{(Dep041.totalFCT+Dep041.totalINV) | number:'1.2-2':'fr'}}</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- DEPENSES 804 -->
+      <div *ngIf="Menu.sousMenu == '804'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Documents de dépenses programme n° 804</h6>
+        <hr>
+        <div class="form-group">
+          <label>Exercice</label>
+          <div class="input-group mb-3">
+            <input [(ngModel)]="Dep804.annee" type="number" class="form-control">
+            <div class="input-group-append">
+              <button (click)="chargerDepenses804()" class="btn btn-info">Charger</button>
+            </div>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="4">Rubriques</th>
+              <th style="text-align: center;">Exercice</th>
+            </tr>
+            <tr>
+              <th colspan="3">N° Comptes</th>
+              <th>Intitulés</th>
+              <th style="text-align: center;">{{Dep804.exercice}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="font-weight: bold;">
+              <td colspan="5">Fonctionnement</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let cpt of Dep804.listeFCT">
+            <tr style="font-weight: bold;">
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(1)}}</td>
+              <td></td>
+              <td>{{cpt.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of cpt.enfants">
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(1)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(2)}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td style="text-align: right;">{{enf.valeur | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td colspan="4" style="text-align: center; font-weight: bold;">TOTAL DES DEPENSES DE FONCTIONNEMENT</td>
+              <td style="text-align: right;">{{Dep804.totalFCT | number:'1.2-2':'fr'}}</td>
+            </tr>
+            <tr>
+              <td colspan="5"></td>
+            </tr>
+            <tr style="font-weight: bold;">
+              <td colspan="5">Investissement</td>
+            </tr>
+          </tbody>
+          <tbody *ngFor="let cpt of Dep804.listeINV">
+            <tr style="font-weight: bold;">
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{cpt.numeroCompte.charAt(1)}}</td>
+              <td></td>
+              <td>{{cpt.libelleCompte}}</td>
+              <td></td>
+            </tr>
+            <tr *ngFor="let enf of cpt.enfants">
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(0)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(1)}}</td>
+              <td style="text-align: center;">{{enf.numeroCompte.charAt(2)}}</td>
+              <td>{{enf.libelleCompte}}</td>
+              <td style="text-align: right;">{{enf.valeur | number:'1.2-2':'fr'}}</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr style="text-align: center; font-weight: bold;">
+              <td colspan="4">TOTAL DES DEPENSES D'INVESTISSEMENT</td>
+              <td style="text-align: right;">{{Dep804.totalINV | number:'1.2-2':'fr'}}</td>
+            </tr>
+            <tr>
+              <td colspan="5"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="text-align: center;">
+              <th colspan="4" style="text-align: right;">TOTAL DES DEPENSES DU PROGRAMME</th>
+              <th style="text-align: right;">{{(Dep804.totalFCT+Dep804.totalINV) | number:'1.2-2':'fr'}}</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+    
+    <!-- MODAL -->
+    <!-- MODAL CHARGEMENT -->
+    <div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="loader">
+      </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

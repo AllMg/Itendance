@@ -24,7 +24,7 @@ export class BpElaborationComponent implements OnInit {
 
   Individu = {
     idIndividu: null,
-    codeService: null
+    codeService: "8010"
   };
 
   ngxServices = [];
@@ -324,7 +324,7 @@ export class BpElaborationComponent implements OnInit {
    */
   chargeRubriqueEnregistrer() {
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", "6000", false).subscribe(obs => {
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistrerBPSE", this.Individu.codeService, false).subscribe(obs => {
       console.log("prendBudgetEnregistrerBPSE", obs);
       if (obs.success) {
         let listeProjet = [];
@@ -573,7 +573,7 @@ export class BpElaborationComponent implements OnInit {
     let argument = [];
     for (let projet of this.Service.projetsChoisis) {
       let servRubr = {
-        refService: "6000",
+        refService: this.Individu.codeService,
         idProjet: projet.idProjet,
         servRubrValeur: []
       }
@@ -618,7 +618,7 @@ export class BpElaborationComponent implements OnInit {
    */
   marqueFinitionBudget(){
     let that = this;
-    let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE","6000",false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("validerBudgetServiceBPSE",this.Individu.codeService,false).subscribe(obs=>{
       that.fermeChargement();
       if(obs.success){
         that.toast.success("Vous avez marqué votre plan budgétaire comme étant valide");
@@ -630,7 +630,7 @@ export class BpElaborationComponent implements OnInit {
   chargerBudgetServiceOuSe(){
     this.SE.projetsChoisis = [];
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", "6000", false).subscribe(obs => {
+    let observ = this.budgetService.budgetTopic("prendBudgetEnregistreSEOuServiceBPSE", this.Individu.codeService, false).subscribe(obs => {
       console.log("prendBudgetEnregistreSEOuServiceBPSE", obs);
       if (obs.success) {
         let htmlAChanger = [];
@@ -683,7 +683,7 @@ export class BpElaborationComponent implements OnInit {
     let argument = [];
     for (let projet of this.SE.projetsChoisis) {
       let servRubr = {
-        refService: "6000",
+        refService: this.Individu.codeService,
         idProjet: projet.idProjet,
         servRubrValeur: []
       }
@@ -726,7 +726,7 @@ export class BpElaborationComponent implements OnInit {
   chargerBudgetServiceEtSe() {
     this.afficheChargement();
     let that = this;
-    let observ = this.budgetService.budgetTopic("prendBudgetServiceEtSEBPSE","6000",false).subscribe(obs=>{
+    let observ = this.budgetService.budgetTopic("prendBudgetServiceEtSEBPSE",this.Validation.refService,false).subscribe(obs=>{
       console.log("prendBudgetServiceEtSEBPSE",obs);
       if(obs.success){
         let liste = [];
@@ -791,7 +791,7 @@ export class BpElaborationComponent implements OnInit {
   validerBudgetServiceOuSE(){
     this.afficheChargement();
     let argument = {
-      refService: "6000",
+      refService: this.Validation.refService,
       seEstValide: 0
     };
     if(this.Validation.budgetChoisi == "se"){

@@ -28,6 +28,7 @@
 
 		<!-- CONTENU -->
 		<div class="row" style="padding: 10px;">
+
 			<!-- ENTREE -->
 			<div *ngIf="Menu.sousMenu == 'art_entree'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Saisie bon d'entrée depuis un TEF</h6>
@@ -95,6 +96,7 @@
 				</table>
 				<button (click)="validerEntree()" class="btn btn-info">Valider</button>
 			</div>
+
 			<!-- DETENTION -->
 			<div *ngIf="Menu.sousMenu == 'detention'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Etablissement d'une fiche de détention</h6>
@@ -159,6 +161,7 @@
 				</table>
 				<button (click)="validerDetention()" class="btn" [ngClass]="{'btn-info': Det.listeCodeArt.length > 0 && Det.refService > 0 && Det.refIndividu.length > 7}">Valider la détention</button>
 			</div>
+
 			<!-- CESSION -->
 			<div *ngIf="Menu.sousMenu == 'cession'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Etablissement des articles hors services ou non utiles</h6>
@@ -199,6 +202,7 @@
 				</table>
 				<button (click)="validerCession()" class="btn" [ngClass]="{'btn-info': Cess.listeDetService.length > 0}">Valider</button>
 			</div>
+			
 		</div>
 	</div>
 

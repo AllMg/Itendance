@@ -19,6 +19,9 @@
         <li class="menu1-active">
           <span>SUIVI</span>
         </li>
+        <li>
+          <span (click)="clickInMenu1('bp-document')">DOCUMENT</span>
+        </li>
       </ul>
     </div>
 
@@ -32,6 +35,9 @@
         </li>
         <li (click)="clickSousMenu('rliste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'rliste'}">
           <span>REMANIEMENTS</span>
+        </li>
+        <li (click)="clickSousMenu('tef')" [ngClass]="{'menu1-active': Menu.sousMenu == 'tef'}">
+          <span>TEF</span>
         </li>
       </ul>
     </div>
@@ -280,19 +286,19 @@
           <div class="col-md-4">
             <div class="form-group">
               <label>Date</label>
-              <input [(ngModel)]="RListe.filtre.date" type="date" class="form-control">
+              <input [(ngModel)]="RListe.filtre.dateRemaniement" (ngModelChange)="filtreRemaniementChange()" type="date" class="form-control">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label>Code Projet</label>
-              <input [(ngModel)]="RListe.filtre.codeProjet" type="text" class="form-control" placeholder="Code Projet">
+              <input [(ngModel)]="RListe.filtre.codeProjet" (ngModelChange)="filtreRemaniementChange()" type="text" class="form-control" placeholder="Code Projet">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label>Compte</label>
-              <input [(ngModel)]="RListe.filtre.compte" type="text" class="form-control" placeholder="N° Compte">
+              <input [(ngModel)]="RListe.filtre.numeroCompte" (ngModelChange)="filtreRemaniementChange()" type="text" class="form-control" placeholder="N° Compte">
             </div>
           </div>
         </div>
@@ -311,27 +317,38 @@
           </thead>
           <tbody>
             <tr *ngFor="let r of RListe.liste">
-              <td>{{avoirDateSlash(r.dateOperation)}}</td>
-              <td>{{avoirDateSlash(r.codeProjet)}}</td>
-              <td>{{avoirDateSlash(r.rubriqueSource)}}</td>
-              <td>{{avoirDateSlash(r.rubriqueDest)}}</td>
-              <td>{{avoirDateSlash(r.valeurRemanier)}}</td>
-              <td>{{avoirDateSlash(r.refServiceSource)}}</td>
-              <td>{{avoirDateSlash(r.refServiceDest)}}</td>
+              <td>{{avoirDateSlash(r.remaniement.dateOperation)}}</td>
+              <td>{{r.projet.codeProjet}}</td>
+              <td>{{r.remaniement.rubriqueSource}}</td>
+              <td>{{r.remaniement.rubriqueDest}}</td>
+              <td>{{r.remaniement.valeurRemanier | number:'1.2-2':'fr'}}</td>
+              <td>{{r.remaniement.refServiceSource}}</td>
+              <td>{{r.remaniement.refServiceDest}}</td>
             </tr>
           </tbody>
         </table>
+				<div *ngIf="RListe.chargeListe" class="loader"></div>
+				<div *ngIf="RListe.liste.length == 0 && !RListe.chargeListe" style="text-align: center;">Pas de résultat</div>
+				<nav *ngIf="RListe.liste.length > 0 && RListe.chargeListe == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="RListe.page > 1" (click)="pagePrecedentR()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{RListe.page}}</span></li>
+				    <li *ngIf="RListe.liste.length == RListe.ligneMax" (click)="pageSuivantR()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
       </div>
 
       <!-- SAISIE REMANIEMENT -->
       <div [ngClass]="{'invisible': Menu.sousMenu != 'rsaisie'}" class="col-md-12">
-        <h6 style="text-transform: uppercase;">OPERATION DE REMANIEMENT</h6>
+        <h6 style="text-transform: uppercase;">OPERATION DE REMANIEMENT DANS LE BUDGET DE L'EXERCICE {{RSaisie.exercice}}</h6>
         <hr>
         <div class="form-group">
           <label>Projet</label>
-          <select [(ngModel)]="RSaisie.champ.idProjet" (change)="projetChange()" class="form-control custom-select">
-            <option *ngFor="let pr of RSaisie.listeProjetCourant" value="{{pr.idProjet}}">{{pr.codeProjet}}</option>
-          </select>
+          <ngx-select [(ngModel)]="RSaisie.champ.idProjet" (ngModelChange)="projetChange()" [items]="RSaisie.listeProjetCourant" style="width: 100%;"></ngx-select>
         </div>
         <div class="form-group">
           <label>Service demandeur</label>
@@ -392,6 +409,53 @@
         <hr>
         <button *ngIf="!RSaisie.charge" (click)="effectuerRemaniement()" class="btn btn-info">Effectuer l'opération</button>
         <div *ngIf="RSaisie.charge" class="loader"></div>
+      </div>
+
+      <!-- TEF -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'tef'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Liste des Titres d'engagement financier</h6>
+        <hr>
+        <div class="form-group">
+          <label>Année</label>
+          <input [(ngModel)]="Tef.filtre.annee" (ngModelChange)="filtreTefChange()" min="1940" type="number" class="form-control">
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>TEF</th>
+              <th>Montant</th>
+              <th>Rubrique</th>
+              <th>Projet</th>
+              <th>Service</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of Tef.liste">
+              <td>{{avoirDateSlash(t.dateEtat)}}</td>
+              <td>{{t.numTef}}</td>
+              <td>{{t.montant | number:'1.2-2':'fr'}}</td>
+              <td>{{t.idRubrique}}</td>
+              <td>{{t.codeProjet}}</td>
+              <td>{{t.codeService}}</td>
+              <td>{{t.statut}}</td>
+            </tr>
+          </tbody>
+        </table>
+				<div *ngIf="Tef.chargeListe" class="loader"></div>
+				<div *ngIf="Tef.liste.length == 0 && !Tef.chargeListe" style="text-align: center;">Pas de résultat</div>
+				<nav *ngIf="Tef.liste.length > 0 && Tef.chargeListe == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Tef.page > 1" (click)="pagePrecedentTef()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Tef.page}}</span></li>
+				    <li *ngIf="Tef.liste.length == Tef.ligneMax" (click)="pageSuivantTef()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
       </div>
 
     </div>

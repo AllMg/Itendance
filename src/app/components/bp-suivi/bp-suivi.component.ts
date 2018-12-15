@@ -40,7 +40,7 @@ export class BpSuiviComponent implements OnInit {
     donneeExiste: false,
     ngxService: [],
     filtre: {
-      refService: "4050",
+      refService: "",
       anneeProjet: 1940
     },
     visibleFCT: false,
@@ -61,13 +61,15 @@ export class BpSuiviComponent implements OnInit {
     liste: [],
     page: 1,
     filtre: {
-      date: null,
+      dateRemaniement: null,
       codeProjet: "",
-      compte: ""
-    }
+      numeroCompte: ""
+    },
+    chargeListe: false
   };
 
   RSaisie = {
+    exercice: null,
     utiliseClass: false,
     rubrDestControl: new FormControl(),
     rubrSourceControl: new FormControl(),
@@ -90,6 +92,17 @@ export class BpSuiviComponent implements OnInit {
     chargeSugg: false
   };
 
+  Tef = {
+    estVue: false,
+    page: 1,
+    ligneMax: 20,
+    liste: [],
+    filtre: {
+      annee: 1940,
+    },
+    chargeListe: false
+  };
+
   constructor(
     private router: Router,
     private toast: ToastrService,
@@ -99,9 +112,11 @@ export class BpSuiviComponent implements OnInit {
     let that = this;
     this.General.exercice = annee;
     this.Service.filtre.anneeProjet = annee;
+    this.RSaisie.exercice = annee;
+    this.Tef.filtre.annee = annee;
     this.RSaisie.rubrDestControl.valueChanges.subscribe(text => {
       text = text.toString().trim();
-      if (text.length > 0 && that.RSaisie.champ.idProjet > 0) {
+      if (text.length > 1 && that.RSaisie.champ.idProjet > 0) {
         let argument = {
           idProjet: that.RSaisie.champ.idProjet,
           refService: that.RSaisie.champ.refServiceDest,
@@ -121,7 +136,7 @@ export class BpSuiviComponent implements OnInit {
     });
     this.RSaisie.rubrSourceControl.valueChanges.subscribe(text => {
       text = text.toString().trim();
-      if (text.length > 0 && that.RSaisie.champ.idProjet > 0) {
+      if (text.length > 1 && that.RSaisie.champ.idProjet > 0) {
         let argument = {
           idProjet: that.RSaisie.champ.idProjet,
           refService: that.RSaisie.champ.refServiceSource,
@@ -144,6 +159,7 @@ export class BpSuiviComponent implements OnInit {
   ngOnInit() {
     let that = this;
     let observ = this.immoService.getAllRefDrhService().subscribe(obs => {
+      console.log("getAllRefDrhService",obs);
       if (obs.success) {
         obs.msg.sort((a, b) => {
           if (a.libelle > b.libelle) {
@@ -188,6 +204,12 @@ export class BpSuiviComponent implements OnInit {
       if (!this.RListe.estVue) {
         this.RListe.estVue = true;
         this.listeRemaniement();
+      }
+    }
+    else if(nom == "tef"){
+      if(!this.Tef.estVue){
+        this.Tef.estVue = true;
+        this.listeTef();
       }
     }
   }
@@ -500,22 +522,62 @@ export class BpSuiviComponent implements OnInit {
   }
 
   listeRemaniement() {
+    this.RListe.chargeListe = true;
     let that = this;
-    let observ = this.budgetService.budgetTopic("listeRemaniementBPSE", this.RListe.filtre, true).subscribe(obs => {
+    let argument = {
+      filtre: this.RListe.filtre,
+      pagination: this.RListe.page
+    };
+    let observ = this.budgetService.budgetTopic("listeRemaniementBPSE", argument, true).subscribe(obs => {
       console.log("listeRemaniementBPSE", obs);
-      if (obs.success) {
+      if (obs.success && obs.msg != null) {
         that.RListe.liste = obs.msg;
       }
+      else{
+        that.RListe.liste = [];
+      }
+      that.RListe.chargeListe = false;
       observ.unsubscribe();
     });
+  }
+
+  filtreRemaniementChange(){
+    this.RListe.page = 1;
+    this.listeRemaniement();
+  }
+
+  pagePrecedentR(){
+    if(!this.RListe.chargeListe){
+      if(this.RListe.page > 1){
+        this.RListe.page--;
+        this.listeRemaniement();
+      }
+    }
+  }
+
+  pageSuivantR(){
+    if(!this.RListe.chargeListe){
+      if(this.RListe.liste.length == this.RListe.ligneMax){
+        this.RListe.page++;
+        this.listeRemaniement();
+      }
+    }
   }
 
   saisieNouvRemaniement() {
     this.Menu.sousMenu = "rsaisie";
     let that = this;
     let observ = this.budgetService.budgetTopic("listeProjetCourantBPSE", "", false).subscribe(obs => {
+      console.log("listeProjetCourantBPSE",obs);
       if (obs.success) {
-        that.RSaisie.listeProjetCourant = obs.msg;
+        let liste = [];
+        for(let pr of obs.msg){
+          liste.push({
+            id: pr.idProjet,
+            text: pr.codeProjet
+          });
+        }
+        that.RSaisie.listeProjetCourant = liste;
       }
       observ.unsubscribe();
     });
@@ -647,34 +709,97 @@ export class BpSuiviComponent implements OnInit {
     });
   }
 
+  champRemaniementBon(argument){
+    if (this.prendResteBudgetSource() != null && this.prendResteBudgetSource() >= 0){
+      if(argument.refServiceSource.length > 0 && argument.refServiceDest.length > 0){
+        if(argument.rubriqueSource.length == 8 && argument.rubriqueDest.length == 8){
+          if(argument.valeurRemanier > 0){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   effectuerRemaniement() {
     let argument = {
       refServiceSource: this.RSaisie.champ.refServiceSource,
       rubriqueSource: this.RSaisie.champ.rubriqueSource.trim(),
       refServiceDest: this.RSaisie.champ.refServiceDest,
       rubriqueDest: this.RSaisie.champ.rubriqueDest.trim(),
-      valeurRemanier: Number(this.RSaisie.champ.valeurRemanier),
+      valeurRemanier: Number(this.RSaisie.champ.valeurRemanier.replace(/ /g, "")),
       projetId: Number(this.RSaisie.champ.idProjet)
     };
-    if (this.prendResteBudgetSource() != null
-      && this.prendResteBudgetSource() >= 0
-      && argument.valeurRemanier > 0
-      && argument.refServiceDest.length > 0
-      && argument.refServiceSource.length > 0
-      && argument.rubriqueDest.length == 8
-      && argument.rubriqueSource.length == 8) {
+    if (this.champRemaniementBon(argument)) {
       this.RSaisie.charge = true;
       let that = this;
       let observ = this.budgetService.budgetTopic("effectuerRemaniementBPSE", argument, true).subscribe(obs => {
         console.log("effectuerRemaniementBPSE", obs);
         if (obs.success) {
+          that.toast.success("Le remaniement est terminé");
           for (let attr in that.RSaisie.champ) {
-            that.RSaisie.champ[attr] = null;
+            if(attr == "idProjet"){
+              that.RSaisie.champ.idProjet = -1;
+            }
+            else{
+              that.RSaisie.champ[attr] = "";
+            }
           }
         }
         that.RSaisie.charge = false;
         observ.unsubscribe();
       });
+    }
+    else{
+      console.log("Erreur de valeur");
+    }
+  }
+
+  filtreTefChange(){
+    this.Tef.page = 1;
+    this.listeTef();
+  }
+
+  listeTef(){
+    this.Tef.chargeListe = true;
+    let that = this;
+    let argument = {
+      param: this.Tef.filtre.annee,
+      size: this.Tef.ligneMax,
+      page: this.Tef.page,
+      order: "desc",
+      orderBy: "dateEtat"
+    };
+    console.log("argument",argument);
+    let observ = this.budgetService.listeTEF(argument).subscribe(obs=>{
+      console.log("listeTEF",obs);
+      if(obs.success){
+        that.Tef.liste = obs.msg.list;
+      }
+      else{
+        that.toast.error(obs.msg);
+      }
+      that.Tef.chargeListe = false;
+      observ.unsubscribe();
+    });
+  }
+
+  pagePrecedentTef(){
+    if(!this.Tef.chargeListe){
+      if(this.Tef.page > 1){
+        this.Tef.page--;
+        this.listeTef();
+      }
+    }
+  }
+
+  pageSuivantTef(){
+    if(!this.Tef.chargeListe){
+      if(this.Tef.liste.length == this.Tef.ligneMax){
+        this.Tef.page++;
+        this.listeTef();
+      }
     }
   }
 

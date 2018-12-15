@@ -19,6 +19,9 @@
         <li (click)="clickInMenu1('bp-suivi')">
           <span>SUIVI</span>
         </li>
+        <li>
+          <span (click)="clickInMenu1('bp-document')">DOCUMENT</span>
+        </li>
       </ul>
     </div>
 
@@ -191,6 +194,7 @@
         </div>
         <!-- FIN DEPENSES TECHNIQUES -->
         <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget(false)" title="Enregistrer votre travail pour pouvoir l'éditer après" class="btn btn-info float-btn"><i class="fa fa-save"></i></button>
+        <p style="font-size: 13px; opacity: 0.8;">Une fois que vous êtes satisfait de votre budget, valider le pour que le Service SE puisse travailler dessus.</p>
         <button *ngIf="Service.projetsChoisis.length > 0" (click)="enregistrerBudget(true)" title="Valider votre budget pour que le Service SE puisse travailler dessus" class="btn btn-info">Valider le plan budgétaire</button>
       </div>
 

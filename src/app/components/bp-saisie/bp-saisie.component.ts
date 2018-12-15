@@ -483,4 +483,19 @@ export class BpSaisieComponent implements OnInit {
     return resultat;
   }
 
+  /* 
+  date: aaaa-mm-jj 
+  resultat: jj/mm/aaaa
+  */
+  avoirDateSlash(date) {
+    if (date == "" || date == null || date == undefined) {
+      return "";
+    }
+    else {
+      let strs = date.toString().split("-");
+      let resultat = strs[2] + "/" + strs[1] + "/" + strs[0];
+      return resultat;
+    }
+  }
+
 }
