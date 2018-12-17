@@ -39,12 +39,12 @@
 						<div class="input-group mb-3">
 							<input [(ngModel)]="Entree.numTef" type="text" class="form-control">
 							<div class="input-group-append">
-								<button (click)="chargerDepuisTEF()" class="btn btn-info">Charger</button>
+								<button (click)="chargerCodeArticleDepuisTEF()" class="btn btn-info">Charger</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div *ngIf="!Entree.tefExiste" class="row">
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>N° BE</label>
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 				</div>
-				<table class="table table-bordered">
+				<table *ngIf="!Entree.tefExiste" class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Désignation</th>
@@ -94,7 +94,63 @@
 						</tr>
 					</tbody>
 				</table>
-				<button (click)="validerEntree()" class="btn btn-info">Valider</button>
+				<button *ngIf="Entree.listeArticle.length > 0" (click)="verifierEntree()" class="btn btn-info">Valider</button>
+				<table *ngIf="Entree.tefExiste" class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Libellé</th>
+							<th>Code</th>
+							<th>Valeur</th>
+							<th>Imputation</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let art of Entree.listeCodeArticle">
+							<td>{{art.libelle}}</td>
+							<td>{{art.idCodeArt}}</td>
+							<td>{{art.prix | number:'1.2-2':'fr'}}</td>
+							<td>{{art.imputation}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- AJOUT CODE ARTICLE -->
+			<div *ngIf="Menu.sousMenu == 'code_article'" class="col-md-12">
+				<h6 style="text-transform: uppercase;">Précision de classe, nature et spécificité d'articles</h6>
+				<hr>
+				<label>Pour que la codification des articles s'effectue, il faut précisier sa Classe, sa Nature ainsi que sa Spécificité</label>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Désignation</th>
+							<th>Classe</th>
+							<th>Nature</th>
+							<th>Spécificité</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let art of Entree.listeNonPresent; let index = index">
+							<td>{{art.libelle}}</td>
+							<td>
+								<select [(ngModel)]="Entree.listeNonPresent[index].idClasseArt" name="select-classe-{{index}}" class="form-control custom-select">
+									<option *ngFor="let c of Entree.listeClasse" value="{{c.idClasseArt}}">{{c.libelle}}</option>
+								</select>
+							</td>
+							<td>
+								<select [(ngModel)]="Entree.listeNonPresent[index].idNatureArt" name="select-nature-{{index}}" class="form-control custom-select">
+									<option *ngFor="let n of Entree.listeNature" value="{{n.idNatureArt}}">{{n.libelle}}</option>
+								</select>
+							</td>
+							<td>
+								<select [(ngModel)]="Entree.listeNonPresent[index].idSpeArt" name="select-spe-{{index}}" class="form-control custom-select">
+									<option *ngFor="let s of Entree.listeSpecificite" value="{{s.idSpeArt}}">{{s.libelle}}</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button (click)="validerClaNatSpe()" class="btn btn-info">Valider</button>
 			</div>
 
 			<!-- DETENTION -->

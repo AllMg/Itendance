@@ -26,10 +26,18 @@ export class ImmoMvtComponent implements OnInit {
 	Entree = {
 		numTef: null,
 		numBE: null,
+		numBC: null,
 		magasin: null,
 		imputation: null,
 		dateEntree: null,
-		listeArticle: []
+		fournisseur: null,
+		listeArticle: [],
+		listeNonPresent: null,
+		listeClasse: [],
+		listeNature: [],
+		listeSpecificite: [],
+		tefExiste: false,
+		listeCodeArticle: []
 	};
 
 	Det = {
@@ -273,20 +281,44 @@ export class ImmoMvtComponent implements OnInit {
 		}
 	}
 
-	chargerDepuisTEF(){
-		this.afficheChargement();
+	chargerCodeArticleDepuisTEF() {
+		if (this.Entree.numTef != null) {
+			this.afficheChargement();
+			this.Entree.numTef = this.Entree.numTef.trim();
+			this.Entree.listeCodeArticle = [];
+			this.Entree.tefExiste = false;
+			let that = this;
+			let observ = this.immoService.immoTopic("chargerCodeArticleDepuisTEFInt", this.Entree.numTef, false).subscribe(obs => {
+				console.log("chargerCodeArticleDepuisTEFInt", obs);
+				observ.unsubscribe();
+				if (obs.success && obs.msg != null && obs.msg.length > 0) {
+					that.Entree.listeCodeArticle = obs.msg;
+					that.Entree.tefExiste = true;
+					that.fermeChargement();
+				}
+				else {
+					that.chargerDepuisTEF();
+				}
+			});
+		}
+	}
+
+	chargerDepuisTEF() {
 		this.Entree.listeArticle = [];
 		this.Entree.numTef = this.Entree.numTef.trim();
 		let that = this;
-		let observ = this.immoService.findByNumTefEntreeDetailsAprro(this.Entree.numTef).subscribe(obs=>{
-			console.log("findByNumTefEntreeDetailsAprro",obs);
-			if(obs.success && obs.msg != null){
+		let observ = this.immoService.findByNumTefEntreeDetailsAprro(this.Entree.numTef).subscribe(obs => {
+			console.log("findByNumTefEntreeDetailsAprro", obs);
+			if (obs.success && obs.msg != null && obs.msg.length > 0) {
 				that.Entree.numBE = obs.msg[0].numBe;
+				that.Entree.numBC = obs.msg[0].numBc;
 				that.Entree.magasin = obs.msg[0].libelleMagasin;
 				that.Entree.dateEntree = that.avoirDateSlash(obs.msg[0].dateInsert);
-				for(let art of obs.msg){
+				for (let art of obs.msg) {
 					that.Entree.listeArticle.push({
-						libelle: art.designation,
+						refArticle: null,
+						codeArticle: null,
+						libelle: art.designation.trim().toUpperCase(),
 						prixUnitaire: art.prixUnitaire,
 						colisage: art.descriptionUnite,
 						quantite: art.qte,
@@ -295,27 +327,140 @@ export class ImmoMvtComponent implements OnInit {
 					});
 				}
 				observ.unsubscribe();
-				observ = that.immoService.findByNumTefTefAprro(that.Entree.numTef).subscribe(obs2=>{
-					console.log("findByNumTefTefAprro",obs2);
-					if(obs2.success && obs2.msg != null){
-						that.Entree.imputation = obs2.msg.idRubrique;
-					}
+				observ = that.immoService.findByNumTefTefAprro(that.Entree.numTef).subscribe(obs2 => {
+					console.log("findByNumTefTefAprro", obs2);
 					observ.unsubscribe();
+					if (obs2.success && obs2.msg != null) {
+						that.Entree.imputation = obs2.msg.idRubrique;
+						observ = that.immoService.findtiersbytrcnaps(that.Entree.numTef).subscribe(obs3 => {
+							console.log("findtiersbytrcnaps", obs3);
+							if (obs3.success && obs.msg != null) {
+								that.Entree.fournisseur = obs.msg.trnomr;
+							}
+							observ.unsubscribe();
+						});
+					}
 					that.fermeChargement();
 				});
 			}
-			else{
+			else {
 				that.fermeChargement();
 			}
 		});
 	}
 
-	clickAmortissable(index){
+	clickAmortissable(index) {
 		this.Entree.listeArticle[index] = !this.Entree.listeArticle[index];
 	}
 
-	validerEntree(){
+	verifierEntree() {
+		if (this.Entree.imputation.length > 0) {
+			this.afficheChargement();
+			let listeLibelle = [];
+			for (let art of this.Entree.listeArticle) {
+				if (!art.amortissable) {
+					listeLibelle.push(art.libelle);
+				}
+			}
+			let that = this;
+			let observ = this.immoService.immoTopic("prendArticlesParLibelleInt", listeLibelle, true).subscribe(obs => {
+				console.log("prendArticlesParLibelleInt", obs);
+				observ.unsubscribe();
+				if (obs.success) {
+					let articleNonPresent = [];
+					for (let art of obs.msg) {
+						for (let artE of that.Entree.listeArticle) {
+							if (artE.libelle == art.libelle) {
+								artE.refArticle = art.idArticle;
+								artE.codeArticle = art.codeArticle;
+							}
+						}
+						if (art.codeArticle == "" || art.codeArticle == null) {
+							articleNonPresent.push({
+								libelle: art.libelle,
+								idClasseArt: -1,
+								idNatureArt: -1,
+								idSpeArt: -1
+							});
+						}
+					}
+					if (articleNonPresent.length > 0) {
+						observ = that.immoService.immoTopic("listeUtilesArtInt", "", false).subscribe(obs => {
+							if (obs.success) {
+								that.Entree.listeClasse = obs.msg.classeArt;
+								that.Entree.listeNature = obs.msg.natureArt;
+								that.Entree.listeSpecificite = obs.msg.specArt
+							}
+						});
+						that.Entree.listeNonPresent = articleNonPresent;
+						that.Menu.sousMenu = "code_article";
+						that.fermeChargement();
+					}
+					else {
+						that.validerEntree();
+					}
+				}
+				else {
+					that.fermeChargement();
+				}
+			});
+		}
+	}
 
+	validerClaNatSpe() {
+		let estBon = true;
+		for (let art of this.Entree.listeNonPresent) {
+			if (art.idClasseArt <= 1 || art.idNatureArt <= 1 || art.idSpeArt <= 1) {
+				estBon = false;
+				break;
+			}
+		}
+		if (estBon) {
+			this.afficheChargement();
+			let that = this;
+			let observ = this.immoService.immoTopic("modifierClaNatSpeArtInt", this.Entree.listeNonPresent, true).subscribe(obs => {
+				console.log("modifierClaNatSpeArtInt", obs);
+				observ.unsubscribe();
+				if (obs.success) {
+					for (let art of obs.msg) {
+						for (let artE of that.Entree.listeArticle) {
+							if (artE.libelle == art.libelle) {
+								artE.codeArticle = art.codeArticle;
+							}
+						}
+					}
+					that.validerEntree();
+				}
+			});
+		}
+		else {
+			this.toast.error("Veuillez préciser tous les valeurs");
+		}
+	}
+
+	validerEntree() {
+		let argument = {
+			tef: this.Entree.numTef,
+			fournisseur: this.Entree.fournisseur,
+			imputation: this.Entree.imputation,
+			magasin: this.Entree.magasin,
+			numCmd: this.Entree.numBC,
+			listeArticle: this.Entree.listeArticle
+		};
+		let that = this;
+		let observ = this.immoService.immoTopic("insererBonEntreeInt", argument, true).subscribe(obs => {
+			console.log("insererBonEntreeInt", obs);
+			observ.unsubscribe();
+			if (obs.success) {
+				that.Entree.listeArticle = [];
+				that.Entree.listeCodeArticle = obs.msg;
+				that.Entree.tefExiste = true;
+			}
+			else {
+				that.toast.error(obs.msg);
+			}
+			that.fermeChargement();
+		});
 	}
 
 	afficheChargement() {
@@ -335,15 +480,15 @@ export class ImmoMvtComponent implements OnInit {
 	date: aaaa-mm-jj 
 	resultat: jj/mm/aaaa
 	*/
-	avoirDateSlash(date){
-	  if(date == "" || date == null || date == undefined){
-		return "";
-	  }
-	  else{
-		let strs = date.toString().split("-");
-		let resultat = strs[2]+"/"+strs[1]+"/"+strs[0];
-		return resultat;
-	  }
+	avoirDateSlash(date) {
+		if (date == "" || date == null || date == undefined) {
+			return "";
+		}
+		else {
+			let strs = date.toString().split("-");
+			let resultat = strs[2] + "/" + strs[1] + "/" + strs[0];
+			return resultat;
+		}
 	}
 
 }
