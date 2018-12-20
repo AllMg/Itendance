@@ -103,6 +103,21 @@ export class BpSuiviComponent implements OnInit {
     chargeListe: false
   };
 
+  Mvt = {
+    estVue: false,
+    ligneMax: 25,
+    liste: [],
+    page: 1,
+    typeFiltre: "normal",
+    filtre: {
+      date: null,
+      dateDebut: null,
+      dateFin: null,
+      numeroCompte: ""
+    },
+    chargeListe: false
+  };
+
   constructor(
     private router: Router,
     private toast: ToastrService,
@@ -799,6 +814,63 @@ export class BpSuiviComponent implements OnInit {
       if(this.Tef.liste.length == this.Tef.ligneMax){
         this.Tef.page++;
         this.listeTef();
+      }
+    }
+  }
+
+  filtreMvtChange(){
+    if(this.Mvt.typeFiltre == 'normal'){
+      this.Mvt.page = 1;
+      this.listeTef();
+    }
+    else{
+      if(this.Mvt.filtre.dateDebut != null && this.Mvt.filtre.dateFin != null){
+        this.Mvt.page = 1;
+        this.listeTef();
+      }
+    }
+  }
+
+  listeMvt(){
+    this.Mvt.chargeListe = true;
+    let that = this;
+    let argument = {
+      numeroCompte: this.Mvt.filtre.numeroCompte
+    };
+    if(this.Mvt.typeFiltre == "normal"){
+      argument["date"] = this.Mvt.filtre.date;
+    }
+    else{
+      argument["dateDebut"] = this.Mvt.filtre.dateDebut;
+      argument["dateFin"] = this.Mvt.filtre.dateFin;
+    }
+    let observ = this.budgetService.budgetTopic("listeMouvementBudgetBPSE",argument,true).subscribe(obs=>{
+      console.log("listeMouvementBudgetBPSE",obs);
+      if(obs.success){
+        that.Mvt.liste = obs.msg;
+      }
+      else{
+        that.toast.error(obs.msg);
+      }
+      that.Mvt.chargeListe = false;
+      observ.unsubscribe();
+    });
+  }
+
+  pagePrecedentMvt(){
+    if(!this.Mvt.chargeListe){
+      if(this.Mvt.page > 1){
+        this.Mvt.page--;
+        this.listeMvt();
+      }
+    }
+  }
+
+  pageSuivantMvt(){
+    if(!this.Mvt.chargeListe){
+      if(this.Mvt.liste.length == this.Mvt.ligneMax){
+        this.Mvt.page++;
+        this.listeMvt();
       }
     }
   }

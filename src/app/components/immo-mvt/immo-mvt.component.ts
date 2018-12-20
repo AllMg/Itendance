@@ -350,7 +350,25 @@ export class ImmoMvtComponent implements OnInit {
 	}
 
 	clickAmortissable(index) {
-		this.Entree.listeArticle[index] = !this.Entree.listeArticle[index];
+		this.Entree.listeArticle[index].amortissable = !this.Entree.listeArticle[index].amortissable;
+		let nbNonAmort = 0;
+		for(let art of this.Entree.listeArticle){
+			if(!art.amortissable){
+				nbNonAmort++;
+			}
+		}
+		let plus = 0;
+		for(let art of this.Entree.listeArticle){
+			if(art.amortissable){
+				plus += art.prixUnitaire / nbNonAmort;
+				art.coutUnitaire = 0;
+			}
+		}
+		for(let art of this.Entree.listeArticle){
+			if(!art.amortissable){
+				art.coutUnitaire = art.prixUnitaire + plus;
+			}
+		}
 	}
 
 	verifierEntree() {

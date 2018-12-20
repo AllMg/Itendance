@@ -33,6 +33,9 @@
         <li (click)="clickSousMenu('service')" [ngClass]="{'menu1-active': Menu.sousMenu == 'service'}">
           <span>BUDGET ANNUEL PAR SERVICE</span>
         </li>
+        <li (click)="clickSousMenu('mvt')" [ngClass]="{'menu1-active': Menu.sousMenu == 'mvt'}">
+          <span>MOUVEMENTS</span>
+        </li>
         <li (click)="clickSousMenu('rliste')" [ngClass]="{'menu1-active': Menu.sousMenu == 'rliste'}">
           <span>REMANIEMENTS</span>
         </li>
@@ -276,6 +279,80 @@
           </tbody>
           <!-- FIN DEPENSES -->
         </table>
+      </div>
+
+      <!-- MOUVEMENT -->
+      <div [ngClass]="{'invisible': Menu.sousMenu != 'mvt'}" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Mouvement de budget</h6>
+        <hr>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label>Filtre</label>
+            <select [(ngModel)]="Mvt.typeFiltre" class="form-control custom-select">
+              <option value="normal">NORMAL</option>
+              <option value="interval">INTERVAL DE DATE</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label>Catégorie</label>
+            <select [(ngModel)]="Mvt.filtre.numeroCompte" (change)="filtreMvtChange()" class="form-control custom-select">
+              <option value="">TOUT</option>
+              <option value="6">FONCTIONNEMENT</option>
+              <option value="2">INVESTISSEMENT</option>
+            </select>
+          </div>
+          <div *ngIf="Mvt.typeFiltre == 'normal'" class="col-md-4 form-group">
+            <label>Date</label>
+            <input [(ngModel)]="Mvt.filtre.date" (ngModelChange)="filtreMvtChange()" type="date" class="form-control">
+          </div>
+          <div *ngIf="Mvt.typeFiltre == 'interval'" class="col-md-6 form-group">
+            <label>Date début</label>
+            <input [(ngModel)]="Mvt.filtre.dateDebut" (ngModelChange)="filtreMvtChange()" type="date" class="form-control">
+          </div>
+          <div *ngIf="Mvt.typeFiltre == 'interval'" class="col-md-6 form-group">
+            <label>Date fin</label>
+            <input [(ngModel)]="Mvt.filtre.dateFin" (ngModelChange)="filtreMvtChange()" type="date" class="form-control">
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>N° TEF</th>
+              <th>N° Compte</th>
+              <th>Montant</th>
+              <th>Type</th>
+              <th>Montant Av.</th>
+              <th>Montant Ap.</th>
+              <th>Service</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of Mvt.liste">
+              <td>{{avoirDateSlash(m.dateMvtBudget)}}</td>
+              <td>{{m.numTef}}</td>
+              <td>{{m.numeroCompte}}</td>
+              <td style="text-align: right;">{{m.valeurUtilise | number:'1.2-2':'fr'}}</td>
+              <td>{{m.sensMvtBudget}}</td>
+              <td style="text-align: right;">{{m.valeurAvant | number:'1.2-2':'fr'}}</td>
+              <td style="text-align: right;">{{m.valeurApres | number:'1.2-2':'fr'}}</td>
+              <td>{{m.refService}}</td>
+            </tr>
+          </tbody>
+        </table>
+				<div *ngIf="Mvt.chargeListe" class="loader"></div>
+				<div *ngIf="Mvt.liste.length == 0 && !Mvt.chargeListe" style="text-align: center;">Pas de résultat</div>
+				<nav *ngIf="Mvt.liste.length > 0 && Mvt.chargeListe == false" aria-label="Page navigation example">
+				  <ul class="pagination justify-content-center">
+				    <li *ngIf="Mvt.page > 1" (click)="pagePrecedentMvt()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-left"></i></button>
+				    </li>
+				    <li class="page-item disabled"><span class="page-link">Page {{Mvt.page}}</span></li>
+				    <li *ngIf="Mvt.liste.length == Mvt.ligneMax" (click)="pageSuivantMvt()" class="page-item">
+				      <button class="page-link"><i class="fa fa-angle-double-right"></i></button>
+				    </li>
+				  </ul>
+				</nav>
       </div>
 
       <!-- LISTE DES REMANIEMENTS -->

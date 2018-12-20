@@ -70,6 +70,7 @@ export class BpElaborationComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("BpElaborationComponent");
     this.initIndividu();
     this.calculAngleSepare();
   }
@@ -78,7 +79,7 @@ export class BpElaborationComponent implements OnInit {
     let utilisateur = JSON.parse(localStorage.getItem('user'));
     let that = this;
     let observ = this.budgetService.getServiceDirection(utilisateur.id_acces).subscribe(obs => {
-      console.log("Utilisateur", obs);
+      console.log("getServiceDirection", obs);
       if (obs.success && obs.msg.length > 0) {
         that.Individu.idIndividu = utilisateur.id_acces;
         that.Individu.codeService = obs.msg[0].code_service.code_service;
