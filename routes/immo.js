@@ -29,7 +29,7 @@ router.post('/immoTopic',function(req,res){
   });
 });
 
-router.post('/listeTypeEntrBatInt',function(req,res){
+/*router.post('/listeTypeEntrBatInt',function(req,res){
   const argument = req.body.data;
   const topicLogReq = "listeTypeEntrBatIntreq";
   const topicLogRes = "listeTypeEntrBatIntres";
@@ -187,7 +187,7 @@ router.post('/listeArticleInt',function(req,res){
       });
     }
   });
-});
+});*/
 
 router.post('/getAllRefDrhService',function(req,res){
   const argument = req.body.data;
@@ -217,6 +217,86 @@ router.post('/getByIdRefDrhService',function(req,res){
     if(err){
       res.json({
         sucess: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/ajouttravailleur',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "ajouttravailleurreq";
+  const topicLogRes = "ajouttravailleurres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(argument), function(err,data){
+    if(err){
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/findByNumTefEntreeDetailsAprro',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "findByNumTefEntreeDetailsAprroReq";
+  const topicLogRes = "findByNumTefEntreeDetailsAprroRes";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, argument, function(err,data){
+    if(err){
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/findByNumTefTefAprro',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "findByNumTefTefAprroReq";
+  const topicLogRes = "findByNumTefTefAprroRes";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(argument), function(err,data){
+    if(err){
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+    else {
+      res.json({
+        success: !err,
+        msg: data
+      });
+    }
+  });
+});
+
+router.post('/findtiersbytrcnaps',function(req,res){
+  const argument = req.body.data;
+  const topicLogReq = "findtiersbytrcnapsReq";
+  const topicLogRes = "findtiersbytrcnapsRes";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(argument), function(err,data){
+    if(err){
+      res.json({
+        success: !err,
         msg: data
       });
     }

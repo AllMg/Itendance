@@ -10,7 +10,7 @@
 		<div class="conteneur-de-menu">
 			<ul class="menu1">
 				<li (click)="clickInMenu1('immo-dmd')"><span>DEMANDE</span></li>
-				<li class="menu1-active"><span>LISTE</span></li>
+				<li class="menu1-active"><span>LISTE DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
 				<li (click)="clickInMenu1('immo-mvt')"><span>MOUVEMENT</span></li>
 				<li (click)="clickInMenu1('immo-inventaire')"><span>INVENTAIRE</span></li>
@@ -27,8 +27,9 @@
 		<!-- FIN MENU -->
 
 		<!-- LISTE -->
-		<!-- LISTE DMD MOB !-->
 		<div class="row" style="padding: 10px;">
+
+				<!-- LISTE DMD MOB -->
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_mob'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes de mobilier</h6>
 				<hr>
@@ -93,6 +94,8 @@
 				  </ul>
 				</nav>
 			</div>
+
+			<!-- LISTE DMD REP MOB -->
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_rep_mob'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes de réparation de mobilier</h6>
 				<hr>
@@ -165,6 +168,8 @@
 				  </ul>
 				</nav>
 			</div>
+
+			<!-- LISTE DMD ENTR BAT -->
 			<div *ngIf="Menu.sousMenu == 'liste_dmd_bat'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des demandes d'entretient de batiment</h6>
 				<hr>
@@ -186,9 +191,7 @@
 					<div class="col-md-3">
 						<div class="form-group">
 							<label>Site</label><br>
-							<select [(ngModel)]="DmdBat.filtre.refSite" (change)="filtreChange('DmdBat')" class="form-control custom-select">
-								<option>SITE</option>
-							</select>
+							<ngx-select [(ngModel)]="DmdBat.filtre.refSite" (typed)="ngxTexteSiteChange($event)" (ngModelChange)="filtreChange('DmdBat')" style="width: 100%;"></ngx-select>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -265,6 +268,7 @@
 				  </ul>
 				</nav>
 			</div>
+			
 		</div>
 	</div>
 
@@ -323,6 +327,7 @@
 	    </div>
 	  </div>
 	</div>
+
 	<!-- MODAL DETAIL DEMANDE REPARATION MOBILIER -->
 	<div #modalDetailRepMob class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div *ngIf="DmdRepMob.liste[DmdRepMob.indice] != undefined" class="modal-dialog modal-lg" role="document">
@@ -363,6 +368,7 @@
 	    </div>
 	  </div>
 	</div>
+	
 	<!-- MODAL DETAIL DEMANDE ENTRETIENT BATIMENT -->
 	<div #modalDetailBat class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
 	  <div *ngIf="DmdBat.liste[DmdBat.indice] != undefined" class="modal-dialog modal-lg" role="document">
@@ -387,7 +393,7 @@
 			</div>
 			<div class="form-group">
 				<label>Site</label>
-				<input value="{{DmdBat.liste[DmdBat.indice].refSite}}" type="text" class="form-control" readonly="true">
+				<input value="{{DmdBat.liste[DmdBat.indice].localisation}}" type="text" class="form-control" readonly="true">
 			</div>
 			<div class="form-group">
 				<label>Type d'entretient</label>

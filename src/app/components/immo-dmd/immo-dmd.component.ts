@@ -17,6 +17,7 @@ export class ImmoDmdComponent implements OnInit {
 
   @ViewChild('art_table') art_table:ElementRef;
   @ViewChild('modalAjoutSpe') modalAjoutSpe:ElementRef;
+	@ViewChild('modalAjoutSite') modalAjoutSite;
 
   Utilisateur:any;
 
@@ -63,7 +64,7 @@ export class ImmoDmdComponent implements OnInit {
     pieceNom: "Parcourir mon ordinateur",
     pieceFichier: [],
     loader: false,
-    listeSite: [],
+    ngxSite: [],
     listeType: [],
     listeCaract: [],
     listeEnum: []
@@ -78,6 +79,20 @@ export class ImmoDmdComponent implements OnInit {
     topic: "",
     valeur: ""
   };
+
+	Site = {
+		chargeModal: false,
+		provinces: [],
+		regions: [],
+		champ: {
+			idProv: "",
+			idReg: "",
+			libelleCommune: "",
+			libelleLoc: ""
+		},
+		fComControl: new FormControl(),
+		comOptions: []
+	};
 
   constructor(
     private router: Router, 
@@ -111,6 +126,26 @@ export class ImmoDmdComponent implements OnInit {
         });
       });
     });
+
+    this.Site.fComControl.valueChanges.subscribe(term => {
+			term = term.toString().trim();
+			if (term.length >= 3) {
+				let observ = that.immoService.immoTopic("rechercheCommuneInt", term, false).subscribe(obs => {
+					console.log("rechercheCommuneInt", obs);
+					if (obs.success) {
+						let liste = [];
+						for (let i = 0; i < obs.msg.length; i++) {
+							liste.push(obs.msg[i].libelle);
+						}
+						that.Site.comOptions = liste;
+					}
+					observ.unsubscribe();
+				});
+			}
+			else {
+				that.Site.comOptions = [];
+			}
+		});
   }
 
   ngOnInit() {
@@ -483,5 +518,91 @@ export class ImmoDmdComponent implements OnInit {
       this.toastr.error("La demande n'a pas de référence");
     }
   }
+
+	ouvreModalSite() {
+		$(this.modalAjoutSite.nativeElement).modal("show");
+		if (this.Site.provinces.length == 0) {
+			let that = this;
+			let observ = this.immoService.immoTopic("listeProvinceInt", "", false).subscribe(obs => {
+				if (obs.success) {
+					that.Site.provinces = obs.msg;
+				}
+				observ.unsubscribe();
+			});
+		}
+	}
+
+	ngxTexteSiteChange(texte: string) {
+		texte = texte.trim();
+		this.DmdEntrBat.ngxSite = [];
+		if (texte.length > 2) {
+			let that = this;
+			let observ = this.immoService.immoTopic("rechercheLocalisationInt", texte, false).subscribe(obs => {
+				console.log("rechercheLocalisationInt", obs);
+				if (obs.success) {
+					let liste = [];
+					for (let i = 0; i < obs.msg.length; i++) {
+						liste.push({ id: obs.msg[i].idLoc, text: obs.msg[i].libelle });
+					}
+					that.DmdEntrBat.ngxSite = liste;
+				}
+				observ.unsubscribe();
+			});
+		}
+	}
+
+	champSiteBon() {
+		this.Site.champ.libelleCommune = this.Site.champ.libelleCommune.trim();
+		this.Site.champ.libelleLoc = this.Site.champ.libelleLoc.trim();
+		if (this.Site.champ.idProv == "") {
+			return { estBon: false, msg: "Veuillez choisir une province" };
+		}
+		if (this.Site.champ.idReg == "") {
+			return { estBon: false, msg: "Veuillez choisir une région" };
+		}
+		if (this.Site.champ.libelleCommune == "") {
+			return { estBon: false, msg: "Commune invalide" };
+		}
+		if (this.Site.champ.libelleLoc == "") {
+			return { estBon: false, msg: "L'indication de la localisation est invalide" };
+		}
+		return { estBon: true, msg: null };
+	}
+
+	enregistreSite() {
+		let verif = this.champSiteBon();
+		if (!verif.estBon) {
+			this.toastr.error(verif.msg);
+		}
+		else {
+			this.Site.chargeModal = true;
+			let that = this;
+			let observ = this.immoService.immoTopic("ajoutLocalisationInt", this.Site.champ, true).subscribe(obs => {
+				console.log("ajoutLocalisationInt",obs);
+				if (obs.success) {
+					if (obs.msg != null) {
+						let nouvSite = obs.msg;
+						that.DmdEntrBat.ngxSite = [{ id: nouvSite.idLoc, text: nouvSite.libelle }];
+						that.DmdEntrBat.site = nouvSite.idLoc;
+						that.fermeModalSite();
+						that.Site.champ.libelleCommune = "";
+						that.Site.champ.libelleLoc = "";
+					}
+					else {
+						that.toastr.error("Erreur du serveur");
+					}
+				}
+				else {
+					that.toastr.error(obs.msg);
+				}
+				this.Site.chargeModal = false;
+				observ.unsubscribe();
+			});
+		}
+	}
+
+	fermeModalSite() {
+		$(this.modalAjoutSite.nativeElement).modal("hide");
+	}
 
 }

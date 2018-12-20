@@ -87,7 +87,7 @@ export class ImmoListeComponent implements OnInit {
       idEnumEntrBat: 0,
       date: null    
     },
-    listeSite: [],
+    ngxSite: [],
     listeEtat: [],
     listeType: [],
     listeCaract: [],
@@ -127,7 +127,6 @@ export class ImmoListeComponent implements OnInit {
     console.log("INIT IMMO LISTE");
     let that = this;
     let observ = this.immoService.immoTopic("listeEtatDmdMobInt", 1, false).subscribe(obs=>{
-    //let observ = this.immoService.listeEtatDmdMobInt().subscribe(obs=>{
       if(obs.success){
         that.DmdMob.listeEtat = obs.msg.listeEtatMob;
         that.DmdRepMob.listeEtat = obs.msg.listeEtatRepMob;
@@ -137,7 +136,6 @@ export class ImmoListeComponent implements OnInit {
     });
 
     let observ1 = this.immoService.immoTopic("listeUtilesDmdBatInt","",false).subscribe(obs=>{
-    //let observ1 = this.immoService.listeUtilesDmdBatInt().subscribe(obs=>{
       if(obs.success){
         that.DmdBat.listeEtat = obs.msg.etatBat;
         that.DmdBat.listeType = obs.msg.typeBat;
@@ -147,13 +145,6 @@ export class ImmoListeComponent implements OnInit {
       console.log("listeUtilesDmdBatInt",obs);
       observ1.unsubscribe();
     });
-  }
-
-  ngOnDestroy(){
-    console.log("DESTROYED IMMO LISTE");
-    this.DmdMob = null;
-    this.DmdRepMob = null;
-    this.DmdBat = null;
   }
 
   clickInMenu1(lien:string){
@@ -206,6 +197,25 @@ export class ImmoListeComponent implements OnInit {
       }
     }
   }
+
+	ngxTexteSiteChange(texte: string) {
+		texte = texte.trim();
+		this.DmdBat.ngxSite = [];
+		if (texte.length > 2) {
+			let that = this;
+			let observ = this.immoService.immoTopic("rechercheLocalisationInt", texte, false).subscribe(obs => {
+				console.log("rechercheLocalisationInt", obs);
+				if (obs.success) {
+					let liste = [];
+					for (let i = 0; i < obs.msg.length; i++) {
+						liste.push({ id: obs.msg[i].idLoc, text: obs.msg[i].libelle });
+					}
+					that.DmdBat.ngxSite = liste;
+				}
+				observ.unsubscribe();
+			});
+		}
+	}
 
   avoirEtatDmd(idEtatDmd, nomAttr){
     for(let i=0; i<this[nomAttr].listeEtat.length; i++){
@@ -351,6 +361,17 @@ export class ImmoListeComponent implements OnInit {
       }
       observ.unsubscribe();
     });
+    if(this.DmdBat.liste[indice].localisation == undefined){
+      this.DmdBat.liste[indice].localisation = "...";
+      let that = this;
+      let observ = this.immoService.immoTopic("detailsLocalisationInt",this.DmdBat.liste[indice].refSite,false).subscribe(obs=>{
+        console.log("detailsLocalisationInt",obs);
+        if(obs.success){
+          that.DmdBat.liste[indice].localisation = obs.msg.libelle;
+        }
+        observ.unsubscribe();
+      });
+    }
   }
 
   validerEtatDmdBat(){
