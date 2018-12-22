@@ -45,6 +45,46 @@ export class ImmoService {
       .map(res => res.json());
   }
 
+  ajouttravailleur(data){
+    let msg = {data: data};
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post(this.host + 'immo/ajouttravailleur', msg, {headers: headers})
+      .map(res => res.json());
+  }
+
+  findByNumTefEntreeDetailsAprro(numTEF){
+    let msg = {data: numTEF};
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post(this.host + 'immo/findByNumTefEntreeDetailsAprro', msg, {headers: headers})
+      .map(res => res.json());
+  }
+
+  findByNumTefTefAprro(numTEF){
+    let msg = {
+      data: {
+        numTef: numTEF
+      }
+    };
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post(this.host + 'immo/findByNumTefTefAprro', msg, {headers: headers})
+      .map(res => res.json());
+  }
+
+  findtiersbytrcnaps(trcnaps){
+    let msg = {
+      data: {
+        trcnaps: trcnaps
+      }
+    };
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post(this.host + 'immo/findtiersbytrcnaps', msg, {headers: headers})
+      .map(res => res.json());
+  }
+
   /*listeTypeEntrBatInt(){
     let msg = {data: ""};
     let headers = new Headers();

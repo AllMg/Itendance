@@ -1,0 +1,250 @@
+<app-banniere></app-banniere>
+<app-info-agents></app-info-agents>
+
+<div class="container-fluid">
+  <div class="col-sm-12 content_page">
+    <div class="row titre_page">
+      <h4>RAPPROCHEMENT BANCAIRE</h4>
+    </div>
+
+    <!-- MENU -->
+    <div class="conteneur-de-menu">
+      <ul class="menu1">
+        <li class="menu1-active">
+          <span>RECETTE</span>
+        </li>
+        <li>
+          <span (click)="clickInMenu1('rb-depense')">DEPENSE</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="conteneur-de-menu2">
+      <ul class="menu1">
+        <li (click)="clickSousMenu('import')" [ngClass]="{'menu1-active': Menu.sousMenu == 'import'}">
+          <span>IMPORT DE RELEVE</span>
+        </li>
+        <li (click)="clickSousMenu('manuel')" [ngClass]="{'menu1-active': (Menu.sousMenu == 'manuel' || Menu.sousMenu == 'ligne')}">
+          <span>TRAITEMENT MANUEL</span>
+        </li>
+      </ul>
+    </div>
+    <!-- FIN MENU -->
+
+    <!-- CONTENU -->
+    <div class="row" style="padding: 10px;">
+
+      <!-- IMPORT -->
+      <div *ngIf="Menu.sousMenu == 'import'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Import des données depuis le relevé électronique vers la base</h6>
+        <hr>
+        <div class="form-group">
+          <label>Fichier Excel</label>
+          <label for="fichier-excel" class="form-control" style="cursor: pointer;">{{Import.fichier}}</label>
+          <input (change)="fichierChange($event)" type="file" accept=".xls, .xlsx" style="display: none;" id="fichier-excel">
+        </div>
+        <div *ngIf="Import.liste.length > 0" class="row">
+          <div class="col-6">
+            <label>Nombre de ligne: <strong>{{Import.liste.length}}</strong></label>
+          </div>
+          <div class="col-6" style="text-align: right">
+            <button (click)="importerLesDonnees()" class="btn btn-info" style="margin-bottom: 10px;">Importer les
+              données</button>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Compte</th>
+              <th>Code</th>
+              <th>Date</th>
+              <th>Valeur</th>
+              <th>Libelle 1</th>
+              <th>Libelle 2</th>
+              <th>Montant</th>
+              <th>Référence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let l of Import.liste">
+              <td>{{l.Compte}}</td>
+              <td>{{l.Code}}</td>
+              <td>{{l.Date}}</td>
+              <td>{{l.Valeur}}</td>
+              <td>{{l.Libelle1}}</td>
+              <td>{{l.Libelle2}}</td>
+              <td style="text-align: right;">{{l.Montant | number:'1.2-2':'fr'}}</td>
+              <td>{{l.Ref}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="Import.liste.length > 0" class="row">
+          <div class="col-6">
+            <label>Nombre de ligne: <strong>{{Import.liste.length}}</strong></label>
+          </div>
+          <div class="col-6" style="text-align: right">
+            <button (click)="importerLesDonnees()" class="btn btn-info">Importer les données</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAPPROCHEMENT MANUEL - LISTE NON TRAITE -->
+      <div *ngIf="Menu.sousMenu == 'manuel'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Traitement des données manuellement</h6>
+        <hr>
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label>Code</label>
+            <input [(ngModel)]="Manuel.filtre.code" type="number" class="form-control">
+          </div>
+          <div class="col-md-6 form-group">
+            <label>Compte</label>
+            <input [(ngModel)]="Manuel.filtre.compte" type="text" class="form-control">
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Compte</th>
+              <th>Code</th>
+              <th>Date</th>
+              <th>Valeur</th>
+              <th>Libelle 1</th>
+              <th>Libelle 2</th>
+              <th>Montant</th>
+              <th>Référence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let l of Manuel.liste; let index = index" (click)="clickLigne(index)" class="ligne-clickable">
+              <td>{{l.compte}}</td>
+              <td>{{l.codeDr}}</td>
+              <td>{{l.dateOperation}}</td>
+              <td>{{l.dateValeur}}</td>
+              <td>{{l.Libelle1}}</td>
+              <td>{{l.Libelle2}}</td>
+              <td style="text-align: right;">{{l.montant | number:'1.2-2':'fr'}}</td>
+              <td>{{l.reference}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RAPPROCHEMENT MANUEL - LIGNE NON TRAITE -->
+      <div *ngIf="Menu.sousMenu == 'ligne'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Traitement de la ligne manuellement</h6>
+        <hr>
+        <button (click)="revenirALaListe()" class="btn">Revenir à la liste</button>
+        <div class="form-group">
+          <label>Etat</label>
+          <select [(ngModel)]="Manuel.flagChoisi" class="form-control custom-select">
+            <option *ngFor="let f of Manuel.listeFlag" value={{f.idTypeFlag}}>{{f.libelleFlag}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Observation</label>
+          <textarea [(ngModel)]="Manuel.observation" class="form-control" rows="3"></textarea>
+        </div>
+        <div *ngIf="Manuel.indice > -1">
+          <button *ngIf="Manuel.flagChoisi != Manuel.liste[Manuel.indice].idTypeFlag" (click)="validerEtatLigne()" class="btn btn-info">Valider le changement d'état</button>
+        </div>
+        <table *ngIf="Manuel.indice > -1" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Compte</th>
+              <th>Code</th>
+              <th>Date</th>
+              <th>Valeur</th>
+              <th>Libelle 1</th>
+              <th>Libelle 2</th>
+              <th>Montant</th>
+              <th>Référence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{Manuel.liste[Manuel.indice].compte}}</td>
+              <td>{{Manuel.liste[Manuel.indice].codeDr}}</td>
+              <td>{{Manuel.liste[Manuel.indice].dateOperation}}</td>
+              <td>{{Manuel.liste[Manuel.indice].dateValeur}}</td>
+              <td>{{Manuel.liste[Manuel.indice].Libelle1}}</td>
+              <td>{{Manuel.liste[Manuel.indice].Libelle2}}</td>
+              <td style="text-align: right;">{{Manuel.liste[Manuel.indice].montant | number:'1.2-2':'fr'}}</td>
+              <td>{{Manuel.liste[Manuel.indice].reference}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <label>DETAIL DU GRAND LIVRE</label>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Pièce</th>
+              <th>N° OP</th>
+              <th>Compte</th>
+              <th>Libelle</th>
+              <th>Montant</th>
+              <th>Tiers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gl of Manuel.grandLivre">
+              <td>{{gl.datecompta}}</td>
+              <td>{{gl.typepcs}}</td>
+              <td>{{gl.recpcs}}</td>
+              <td>{{gl.cptg}}</td>
+              <td>{{gl.libelle}}</td>
+              <td>{{gl.cred | number:'1.2-2':'fr'}}</td>
+              <td>{{gl.numtrs}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <!-- MODAL CHARGEMENT -->
+    <div #modalChargement class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="loader">
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL MESSAGE IMPORT -->
+    <div #modalMessageImport class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title"></h6>
+            <button type="button" class="close" (click)="fermeMessageImport()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div *ngIf="!Import.afficheErreur" class="modal-body">
+            <p>Import des données terminé.</p>
+            <p>Le nombre de ligne traité automatiquement est de <strong>{{Import.nbTraiteAuto}}</strong>.</p>
+            <p>Le nombre de ligne qui exige une traitement manuelle est de <strong>{{Import.nbNonTraiteAuto}}</strong>.</p>
+          </div>
+          <div *ngIf="Import.afficheErreur" class="modal-body">
+            <p>Le format de données ne correspond pas au éxigence.</p>
+            <p>La norme est <strong>{{Import.format[0]}}</strong>, <strong>{{Import.format[1]}}</strong>, <strong>{{Import.format[2]}}</strong>,
+              <strong>{{Import.format[3]}}</strong>, <strong>{{Import.format[4]}}</strong>, <strong>{{Import.format[5]}}</strong>,
+              <strong>{{Import.format[6]}}</strong>, <strong>{{Import.format[7]}}</strong>.</p>
+            <p style="font-size: 12px; opacity: 0.8;">L'ordre n'est pas obligatoire</p>
+          </div>
+          <div class="modal-footer">
+            <button (click)="fermeMessageImport()" type="button" class="btn btn-primary">Fermer</button>
+            <button *ngIf="Import.nbNonTraiteAuto > 0 && !Import.afficheErreur" (click)="voirRapprochementManuel()"
+              type="button" class="btn btn-primary">Voir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-historique-indiv></app-historique-indiv>
+<app-lien-foot></app-lien-foot>

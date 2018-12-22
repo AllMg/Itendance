@@ -1,0 +1,71 @@
+.titre_page>h4{
+    background-color: #2F574D;
+}
+
+.btn-info{
+    background-color: #2F574D;
+}
+.btn-info{
+    border-color: #2F574D;
+}
+.btn-info:hover{
+    background-color: #1F2A36;
+}
+
+.conteneur-de-menu{
+    width: 100%;
+}
+
+.conteneur-de-menu2{
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.menu1 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-color: #729179;
+}
+
+.menu1 li {
+    float: left;
+}
+
+.menu1 li span {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.menu1 li span:hover {
+    color: white;
+    cursor: pointer;
+    background-color: #2F574D;
+}
+
+.menu1-active span{
+    color: white;
+    background-color: #2F574D;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #2F574D; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: auto;
+}
+
+.ligne-clickable{
+    cursor: pointer;
+}
+.ligne-clickable:hover{
+    background-color: #f3f3f3;
+}
