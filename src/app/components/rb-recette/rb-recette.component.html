@@ -21,8 +21,8 @@
 
     <div class="conteneur-de-menu2">
       <ul class="menu1">
-        <li (click)="clickSousMenu('import')" [ngClass]="{'menu1-active': Menu.sousMenu == 'import'}">
-          <span>IMPORT DE RELEVE</span>
+        <li (click)="clickSousMenu('lecture')" [ngClass]="{'menu1-active': Menu.sousMenu == 'lecture'}">
+          <span>LECTURE DE RELEVE</span>
         </li>
         <li (click)="clickSousMenu('manuel')" [ngClass]="{'menu1-active': (Menu.sousMenu == 'manuel' || Menu.sousMenu == 'ligne')}">
           <span>TRAITEMENT MANUEL</span>
@@ -34,22 +34,20 @@
     <!-- CONTENU -->
     <div class="row" style="padding: 10px;">
 
-      <!-- IMPORT -->
-      <div *ngIf="Menu.sousMenu == 'import'" class="col-md-12">
-        <h6 style="text-transform: uppercase;">Import des données depuis le relevé électronique vers la base</h6>
+      <!-- LECTURE -->
+      <div *ngIf="Menu.sousMenu == 'lecture'" class="col-md-12">
+        <h6 style="text-transform: uppercase;">Lecture des données de relevé bancaire électronique</h6>
         <hr>
         <div class="form-group">
-          <label>Fichier Excel</label>
-          <label for="fichier-excel" class="form-control" style="cursor: pointer;">{{Import.fichier}}</label>
-          <input (change)="fichierChange($event)" type="file" accept=".xls, .xlsx" style="display: none;" id="fichier-excel">
+          <label>Banque</label>
+          <ngx-select [(ngModel)]="Lecture.imputation" [items]="Lecture.ngxBanque" (typed)="chercheBanque($event)" style="width: 100%;"></ngx-select>
         </div>
-        <div *ngIf="Import.liste.length > 0" class="row">
+        <div *ngIf="Lecture.liste.length > 0" class="row">
           <div class="col-6">
-            <label>Nombre de ligne: <strong>{{Import.liste.length}}</strong></label>
+            <label>Nombre de ligne: <strong>{{Lecture.liste.length}}</strong></label>
           </div>
           <div class="col-6" style="text-align: right">
-            <button (click)="importerLesDonnees()" class="btn btn-info" style="margin-bottom: 10px;">Importer les
-              données</button>
+            <button class="btn btn-info" style="margin-bottom: 10px;">Effectuer le rapprochement</button>
           </div>
         </div>
         <table class="table table-bordered">
@@ -66,7 +64,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let l of Import.liste">
+            <tr *ngFor="let l of Lecture.liste">
               <td>{{l.Compte}}</td>
               <td>{{l.Code}}</td>
               <td>{{l.Date}}</td>
@@ -78,12 +76,12 @@
             </tr>
           </tbody>
         </table>
-        <div *ngIf="Import.liste.length > 0" class="row">
+        <div *ngIf="Lecture.liste.length > 0" class="row">
           <div class="col-6">
-            <label>Nombre de ligne: <strong>{{Import.liste.length}}</strong></label>
+            <label>Nombre de ligne: <strong>{{Lecture.liste.length}}</strong></label>
           </div>
           <div class="col-6" style="text-align: right">
-            <button (click)="importerLesDonnees()" class="btn btn-info">Importer les données</button>
+            <button class="btn btn-info">Effectuer le rapprochement</button>
           </div>
         </div>
       </div>
@@ -95,7 +93,7 @@
         <div class="row">
           <div class="col-md-6 form-group">
             <label>Code</label>
-            <input [(ngModel)]="Manuel.filtre.code" type="number" class="form-control">
+            <input [(ngModel)]="Manuel.filtre.code" type="text" class="form-control">
           </div>
           <div class="col-md-6 form-group">
             <label>Compte</label>
@@ -212,31 +210,24 @@
       </div>
     </div>
 
-    <!-- MODAL MESSAGE IMPORT -->
-    <div #modalMessageImport class="modal" tabindex="-1" role="dialog">
+    <!-- MODAL MESSAGE LECTURE -->
+    <div #modalMessageLecture class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h6 class="modal-title"></h6>
-            <button type="button" class="close" (click)="fermeMessageImport()">
+            <button type="button" class="close" (click)="fermeMessageLecture()">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div *ngIf="!Import.afficheErreur" class="modal-body">
-            <p>Import des données terminé.</p>
-            <p>Le nombre de ligne traité automatiquement est de <strong>{{Import.nbTraiteAuto}}</strong>.</p>
-            <p>Le nombre de ligne qui exige une traitement manuelle est de <strong>{{Import.nbNonTraiteAuto}}</strong>.</p>
-          </div>
-          <div *ngIf="Import.afficheErreur" class="modal-body">
-            <p>Le format de données ne correspond pas au éxigence.</p>
-            <p>La norme est <strong>{{Import.format[0]}}</strong>, <strong>{{Import.format[1]}}</strong>, <strong>{{Import.format[2]}}</strong>,
-              <strong>{{Import.format[3]}}</strong>, <strong>{{Import.format[4]}}</strong>, <strong>{{Import.format[5]}}</strong>,
-              <strong>{{Import.format[6]}}</strong>, <strong>{{Import.format[7]}}</strong>.</p>
-            <p style="font-size: 12px; opacity: 0.8;">L'ordre n'est pas obligatoire</p>
+          <div class="modal-body">
+            <p>Lecture des données terminé.</p>
+            <p>Le nombre de ligne traité automatiquement est de <strong>{{Lecture.nbTraiteAuto}}</strong>.</p>
+            <p>Le nombre de ligne qui exige une traitement manuelle est de <strong>{{Lecture.nbNonTraiteAuto}}</strong>.</p>
           </div>
           <div class="modal-footer">
-            <button (click)="fermeMessageImport()" type="button" class="btn btn-primary">Fermer</button>
-            <button *ngIf="Import.nbNonTraiteAuto > 0 && !Import.afficheErreur" (click)="voirRapprochementManuel()"
+            <button (click)="fermeMessageLecture()" type="button" class="btn btn-primary">Fermer</button>
+            <button *ngIf="Lecture.nbNonTraiteAuto > 0" (click)="voirRapprochementManuel()"
               type="button" class="btn btn-primary">Voir</button>
           </div>
         </div>

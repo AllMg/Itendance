@@ -16,21 +16,29 @@ declare var $: any;
 export class RbRecetteComponent implements OnInit {
 
   @ViewChild('modalChargement') modalChargement;
-  @ViewChild('modalMessageImport') modalMessageImport;
+  @ViewChild('modalMessageLecture') modalMessageLecture;
 
   Menu = {
     menu: "inventaire",
     sousMenu: ""
   };
 
-  Import = {
+  Lecture = {
+    ngxBanque: [],
+    imputation: null,
+    liste: [],
+    nbTraiteAuto: 0,
+    nbNonTraiteAuto: 0
+  };
+
+  /*Import = {
     fichier: "Parcourir mon ordinateur",
     liste: [],
     nbTraiteAuto: 0,
     nbNonTraiteAuto: 0,
     format: ["Compte", "Code", "Date", "Valeur", "Libelle1", "Libelle2", "Montant", "Ref"],
     afficheErreur: false
-  };
+  };*/
 
   Manuel = {
     liste: [],
@@ -66,7 +74,36 @@ export class RbRecetteComponent implements OnInit {
     }
   }
 
-  fichierChange($event) {
+  chercheBanque(text: string){
+    console.log("text",text);
+    text = text.trim();
+    if(text.length > 2){
+      let that = this;
+      let observ = this.rbService.getBanqueByAbrevCF(text).subscribe(obs=>{
+        console.log("getBanqueByAbrevCF",obs);
+        if(obs.success){
+          obs.msg.sort((a, b)=>{
+            if(a.nom > b.nom){
+              return 1;
+            }
+            else if(a.nom < b.nom){
+              return -1
+            }
+            return 0;
+          });
+          for(let banq of obs.msg){
+            that.Lecture.liste.push({
+              id: banq.imputation,
+              text: banq.abrev + " / " + banq.nom + " / " + banq.adresse
+            });
+          }
+        }
+        observ.unsubscribe();
+      });
+    }
+  }
+
+  /*fichierChange($event) {
     this.afficheChargement();
     let fichier = $event.target.files[0];
     let fileReader = new FileReader();
@@ -138,10 +175,10 @@ export class RbRecetteComponent implements OnInit {
       }
       observ.unsubscribe();
     });
-  }
+  }*/
 
   voirRapprochementManuel() {
-    this.fermeMessageImport();
+    this.fermeMessageLecture();
     this.prendListeFlag();
     this.prendListeNonTraiteAuto();
     this.Menu.sousMenu = "manuel";
@@ -221,12 +258,12 @@ export class RbRecetteComponent implements OnInit {
     this.Manuel.indice = -1;
   }
 
-  ouvreMessageImport() {
-    $(this.modalMessageImport.nativeElement).modal('show');
+  ouvreMessageLecture() {
+    $(this.modalMessageLecture.nativeElement).modal('show');
   }
 
-  fermeMessageImport() {
-    $(this.modalMessageImport.nativeElement).modal('hide');
+  fermeMessageLecture() {
+    $(this.modalMessageLecture.nativeElement).modal('hide');
   }
 
   afficheChargement() {
