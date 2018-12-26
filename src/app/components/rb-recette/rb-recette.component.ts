@@ -16,17 +16,24 @@ declare var $: any;
 export class RbRecetteComponent implements OnInit {
 
   @ViewChild('modalChargement') modalChargement;
+  @ViewChild('modalProgression') modalProgression;
   @ViewChild('modalMessageLecture') modalMessageLecture;
 
   Menu = {
-    menu: "inventaire",
+    menu: "rapprochement",
     sousMenu: ""
   };
 
   Lecture = {
     ngxBanque: [],
-    imputation: null,
+    listeBanque: [],
     liste: [],
+    filtre: {
+      imputation: null,
+      date: null,
+      dr: "42"
+    },
+    nbTraite: 0,
     nbTraiteAuto: 0,
     nbNonTraiteAuto: 0
   };
@@ -41,11 +48,13 @@ export class RbRecetteComponent implements OnInit {
   };*/
 
   Manuel = {
+    ngxBanque: [],
+    listeBanque: [],
     liste: [],
     indice: -1,
     filtre: {
-      compte: "",
-      code: null
+      imputation: "",
+      dr: null
     },
     listeFlag: [],
     flagChoisi: -1,
@@ -74,32 +83,116 @@ export class RbRecetteComponent implements OnInit {
     }
   }
 
-  chercheBanque(text: string){
-    console.log("text",text);
+  chercheBanque(text: string, obj:string) {
+    console.log("text", text);
     text = text.trim();
-    if(text.length > 2){
+    if (text.length > 2) {
       let that = this;
-      let observ = this.rbService.getBanqueByAbrevCF(text).subscribe(obs=>{
-        console.log("getBanqueByAbrevCF",obs);
-        if(obs.success){
-          obs.msg.sort((a, b)=>{
-            if(a.nom > b.nom){
+      let observ = this.rbService.getBanqueByAbrevCF(text).subscribe(obs => {
+        console.log("getBanqueByAbrevCF", obs);
+        if (obs.success) {
+          obs.msg.sort((a, b) => {
+            if (a.nom > b.nom) {
               return 1;
             }
-            else if(a.nom < b.nom){
+            else if (a.nom < b.nom) {
               return -1
             }
             return 0;
           });
-          for(let banq of obs.msg){
-            that.Lecture.liste.push({
+          that[obj].listeBanque = obs.msg;
+          let liste = [];
+          for (let banq of obs.msg) {
+            liste.push({
               id: banq.imputation,
               text: banq.abrev + " / " + banq.nom + " / " + banq.adresse
             });
           }
+          that[obj].ngxBanque = liste;
         }
         observ.unsubscribe();
       });
+    }
+  }
+
+  filtreLectureChange() {
+    if (this.Lecture.ngxBanque.length > 0 && this.Lecture.filtre.date != null && this.Lecture.filtre.imputation != null) {
+      this.afficheChargement();
+      let strs = this.Lecture.filtre.date.toString().split("-");
+      let idImport = strs[2] + strs[1] + strs[0] + "-";
+      for (let banq of this.Lecture.listeBanque) {
+        if (banq.imputation == this.Lecture.filtre.imputation) {
+          idImport += banq.nom;
+          break;
+        }
+      }
+      let that = this;
+      let observ = this.rbService.listeRecette(idImport).subscribe(obs => {
+        console.log("listeRecette", obs);
+        if (obs.success) {
+          that.Lecture.nbTraiteAuto = 0;
+          that.Lecture.nbNonTraiteAuto = 0;
+          that.Lecture.liste = obs.msg;
+        }
+        that.fermeChargement();
+        observ.unsubscribe();
+      });
+    }
+  }
+
+  effectuerLeRapprochement() {
+    this.Lecture.filtre.dr = this.Lecture.filtre.dr.trim();
+    if (this.Lecture.filtre.dr != "") {
+      this.Lecture.nbTraite = 0;
+      let progression = 0;
+      let bar = $('.progress-bar');
+      bar.css('width', progression + '%').attr('aria-valuenow', progression);
+      this.afficheProgression();
+      this.rapproche(0, bar);
+    }
+    else {
+      this.toast.error("Veuillez préciser le Code DR");
+    }
+  }
+
+  rapproche(indice: number, bar: any) {
+    if (indice < this.Lecture.liste.length) {
+      let that = this;
+      let observ = this.rbService.getGLDR(null).subscribe(obsGL => {
+        console.log("getGLDR", obsGL);
+        observ.unsubscribe();
+        if (obsGL.success) {
+          observ = this.rbService.rappBancTopic("rapprocheReleveEtGrandLivreRBSE", "", true).subscribe(obs => {
+            console.log("rapprocheReleveEtGrandLivreRBSE", obsGL);
+            observ.unsubscribe();
+            if (obs.success) {
+              if (obs.msg == 1) {
+                that.Lecture.nbTraiteAuto++;
+              }
+              else {
+                that.Lecture.nbNonTraiteAuto++;
+              }
+
+              let progression = that.Lecture.nbTraite * 100 / that.Lecture.liste.length;
+              bar.css('width', progression + '%').attr('aria-valuenow', progression);
+
+              that.rapproche(indice + 1, bar);
+            }
+            else {
+              that.fermeProgression();
+              that.toast.error(obs.msg);
+            }
+          });
+        }
+        else {
+          that.fermeProgression();
+          that.toast.error(obsGL.msg);
+        }
+      });
+    }
+    else {
+      this.fermeProgression();
+      this.ouvreMessageLecture();
     }
   }
 
@@ -180,6 +273,10 @@ export class RbRecetteComponent implements OnInit {
   voirRapprochementManuel() {
     this.fermeMessageLecture();
     this.prendListeFlag();
+    this.Manuel.listeBanque = this.Lecture.listeBanque;
+    this.Manuel.ngxBanque = this.Lecture.ngxBanque;
+    this.Manuel.filtre.imputation = this.Lecture.filtre.imputation;
+    this.Manuel.filtre.dr = this.Lecture.filtre.dr;
     this.prendListeNonTraiteAuto();
     this.Menu.sousMenu = "manuel";
   }
@@ -208,7 +305,7 @@ export class RbRecetteComponent implements OnInit {
     }
   }
 
-  clickLigne(index){
+  clickLigne(index) {
     this.Manuel.indice = index;
     this.Manuel.flagChoisi = this.Manuel.liste[index].idTypeFlag;
     this.Manuel.grandLivre = [];
@@ -222,38 +319,38 @@ export class RbRecetteComponent implements OnInit {
       fin: this.Manuel.liste[index].dateValeur,
       exercice: "" // est déjà compris dans la date début et fin
     };
-    let observ = this.rbService.getGLDR(argument).subscribe(obs=>{
-      console.log("getGLDR",obs);
-      if(obs.success){
+    let observ = this.rbService.getGLDR(argument).subscribe(obs => {
+      console.log("getGLDR", obs);
+      if (obs.success) {
         that.Manuel.grandLivre = obs.msg.gl;
       }
       observ.unsubscribe();
     });
   }
 
-  validerEtatLigne(){
+  validerEtatLigne() {
     this.afficheChargement();
     let that = this;
     let argument = {
       idRecette: this.Manuel.liste[this.Manuel.indice].idRecette,
       observation: this.Manuel.observation
     };
-    let observ = this.rbService.rappBancTopic("changerFlagRecetteRBSE",argument,true).subscribe(obs=>{
-      console.log("changerFlagRecetteRBSE",obs);
+    let observ = this.rbService.rappBancTopic("changerFlagRecetteRBSE", argument, true).subscribe(obs => {
+      console.log("changerFlagRecetteRBSE", obs);
       that.fermeChargement();
-      if(obs.success){
+      if (obs.success) {
         that.Menu.sousMenu = "manuel";
         that.Manuel.liste.splice(that.Manuel.indice, 1);
         that.Manuel.indice = -1;
       }
-      else{
+      else {
         that.toast.error(obs.msg);
       }
       observ.unsubscribe();
     });
   }
 
-  revenirALaListe(){
+  revenirALaListe() {
     this.Menu.sousMenu = "manuel";
     this.Manuel.indice = -1;
   }
@@ -264,6 +361,14 @@ export class RbRecetteComponent implements OnInit {
 
   fermeMessageLecture() {
     $(this.modalMessageLecture.nativeElement).modal('hide');
+  }
+
+  afficheProgression() {
+    $(this.modalProgression.nativeElement).modal("show");
+  }
+
+  fermeProgression() {
+    $(this.modalProgression.nativeElement).modal('hide');
   }
 
   afficheChargement() {

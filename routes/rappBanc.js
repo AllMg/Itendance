@@ -69,4 +69,33 @@ router.post('/getGLDR',function(req,res){
   });
 });
 
+router.post('/getBanqueByAbrevCF', function (req, res) {
+  const msg = req.body.data;
+  var topicLogReq = "getBanqueByAbrevCFreq";
+  var topicLogRes = "getBanqueByAbrevres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, msg, function (err, data) {
+    if (err) {
+      console.log(err);
+      res.json({ sucess: !err, msg: "Import relevé banquaire: " + data });
+    } else {
+      res.json({ success: !err, msg: data });
+    }
+  });
+});
+
+router.post('/listeRecette', function (req, res) {
+  const msg = req.body.data;
+  var topicLogReq = "listeRecettereq";
+  var topicLogRes = "listeRecetteres";
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, msg, function (err, data) {
+    if (err) {
+      console.log(err);
+      res.json({ sucess: !err, msg: "Lecture relevé banquaire: " + data });
+    } else {
+      res.json({ success: !err, msg: data });
+    }
+  });
+});
+
+
 module.exports = router;

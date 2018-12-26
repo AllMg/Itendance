@@ -38,9 +38,20 @@
       <div *ngIf="Menu.sousMenu == 'lecture'" class="col-md-12">
         <h6 style="text-transform: uppercase;">Lecture des données de relevé bancaire électronique</h6>
         <hr>
-        <div class="form-group">
-          <label>Banque</label>
-          <ngx-select [(ngModel)]="Lecture.imputation" [items]="Lecture.ngxBanque" (typed)="chercheBanque($event)" style="width: 100%;"></ngx-select>
+        <div class="row">
+          <div class="col-6 form-group">
+            <label>Banque</label>
+            <ngx-select [(ngModel)]="Lecture.filtre.imputation" (ngModelChange)="filtreLectureChange()" [items]="Lecture.ngxBanque"
+              (typed)="chercheBanque($event,'Lecture')" style="width: 100%;"></ngx-select>
+          </div>
+          <div class="col-6 form-group">
+            <label>Date</label>
+            <input [(ngModel)]="Lecture.filtre.date" (ngModelChange)="filtreLectureChange()" type="date" class="form-control">
+          </div>
+        </div>
+        <div *ngIf="Lecture.liste.length > 0" class="form-group">
+          <label>DR</label>
+          <input [(ngModel)]="Lecture.filtre.dr" placeholder="Code DR" type="text" class="form-control">
         </div>
         <div *ngIf="Lecture.liste.length > 0" class="row">
           <div class="col-6">
@@ -53,26 +64,24 @@
         <table class="table table-bordered">
           <thead>
             <tr>
+              <th>Date réception</th>
               <th>Compte</th>
-              <th>Code</th>
               <th>Date</th>
               <th>Valeur</th>
-              <th>Libelle 1</th>
-              <th>Libelle 2</th>
+              <th>Employeur</th>
               <th>Montant</th>
-              <th>Référence</th>
+              <th>Période</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let l of Lecture.liste">
-              <td>{{l.Compte}}</td>
-              <td>{{l.Code}}</td>
-              <td>{{l.Date}}</td>
-              <td>{{l.Valeur}}</td>
-              <td>{{l.Libelle1}}</td>
-              <td>{{l.Libelle2}}</td>
+              <td>{{l.dateRecep}}</td>
+              <td>{{Lecture.filtre.imputation}}</td>
+              <td>{{l.dateOperation}}</td>
+              <td>{{l.dateValeur}}</td>
+              <td>{{l.employeur}}</td>
               <td style="text-align: right;">{{l.Montant | number:'1.2-2':'fr'}}</td>
-              <td>{{l.Ref}}</td>
+              <td>{{l.periode}}</td>
             </tr>
           </tbody>
         </table>
@@ -92,25 +101,24 @@
         <hr>
         <div class="row">
           <div class="col-md-6 form-group">
-            <label>Code</label>
-            <input [(ngModel)]="Manuel.filtre.code" type="text" class="form-control">
+            <label>Banque</label>
+            <ngx-select [(ngModel)]="Manuel.filtre.imputation" (typed)="chercheBanque($event,'Manuel')" [items]="Manuel.ngxBanque"
+              style="width: 100%;"></ngx-select>
           </div>
           <div class="col-md-6 form-group">
-            <label>Compte</label>
-            <input [(ngModel)]="Manuel.filtre.compte" type="text" class="form-control">
+            <label>DR</label>
+            <input [(ngModel)]="Manuel.filtre.dr" placeholder="Code DR" type="text" class="form-control">
           </div>
         </div>
         <table class="table table-bordered">
           <thead>
             <tr>
               <th>Compte</th>
-              <th>Code</th>
+              <th>DR</th>
               <th>Date</th>
               <th>Valeur</th>
-              <th>Libelle 1</th>
-              <th>Libelle 2</th>
+              <th>Employeur</th>
               <th>Montant</th>
-              <th>Référence</th>
             </tr>
           </thead>
           <tbody>
@@ -119,10 +127,8 @@
               <td>{{l.codeDr}}</td>
               <td>{{l.dateOperation}}</td>
               <td>{{l.dateValeur}}</td>
-              <td>{{l.Libelle1}}</td>
-              <td>{{l.Libelle2}}</td>
+              <td>{{l.employeur}}</td>
               <td style="text-align: right;">{{l.montant | number:'1.2-2':'fr'}}</td>
-              <td>{{l.reference}}</td>
             </tr>
           </tbody>
         </table>
@@ -144,7 +150,8 @@
           <textarea [(ngModel)]="Manuel.observation" class="form-control" rows="3"></textarea>
         </div>
         <div *ngIf="Manuel.indice > -1">
-          <button *ngIf="Manuel.flagChoisi != Manuel.liste[Manuel.indice].idTypeFlag" (click)="validerEtatLigne()" class="btn btn-info">Valider le changement d'état</button>
+          <button *ngIf="Manuel.flagChoisi != Manuel.liste[Manuel.indice].idTypeFlag" (click)="validerEtatLigne()"
+            class="btn btn-info">Valider le changement d'état</button>
         </div>
         <table *ngIf="Manuel.indice > -1" class="table table-bordered">
           <thead>
@@ -210,6 +217,24 @@
       </div>
     </div>
 
+    <!-- MODAL CHARGEMENT PROGRESSE -->
+    <div #modalProgression class="modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header"></div>
+          <div class="modal-body">
+            <span>Traitement en cours...</span>
+            <span>{{Lecture.nbTraite}}/{{Lecture.liste.length}}</span>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+                aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="modal-footer"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- MODAL MESSAGE LECTURE -->
     <div #modalMessageLecture class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -227,8 +252,7 @@
           </div>
           <div class="modal-footer">
             <button (click)="fermeMessageLecture()" type="button" class="btn btn-primary">Fermer</button>
-            <button *ngIf="Lecture.nbNonTraiteAuto > 0" (click)="voirRapprochementManuel()"
-              type="button" class="btn btn-primary">Voir</button>
+            <button *ngIf="Lecture.nbNonTraiteAuto > 0" (click)="voirRapprochementManuel()" type="button" class="btn btn-primary">Voir</button>
           </div>
         </div>
       </div>
