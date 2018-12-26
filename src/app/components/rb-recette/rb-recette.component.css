@@ -69,3 +69,7 @@
 .ligne-clickable:hover{
     background-color: #f3f3f3;
 }
+
+.progress-bar{
+    background-color: #2F574D;
+}

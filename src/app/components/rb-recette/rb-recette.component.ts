@@ -31,7 +31,7 @@ export class RbRecetteComponent implements OnInit {
     filtre: {
       imputation: null,
       date: null,
-      dr: "42"
+      dr: null
     },
     nbTraite: 0,
     nbTraiteAuto: 0,
@@ -79,11 +79,10 @@ export class RbRecetteComponent implements OnInit {
     this.Menu.sousMenu = nom;
     if (nom == "manuel") {
       this.prendListeFlag();
-      this.prendListeNonTraiteAuto();
     }
   }
 
-  chercheBanque(text: string, obj:string) {
+  chercheBanque(text: string, obj: string) {
     console.log("text", text);
     text = text.trim();
     if (text.length > 2) {
@@ -126,29 +125,54 @@ export class RbRecetteComponent implements OnInit {
           break;
         }
       }
-      let that = this;
-      let observ = this.rbService.listeRecette(idImport).subscribe(obs => {
-        console.log("listeRecette", obs);
-        if (obs.success) {
-          that.Lecture.nbTraiteAuto = 0;
-          that.Lecture.nbNonTraiteAuto = 0;
-          that.Lecture.liste = obs.msg;
-        }
-        that.fermeChargement();
-        observ.unsubscribe();
-      });
+      let argument = {
+        ref_id: "7112018-BFV1",
+        page: 1
+      };
+      this.Lecture.liste = [];
+      this.prendListeRecette(argument);
     }
   }
 
+  prendListeRecette(argument: any) {
+    let that = this;
+    let observ = this.rbService.listeRecette(argument).subscribe(obs => {
+      console.log("listeRecette", obs);
+      if (obs.success) {
+        if (obs.msg.length > 0) {
+          that.Lecture.nbTraiteAuto = 0;
+          that.Lecture.nbNonTraiteAuto = 0;
+          for (let rec of obs.msg) {
+            that.Lecture.liste.push(rec);
+          }
+          argument.page++;
+          that.prendListeRecette(argument);
+        }
+        else {
+          that.fermeChargement();
+        }
+      }
+      else {
+        that.fermeChargement();
+      }
+      observ.unsubscribe();
+    });
+  }
+
   effectuerLeRapprochement() {
-    this.Lecture.filtre.dr = this.Lecture.filtre.dr.trim();
-    if (this.Lecture.filtre.dr != "") {
-      this.Lecture.nbTraite = 0;
-      let progression = 0;
-      let bar = $('.progress-bar');
-      bar.css('width', progression + '%').attr('aria-valuenow', progression);
-      this.afficheProgression();
-      this.rapproche(0, bar);
+    if (this.Lecture.filtre.dr != null) {
+      this.Lecture.filtre.dr = this.Lecture.filtre.dr.trim();
+      if (this.Lecture.filtre.dr != "") {
+        this.Lecture.nbTraite = 0;
+        let progression = 0;
+        let bar = $('.progress-bar');
+        bar.css('width', progression + '%').attr('aria-valuenow', progression);
+        this.afficheProgression();
+        this.rapproche(0, bar);
+      }
+      else {
+        this.toast.error("Veuillez préciser le Code DR");
+      }
     }
     else {
       this.toast.error("Veuillez préciser le Code DR");
@@ -282,12 +306,14 @@ export class RbRecetteComponent implements OnInit {
   }
 
   prendListeNonTraiteAuto() {
+    this.afficheChargement();
     let that = this;
     let observ = this.rbService.rappBancTopic("prendListeNonTraiteAutoRBSE", this.Manuel.filtre, true).subscribe(obs => {
       console.log("prendListeNonTraiteAutoRBSE", obs);
       if (obs.success) {
         that.Manuel.liste = obs.msg;
       }
+      that.fermeChargement();
       observ.unsubscribe();
     });
   }

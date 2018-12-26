@@ -58,7 +58,7 @@
             <label>Nombre de ligne: <strong>{{Lecture.liste.length}}</strong></label>
           </div>
           <div class="col-6" style="text-align: right">
-            <button class="btn btn-info" style="margin-bottom: 10px;">Effectuer le rapprochement</button>
+            <button (click)="effectuerLeRapprochement()" class="btn btn-info" style="margin-bottom: 10px;">Effectuer le rapprochement</button>
           </div>
         </div>
         <table class="table table-bordered">
@@ -75,22 +75,26 @@
           </thead>
           <tbody>
             <tr *ngFor="let l of Lecture.liste">
-              <td>{{l.dateRecep}}</td>
+              <td>{{avoirDateSlash(l.dateRecep)}}</td>
               <td>{{Lecture.filtre.imputation}}</td>
-              <td>{{l.dateOperation}}</td>
-              <td>{{l.dateValeur}}</td>
+              <td>{{avoirDateSlash(l.dateOperation)}}</td>
+              <td>{{avoirDateSlash(l.dateValeur)}}</td>
               <td>{{l.employeur}}</td>
-              <td style="text-align: right;">{{l.Montant | number:'1.2-2':'fr'}}</td>
+              <td style="text-align: right;">{{l.montant | number:'1.2-2':'fr'}}</td>
               <td>{{l.periode}}</td>
             </tr>
           </tbody>
         </table>
+        <div *ngIf="Lecture.liste.length > 0" class="form-group">
+          <label>DR</label>
+          <input [(ngModel)]="Lecture.filtre.dr" placeholder="Code DR" type="text" class="form-control">
+        </div>
         <div *ngIf="Lecture.liste.length > 0" class="row">
           <div class="col-6">
             <label>Nombre de ligne: <strong>{{Lecture.liste.length}}</strong></label>
           </div>
           <div class="col-6" style="text-align: right">
-            <button class="btn btn-info">Effectuer le rapprochement</button>
+            <button (click)="effectuerLeRapprochement()" class="btn btn-info">Effectuer le rapprochement</button>
           </div>
         </div>
       </div>
@@ -100,16 +104,27 @@
         <h6 style="text-transform: uppercase;">Traitement des données manuellement</h6>
         <hr>
         <div class="row">
-          <div class="col-md-6 form-group">
+          <div class="col-md-5">
             <label>Banque</label>
+          </div>
+          <div class="col-md-5">
+            <label>DR</label>
+          </div>
+          <div class="col-md-2">
+            <label></label>
+          </div>
+          <div class="col-md-5">
             <ngx-select [(ngModel)]="Manuel.filtre.imputation" (typed)="chercheBanque($event,'Manuel')" [items]="Manuel.ngxBanque"
               style="width: 100%;"></ngx-select>
           </div>
-          <div class="col-md-6 form-group">
-            <label>DR</label>
+          <div class="col-md-5">
             <input [(ngModel)]="Manuel.filtre.dr" placeholder="Code DR" type="text" class="form-control">
           </div>
+          <div class="col-md-2">
+            <button (click)="prendListeNonTraiteAuto()" class="btn btn-info">Charger</button>
+          </div>
         </div>
+        <br>
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -125,8 +140,8 @@
             <tr *ngFor="let l of Manuel.liste; let index = index" (click)="clickLigne(index)" class="ligne-clickable">
               <td>{{l.compte}}</td>
               <td>{{l.codeDr}}</td>
-              <td>{{l.dateOperation}}</td>
-              <td>{{l.dateValeur}}</td>
+              <td>{{avoirDateSlash(l.dateOperation)}}</td>
+              <td>{{avoirDateSlash(l.dateValeur)}}</td>
               <td>{{l.employeur}}</td>
               <td style="text-align: right;">{{l.montant | number:'1.2-2':'fr'}}</td>
             </tr>
@@ -157,25 +172,21 @@
           <thead>
             <tr>
               <th>Compte</th>
-              <th>Code</th>
+              <th>DR</th>
               <th>Date</th>
               <th>Valeur</th>
-              <th>Libelle 1</th>
-              <th>Libelle 2</th>
+              <th>Employeur</th>
               <th>Montant</th>
-              <th>Référence</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>{{Manuel.liste[Manuel.indice].compte}}</td>
               <td>{{Manuel.liste[Manuel.indice].codeDr}}</td>
-              <td>{{Manuel.liste[Manuel.indice].dateOperation}}</td>
-              <td>{{Manuel.liste[Manuel.indice].dateValeur}}</td>
-              <td>{{Manuel.liste[Manuel.indice].Libelle1}}</td>
-              <td>{{Manuel.liste[Manuel.indice].Libelle2}}</td>
+              <td>{{avoirDateSlash(Manuel.liste[Manuel.indice].dateOperation)}}</td>
+              <td>{{avoirDateSlash(Manuel.liste[Manuel.indice].dateValeur)}}</td>
+              <td>{{Manuel.liste[Manuel.indice].employeur}}</td>
               <td style="text-align: right;">{{Manuel.liste[Manuel.indice].montant | number:'1.2-2':'fr'}}</td>
-              <td>{{Manuel.liste[Manuel.indice].reference}}</td>
             </tr>
           </tbody>
         </table>
@@ -194,12 +205,12 @@
           </thead>
           <tbody>
             <tr *ngFor="let gl of Manuel.grandLivre">
-              <td>{{gl.datecompta}}</td>
+              <td>{{avoirDateSlash(gl.datecompta)}}</td>
               <td>{{gl.typepcs}}</td>
               <td>{{gl.recpcs}}</td>
               <td>{{gl.cptg}}</td>
               <td>{{gl.libelle}}</td>
-              <td>{{gl.cred | number:'1.2-2':'fr'}}</td>
+              <td style="text-align: right;">{{gl.cred | number:'1.2-2':'fr'}}</td>
               <td>{{gl.numtrs}}</td>
             </tr>
           </tbody>
@@ -251,8 +262,8 @@
             <p>Le nombre de ligne qui exige une traitement manuelle est de <strong>{{Lecture.nbNonTraiteAuto}}</strong>.</p>
           </div>
           <div class="modal-footer">
-            <button (click)="fermeMessageLecture()" type="button" class="btn btn-primary">Fermer</button>
-            <button *ngIf="Lecture.nbNonTraiteAuto > 0" (click)="voirRapprochementManuel()" type="button" class="btn btn-primary">Voir</button>
+            <button (click)="fermeMessageLecture()" type="button" class="btn">Fermer</button>
+            <button *ngIf="Lecture.nbNonTraiteAuto > 0" (click)="voirRapprochementManuel()" type="button" class="btn btn-info">Voir</button>
           </div>
         </div>
       </div>

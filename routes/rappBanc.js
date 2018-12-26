@@ -52,7 +52,7 @@ router.post('/getGrandlivre',function(req,res){
 router.post('/getGLDR',function(req,res){
   const argument = req.body.data;
   const topicLogReq = "getGLDRreq";
-  const topicLogRes = "getGLDRreq";
+  const topicLogRes = "getGLDrres";
   kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(argument), function(err,data){
     if(err){
       res.json({
@@ -87,7 +87,7 @@ router.post('/listeRecette', function (req, res) {
   const msg = req.body.data;
   var topicLogReq = "listeRecettereq";
   var topicLogRes = "listeRecetteres";
-  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, msg, function (err, data) {
+  kafkaConfig.kafkaConnector(topicLogReq, topicLogRes, JSON.stringify(msg), function (err, data) {
     if (err) {
       console.log(err);
       res.json({ sucess: !err, msg: "Lecture relevé banquaire: " + data });
