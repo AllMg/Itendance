@@ -11,7 +11,7 @@
 		<div class="conteneur-de-menu">
 			<ul class="menu1">
 				<li (click)="clickInMenu1('immo-liste')"><span>DEMANDE</span></li>
-				<li (click)="clickInMenu1('immo-liste')"><span>LISTE</span></li>
+				<li (click)="clickInMenu1('immo-liste')"><span>LISTE DEMANDE</span></li>
 				<li (click)="clickInMenu1('immo-art')"><span>ARTICLE</span></li>
 				<li (click)="clickInMenu1('immo-mvt')"><span>MOUVEMENT</span></li>
 				<li class="menu1-active"><span>INVENTAIRE</span></li>
@@ -30,6 +30,7 @@
 
 		<!-- CONTENU -->
 		<div class="row" style="padding: 10px;">
+
 			<!-- INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'inventaire'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Inventaire des immobilisations</h6>
@@ -80,6 +81,7 @@
 				<p style="font-size: 12px; opacity: 0.85">Les articles non présent auront automatiquement une date de fin de détention lors de l'enregistrement mais seront dans la base de PV d'inventaire</p>
 				<button (click)="enregistrerPV()" class="btn" [ngClass]="{'btn-info': Pv.listeASauver.length > 0}">Enregistrer</button>
 			</div>
+
 			<!-- LISTE PV D'INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'liste_pv'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des PV d'inventaire des immobilisations</h6>
@@ -135,6 +137,7 @@
 				  </ul>
 				</nav>
 			</div>
+
 			<!-- DETAIL PV D'INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'detail_pv'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Détail PV d'inventaire</h6>
@@ -195,6 +198,7 @@
 					<button (click)="retourListe()" class="btn">Retour à la liste</button>
 				</div>
 			</div>
+
 			<!-- ETAT D'INVENTAIRE-->
 			<div *ngIf="Menu.sousMenu == 'etat'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Etablissement d'etat d'inventaire des immobilisations</h6>
@@ -235,6 +239,7 @@
 				</table>
 				<button *ngIf="!Etat.finAtteint && Etat.liste.length > 0" (click)="afficherPlusEtat()" class="btn btn-info">Afficher plus</button>
 			</div>
+
 			<!-- CONDAMNATION ET VENTE -->
 			<div *ngIf="Menu.sousMenu == 'cond'" class="col-md-12">
 				<h6 style="text-transform: uppercase;">Liste des immobilisations condamnanés</h6>
@@ -328,6 +333,7 @@
 				  </ul>
 				</nav>
 			</div>
+			
 		</div>
 
 	</div>

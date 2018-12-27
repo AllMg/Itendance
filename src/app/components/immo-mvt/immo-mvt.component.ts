@@ -285,7 +285,13 @@ export class ImmoMvtComponent implements OnInit {
 		if (this.Entree.numTef != null) {
 			this.afficheChargement();
 			this.Entree.numTef = this.Entree.numTef.trim();
+			this.Entree.listeArticle = [];
 			this.Entree.listeCodeArticle = [];
+			this.Entree.numBE = null;
+			this.Entree.numBC = null;
+			this.Entree.imputation = null;
+			this.Entree.dateEntree = null;
+			this.Entree.magasin = null;
 			this.Entree.tefExiste = false;
 			let that = this;
 			let observ = this.immoService.immoTopic("chargerCodeArticleDepuisTEFInt", this.Entree.numTef, false).subscribe(obs => {
@@ -304,7 +310,6 @@ export class ImmoMvtComponent implements OnInit {
 	}
 
 	chargerDepuisTEF() {
-		this.Entree.listeArticle = [];
 		this.Entree.numTef = this.Entree.numTef.trim();
 		let that = this;
 		let observ = this.immoService.findByNumTefEntreeDetailsAprro(this.Entree.numTef).subscribe(obs => {

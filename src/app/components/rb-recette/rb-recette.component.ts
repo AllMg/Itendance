@@ -125,6 +125,7 @@ export class RbRecetteComponent implements OnInit {
           break;
         }
       }
+      console.log("idImport",idImport);
       let argument = {
         ref_id: "7112018-BFV1",
         page: 1
@@ -182,6 +183,12 @@ export class RbRecetteComponent implements OnInit {
   rapproche(indice: number, bar: any) {
     if (indice < this.Lecture.liste.length) {
       let that = this;
+      let argument = {
+        cpte: this.Lecture.filtre.imputation,
+        debut: "2014-01-01",
+        fin: "2014-01-05",
+        codedr: this.Lecture.filtre.dr
+      };
       let observ = this.rbService.getGLDR(null).subscribe(obsGL => {
         console.log("getGLDR", obsGL);
         observ.unsubscribe();
